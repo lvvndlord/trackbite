@@ -2,5 +2,5 @@
   <Configurations>
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="trackbite/trackbite.vcxproj" />
+  <Project Path="trackbite/trackbite.vcxproj" Id="85ec0458-85ba-48f7-a935-1a5cbed12944" />
 </Solution>

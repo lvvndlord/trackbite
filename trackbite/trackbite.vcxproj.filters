@@ -66,5 +66,8 @@
     <ClInclude Include="ProfilUzytkownika.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TypyZywieniowe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

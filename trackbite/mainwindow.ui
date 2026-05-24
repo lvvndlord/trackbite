@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget_1">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="dziennikTab">
        <attribute name="title">
@@ -29,7 +29,7 @@
          <rect>
           <x>50</x>
           <y>10</y>
-          <width>611</width>
+          <width>691</width>
           <height>51</height>
          </rect>
         </property>
@@ -75,7 +75,7 @@
          <rect>
           <x>50</x>
           <y>70</y>
-          <width>611</width>
+          <width>691</width>
           <height>51</height>
          </rect>
         </property>
@@ -97,14 +97,24 @@
           </widget>
          </item>
          <item>
-          <widget class="QLabel" name="labelGramy">
+          <widget class="QLabel" name="labelIlosc">
            <property name="text">
-            <string>Gramy</string>
+            <string>Ilość:</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QDoubleSpinBox" name="doubleSpinGramy"/>
+          <widget class="QDoubleSpinBox" name="doubleSpinIlosc"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="labelJednostka">
+           <property name="text">
+            <string>Jednostka:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="comboJednostkaDziennik"/>
          </item>
          <item>
           <widget class="QPushButton" name="buttonDodajDoDziennika">
@@ -134,13 +144,23 @@
          <rect>
           <x>50</x>
           <y>130</y>
-          <width>611</width>
-          <height>371</height>
+          <width>691</width>
+          <height>361</height>
          </rect>
         </property>
         <column>
          <property name="text">
           <string>Produkt</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Ilość</string>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Jednostka</string>
          </property>
         </column>
         <column>
@@ -174,7 +194,7 @@
          <rect>
           <x>50</x>
           <y>510</y>
-          <width>611</width>
+          <width>691</width>
           <height>61</height>
          </rect>
         </property>
