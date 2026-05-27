@@ -100,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="BazaProduktow.cpp" />
     <ClCompile Include="DziennikZywieniowy.cpp" />
+    <ClCompile Include="PlikManager.cpp" />
     <ClCompile Include="Produkt.cpp" />
     <ClCompile Include="ProfilUzytkownika.cpp" />
     <QtRcc Include="mainwindow.qrc" />
@@ -111,6 +112,7 @@
   <ItemGroup>
     <ClInclude Include="BazaProduktow.h" />
     <ClInclude Include="DziennikZywieniowy.h" />
+    <ClInclude Include="PlikManager.h" />
     <ClInclude Include="Produkt.h" />
     <ClInclude Include="ProfilUzytkownika.h" />
     <ClInclude Include="TypyZywieniowe.h" />

@@ -1,0 +1,5 @@
+Jajko|155|13|1.1|11|g:1;sztuka:55;
+Ryz bialy|130|2.7|28|0.3|g:1;opakowanie:500;
+Ser zolty|350|25|2|27|g:1;plaster:20;opakowanie:150;
+Banan|89|1.1|23|0.3|g:1;sztuka:120;
+BABAB|5|3|2|3|g:1;

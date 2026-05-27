@@ -52,6 +52,9 @@
     <ClCompile Include="ProfilUzytkownika.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PlikManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Produkt.h">
@@ -67,6 +70,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TypyZywieniowe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PlikManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

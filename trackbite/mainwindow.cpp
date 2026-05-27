@@ -11,21 +11,38 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     ui.setupUi(this);
-    dziennik.ustawLimityDzienne({ 2200.0, 120.0, 240.0, 70.0 });
+
+    // Wczytanie danych z plikow przy starcie
+    wczytajDaneZPlikow();
 
     ustawDziennikGui();
-    dodajProduktyTestoweDoCombo();
+    if (produkty.empty())
+    {
+        dodajProduktyTestoweDoCombo();
+    }
     odswiezDziennik();
 }
 
 MainWindow::~MainWindow()
-{}
+{
+    // Zapisz dane przed zamknieciem
+    zapiszDaneDoPlikow();
+}
 
 void MainWindow::ustawDziennikGui()
 {
     ui.doubleSpinIlosc->setRange(1.0, 5000.0);
     ui.doubleSpinIlosc->setDecimals(0);
     ui.doubleSpinIlosc->setValue(100.0);
+
+    // Walidacja i zakresy pól profilu
+    ui.spinWiek->setRange(8, 120); // wiek 8..120
+    ui.doubleSpinWaga->setRange(20.0, 300.0); // waga 20..300 kg
+    ui.doubleSpinWaga->setDecimals(1);
+    ui.doubleSpinWzrost->setRange(50.0, 250.0); // wzrost 50..250 cm
+    ui.doubleSpinWzrost->setDecimals(1);
+    ui.doubleSpinLimitKalorii->setRange(800.0, 10000.0); // rozsądny zakres kalorii
+    ui.doubleSpinLimitKalorii->setDecimals(0);
 
     ui.tableDziennik->setColumnCount(8);
     ui.tableDziennik->setHorizontalHeaderLabels(
@@ -83,6 +100,24 @@ void MainWindow::dodajProduktyTestoweDoCombo()
             );
         };
 
+    // Jeżeli istnieje plik produkty.txt w katalogu, wczytaj zamiast testowych
+    std::vector<Produkt> zPliku;
+    if (PlikManager::wczytajProdukty("produkty.txt", zPliku))
+    {
+        produkty = std::move(zPliku);
+        for (std::size_t i = 0; i < produkty.size(); ++i)
+        {
+            ui.comboProduktDziennik->addItem(QString::fromStdString(produkty[i].pobierzNazwe()), static_cast<int>(i));
+        }
+        if (ui.comboProduktDziennik->count() > 0)
+        {
+            ui.comboProduktDziennik->setCurrentIndex(0);
+            on_comboProduktDziennik_currentIndexChanged(ui.comboProduktDziennik->currentIndex());
+        }
+        return;
+        }
+
+        // domyslne produkty (gdy brak pliku)
     dodajProdukt(
         "Jajko",
         155.0, 13.0, 1.1, 11.0,
@@ -121,10 +156,45 @@ void MainWindow::dodajProduktyTestoweDoCombo()
         ui.comboProduktDziennik->setCurrentIndex(0);
         on_comboProduktDziennik_currentIndexChanged(ui.comboProduktDziennik->currentIndex());
     }
+
+    // ustaw domyslny index i laduj jednostki
+    if (ui.comboProduktDziennik->count() > 0)
+    {
+        ui.comboProduktDziennik->setCurrentIndex(0);
+        on_comboProduktDziennik_currentIndexChanged(0);
+    }
+}
+
+// Wczytywanie / zapisywanie danych
+void MainWindow::wczytajDaneZPlikow()
+{
+    // Profil
+    ProfilUzytkownika p;
+    if (PlikManager::wczytajProfil("profil.txt", p))
+    {
+        profil = p;
+    }
+
+    // Baza produktow
+    std::vector<Produkt> pb;
+    PlikManager::wczytajProdukty("produkty.txt", pb);
+    if (!pb.empty()) produkty = std::move(pb);
+
+    // Dziennik
+    PlikManager::wczytajDziennik("dziennik.txt", dziennik);
+}
+
+void MainWindow::zapiszDaneDoPlikow()
+{
+    PlikManager::zapiszProfil("profil.txt", profil);
+    PlikManager::zapiszProdukty("produkty.txt", produkty);
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
 }
 
 void MainWindow::on_comboProduktDziennik_currentIndexChanged(int index)
 {
+    if (aktualizujeUi) return;
+
     ui.comboJednostkaDziennik->clear();
 
     if (index < 0)
@@ -244,6 +314,24 @@ void MainWindow::odswiezDziennik()
     ustawProgress(ui.progressBialko, dziennik.procentBialka());
     ustawProgress(ui.progressWeglowodany, dziennik.procentWeglowodanow());
     ustawProgress(ui.progressTluszcz, dziennik.procentTluszczu());
+
+    // Jeżeli profil wczytany, ustaw limit kalorii
+    if (!profil.pobierzImie().empty())
+    {
+        // zabezpiecz przed reentry
+        aktualizujeUi = true;
+
+        dziennik.ustawLimitKalorii(profil.pobierzLimitKalorii());
+
+        // Wypelnij pola UI danymi profilu
+        ui.lineEditImie->setText(QString::fromStdString(profil.pobierzImie()));
+        ui.spinWiek->setValue(profil.pobierzWiek());
+        ui.doubleSpinWaga->setValue(profil.pobierzWage());
+        ui.doubleSpinWzrost->setValue(profil.pobierzWzrost());
+        ui.doubleSpinLimitKalorii->setValue(profil.pobierzLimitKalorii());
+
+        aktualizujeUi = false;
+    }
 }
 
 void MainWindow::on_buttonDodajDoDziennika_clicked()
@@ -299,6 +387,9 @@ void MainWindow::on_buttonDodajDoDziennika_clicked()
         return;
     }
 
+    // Autozapis dziennika po dodaniu
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
+
     odswiezDziennik();
 }
 
@@ -320,13 +411,62 @@ void MainWindow::on_buttonUsunZDziennika_clicked()
         return;
     }
 
+    // Autozapis dziennika po usunieciu
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
+
     odswiezDziennik();
 }
 
 void MainWindow::on_buttonWyczyscDziennik_clicked()
 {
     dziennik.wyczysc();
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
     odswiezDziennik();
+}
+
+void MainWindow::on_buttonDodajProdukt_clicked()
+{
+    const QString nazwa = ui.lineEditNazwaProduktu->text().trimmed();
+    const double kcal = ui.doubleSpinKalorie->value();
+    const double bialko = ui.doubleSpinBialko->value();
+    const double weg = ui.doubleSpinWeglowodany->value();
+    const double tluszcz = ui.doubleSpinTluszcze->value();
+
+    if (nazwa.isEmpty())
+    {
+        QMessageBox::warning(this, "Blad", "Nazwa produktu nie moze byc pusta.");
+        return;
+    }
+
+    if (!(std::isfinite(kcal) && kcal >= 0.0 && kcal <= 10000.0))
+    {
+        QMessageBox::warning(this, "Blad", "Niepoprawna wartosc kalorii.");
+        return;
+    }
+
+    if (!(std::isfinite(bialko) && bialko >= 0.0 && bialko <= 1000.0) ||
+        !(std::isfinite(weg) && weg >= 0.0 && weg <= 1000.0) ||
+        !(std::isfinite(tluszcz) && tluszcz >= 0.0 && tluszcz <= 1000.0))
+    {
+        QMessageBox::warning(this, "Blad", "Niepoprawne wartosci makroskladnikow.");
+        return;
+    }
+
+    Produkt p(nazwa.toStdString(), Makroskladniki{ kcal, bialko, weg, tluszcz });
+    // produkt ma domyslna jednostke g
+    produkty.push_back(p);
+
+    const int idx = static_cast<int>(produkty.size() - 1);
+    ui.comboProduktDziennik->addItem(nazwa, idx);
+
+    // ustaw na nowo i zaladuj jednostki
+    ui.comboProduktDziennik->setCurrentIndex(idx);
+    on_comboProduktDziennik_currentIndexChanged(idx);
+
+    // zapis bazy produktow
+    PlikManager::zapiszProdukty("produkty.txt", produkty);
+
+    QMessageBox::information(this, "Produkty", "Produkt dodany.");
 }
 
 QString MainWindow::komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) const
@@ -357,4 +497,60 @@ QString MainWindow::komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) cons
     default:
         return "Nieznany blad.";
     }
+}
+
+// Zapisz profil (walidacja + autozapis)
+void MainWindow::on_buttonZapiszProfil_clicked()
+{
+    const QString imie = ui.lineEditImie->text().trimmed();
+    const int wiek = ui.spinWiek->value();
+    const double waga = ui.doubleSpinWaga->value();
+    const double wzrost = ui.doubleSpinWzrost->value();
+    const double limit = ui.doubleSpinLimitKalorii->value();
+
+    if (imie.isEmpty())
+    {
+        QMessageBox::warning(this, "Blad", "Imie nie moze byc puste.");
+        return;
+    }
+
+    // dodatkowa walidacja warunkowa
+    if (wiek < 8 || wiek > 120)
+    {
+        QMessageBox::warning(this, "Blad", "Wiek poza zakresem (8-120). ");
+        return;
+    }
+
+    if (waga < 20.0 || waga > 300.0)
+    {
+        QMessageBox::warning(this, "Blad", "Waga poza zakresem (20-300 kg). ");
+        return;
+    }
+
+    if (wzrost < 50.0 || wzrost > 250.0)
+    {
+        QMessageBox::warning(this, "Blad", "Wzrost poza zakresem (50-250 cm). ");
+        return;
+    }
+
+    if (limit < 800.0 || limit > 10000.0)
+    {
+        QMessageBox::warning(this, "Blad", "Limit kalorii poza zakresem (800-10000). ");
+        return;
+    }
+
+    profil.ustawImie(imie.toStdString());
+    profil.ustawWiek(wiek);
+    profil.ustawWage(waga);
+    profil.ustawWzrost(wzrost);
+    profil.ustawLimitKalorii(limit);
+
+    // Autozapis profilu
+    PlikManager::zapiszProfil("profil.txt", profil);
+
+    // Ustaw limit w dzienniku i zapisz
+    dziennik.ustawLimitKalorii(limit);
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
+
+    QMessageBox::information(this, "Profil", "Profil zapisany.");
 }
