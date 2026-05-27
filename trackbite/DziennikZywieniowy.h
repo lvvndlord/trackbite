@@ -3,10 +3,18 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+
 #include "TypyZywieniowe.h"
 
-// Jedna pozycja w dzienniku, np.:
-// "Ser żółty, 2 plastry, 40 g".
+enum class PoraPosilku
+{
+    Sniadanie,
+    DrugieSniadanie,
+    Obiad,
+    Kolacja,
+    Przekaski
+};
+
 class PozycjaDziennika final : public IMakroObliczalny
 {
 public:
@@ -14,7 +22,8 @@ public:
         const std::string& nazwaProduktu,
         double ilosc,
         const JednostkaProduktu& jednostka,
-        const Makroskladniki& makroNa100g
+        const Makroskladniki& makroNa100g,
+        PoraPosilku poraPosilku
     );
 
     const std::string& pobierzNazweProduktu() const;
@@ -22,6 +31,7 @@ public:
     const JednostkaProduktu& pobierzJednostke() const;
     double pobierzGramy() const;
     const Makroskladniki& pobierzMakroNa100g() const;
+    PoraPosilku pobierzPorePosilku() const;
 
     Makroskladniki obliczMakro() const override;
 
@@ -30,6 +40,7 @@ private:
     double ilosc;
     JednostkaProduktu jednostka;
     Makroskladniki makroNa100g;
+    PoraPosilku poraPosilku;
 };
 
 class DziennikZywieniowy
@@ -55,7 +66,8 @@ public:
         double kalorieNa100g,
         double bialkoNa100g,
         double weglowodanyNa100g,
-        double tluszczNa100g
+        double tluszczNa100g,
+        PoraPosilku poraPosilku
     );
 
     bool usunPozycje(std::size_t indeks);
@@ -63,7 +75,9 @@ public:
 
     const std::vector<PozycjaDziennika>& pobierzPozycje() const;
 
+    std::vector<PozycjaDziennika> pobierzPozycjeDlaPory(PoraPosilku pora) const;
     Makroskladniki obliczSume() const;
+    Makroskladniki obliczSumeDlaPory(PoraPosilku pora) const;
 
     bool ustawLimitKalorii(double limitKalorii);
     bool ustawLimityDzienne(const Makroskladniki& limity);

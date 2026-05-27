@@ -20,13 +20,21 @@ PozycjaDziennika::PozycjaDziennika(
     const std::string& nazwaProduktu,
     double ilosc,
     const JednostkaProduktu& jednostka,
-    const Makroskladniki& makroNa100g
+    const Makroskladniki& makroNa100g,
+    PoraPosilku poraPosilku
 )
     : nazwaProduktu(nazwaProduktu),
     ilosc(ilosc),
     jednostka(jednostka),
-    makroNa100g(makroNa100g)
-{}
+    makroNa100g(makroNa100g),
+    poraPosilku(poraPosilku)
+{
+}
+
+PoraPosilku PozycjaDziennika::pobierzPorePosilku() const
+{
+    return poraPosilku;
+}
 
 const std::string& PozycjaDziennika::pobierzNazweProduktu() const
 {
@@ -69,7 +77,8 @@ DziennikZywieniowy::WynikOperacji DziennikZywieniowy::dodajPozycje(
     double kalorieNa100g,
     double bialkoNa100g,
     double weglowodanyNa100g,
-    double tluszczNa100g
+    double tluszczNa100g,
+    PoraPosilku poraPosilku
 )
 {
     const Makroskladniki makroNa100g{
@@ -87,7 +96,14 @@ DziennikZywieniowy::WynikOperacji DziennikZywieniowy::dodajPozycje(
         return wynikWalidacji;
     }
 
-    pozycje.emplace_back(nazwaProduktu, ilosc, jednostka, makroNa100g);
+    pozycje.emplace_back(
+        nazwaProduktu,
+        ilosc,
+        jednostka,
+        makroNa100g,
+        poraPosilku
+    );
+
     return WynikOperacji::Sukces;
 }
 
@@ -100,6 +116,36 @@ bool DziennikZywieniowy::usunPozycje(std::size_t indeks)
 
     pozycje.erase(pozycje.begin() + static_cast<std::ptrdiff_t>(indeks));
     return true;
+}
+
+std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(PoraPosilku pora) const
+{
+    std::vector<PozycjaDziennika> wynik;
+
+    for (const PozycjaDziennika& pozycja : pozycje)
+    {
+        if (pozycja.pobierzPorePosilku() == pora)
+        {
+            wynik.push_back(pozycja);
+        }
+    }
+
+    return wynik;
+}
+
+Makroskladniki DziennikZywieniowy::obliczSumeDlaPory(PoraPosilku pora) const
+{
+    Makroskladniki suma;
+
+    for (const PozycjaDziennika& pozycja : pozycje)
+    {
+        if (pozycja.pobierzPorePosilku() == pora)
+        {
+            suma += pozycja.obliczMakro();
+        }
+    }
+
+    return suma;
 }
 
 void DziennikZywieniowy::wyczysc()
