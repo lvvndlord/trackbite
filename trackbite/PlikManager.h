@@ -2,43 +2,19 @@
 
 #include <string>
 #include <vector>
+#include "Produkt.h"
+#include "ProfilUzytkownika.h"
+#include "DziennikZywieniowy.h"
 
-// Menedżer do obsługi operacji na plikach
 class PlikManager
 {
 public:
-	// Typy plików wspierane
-	enum class TypPliku
-	{
-		TekstowyProdukt,
-		TekstowyProfil,
-		TekstowyDziennik
-	};
+	static bool zapiszProdukty(const std::string& sciezka, const std::vector<Produkt>& produkty);
+	static bool wczytajProdukty(const std::string& sciezka, std::vector<Produkt>& produkty);
 
-	PlikManager();
+	static bool zapiszProfil(const std::string& sciezka, const ProfilUzytkownika& profil);
+	static bool wczytajProfil(const std::string& sciezka, ProfilUzytkownika& profil);
 
-	// Odczyt pliku tekstowego
-	static bool czytajPlik(const std::string& sciezka, std::vector<std::string>& linie);
-
-	// Zapis pliku tekstowego
-	static bool piszzPlik(const std::string& sciezka, const std::vector<std::string>& linie);
-
-	// Czy plik istnieje
-	static bool czyPlikIstnieje(const std::string& sciezka);
-
-	// Usunięcie pliku
-	static bool usunPlik(const std::string& sciezka);
-
-	// Pobranie domyślnego katalogu dla danych
-	static std::string pobierzKatalogDanych();
-
-	// Walidacja ścieżki pliku
-	static bool czySciezkaPoprawna(const std::string& sciezka);
-
-private:
-	static const std::string KATALOG_DANYCH;
-
-	// Funkcje pomocnicze
-	static std::string pobierzRozszerzeniePliku(const std::string& sciezka);
-	static bool czyRozszerzeniePrawidlowe(const std::string& rozszerzenie);
+	static bool zapiszDziennik(const std::string& sciezka, const DziennikZywieniowy& dziennik);
+	static bool wczytajDziennik(const std::string& sciezka, DziennikZywieniowy& dziennik);
 };

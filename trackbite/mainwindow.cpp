@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget* parent)
     aktualnaData(QDate::currentDate())
 {
     ui.setupUi(this);
+    wczytajDaneZPlikow();
     setStyleSheet(R"(
     QMainWindow {
         background: #f5f6f8;
@@ -218,6 +219,7 @@ QScrollBar::sub-page:vertical {
 
 MainWindow::~MainWindow()
 {
+    zapiszDaneDoPlikow();
 }
 
 void MainWindow::ustawDziennikGui()
@@ -540,6 +542,32 @@ void MainWindow::dodajProduktTestowyDoPory(PoraPosilku pora)
     odswiezDziennik();
 }
 
+// Wczytywanie / zapisywanie danych
+void MainWindow::wczytajDaneZPlikow()
+{
+    // Profil
+    ProfilUzytkownika p;
+    if (PlikManager::wczytajProfil("profil.txt", p))
+    {
+        profil = p;
+    }
+
+    // Baza produktow
+    std::vector<Produkt> pb;
+    PlikManager::wczytajProdukty("produkty.txt", pb);
+    if (!pb.empty()) produkty = std::move(pb);
+
+    // Dziennik
+    PlikManager::wczytajDziennik("dziennik.txt", dziennik);
+}
+
+void MainWindow::zapiszDaneDoPlikow()
+{
+    PlikManager::zapiszProfil("profil.txt", profil);
+    PlikManager::zapiszProdukty("produkty.txt", produkty);
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
+}
+
 void MainWindow::on_buttonDodajSniadanie_clicked()
 {
     dodajProduktTestowyDoPory(PoraPosilku::Sniadanie);
@@ -606,4 +634,60 @@ QString MainWindow::komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) cons
     default:
         return "Nieznany blad.";
     }
+}
+
+// Zapisz profil (walidacja + autozapis)
+void MainWindow::on_buttonZapiszProfil_clicked()
+{
+    const QString imie = ui.lineEditImie->text().trimmed();
+    const int wiek = ui.spinWiek->value();
+    const double waga = ui.doubleSpinWaga->value();
+    const double wzrost = ui.doubleSpinWzrost->value();
+    const double limit = ui.doubleSpinLimitKalorii->value();
+
+    if (imie.isEmpty())
+    {
+        QMessageBox::warning(this, "Blad", "Imie nie moze byc puste.");
+        return;
+    }
+
+    // dodatkowa walidacja warunkowa
+    if (wiek < 8 || wiek > 120)
+    {
+        QMessageBox::warning(this, "Blad", "Wiek poza zakresem (8-120). ");
+        return;
+    }
+
+    if (waga < 20.0 || waga > 300.0)
+    {
+        QMessageBox::warning(this, "Blad", "Waga poza zakresem (20-300 kg). ");
+        return;
+    }
+
+    if (wzrost < 50.0 || wzrost > 250.0)
+    {
+        QMessageBox::warning(this, "Blad", "Wzrost poza zakresem (50-250 cm). ");
+        return;
+    }
+
+    if (limit < 800.0 || limit > 10000.0)
+    {
+        QMessageBox::warning(this, "Blad", "Limit kalorii poza zakresem (800-10000). ");
+        return;
+    }
+
+    profil.ustawImie(imie.toStdString());
+    profil.ustawWiek(wiek);
+    profil.ustawWage(waga);
+    profil.ustawWzrost(wzrost);
+    profil.ustawLimitKalorii(limit);
+
+    // Autozapis profilu
+    PlikManager::zapiszProfil("profil.txt", profil);
+
+    // Ustaw limit w dzienniku i zapisz
+    dziennik.ustawLimitKalorii(limit);
+    PlikManager::zapiszDziennik("dziennik.txt", dziennik);
+
+    QMessageBox::information(this, "Profil", "Profil zapisany.");
 }
