@@ -215,6 +215,8 @@ QScrollBar::sub-page:vertical {
 
     ustawDziennikGui();
     odswiezDziennik();
+
+    odswiezTabeleProduktow();
 }
 
 MainWindow::~MainWindow()
@@ -545,26 +547,47 @@ void MainWindow::dodajProduktTestowyDoPory(PoraPosilku pora)
 // Wczytywanie / zapisywanie danych
 void MainWindow::wczytajDaneZPlikow()
 {
-    // Profil
     ProfilUzytkownika p;
     if (PlikManager::wczytajProfil("profil.txt", p))
     {
         profil = p;
     }
 
-    // Baza produktow
-    std::vector<Produkt> pb;
+    // Ładowanie bazy przez Twoją klasę!
+    vector<Produkt> pb;
     PlikManager::wczytajProdukty("produkty.txt", pb);
-    if (!pb.empty()) produkty = std::move(pb);
+    if (pb.empty())
+    {
+        bazaProduktow.dodajProdukt(Produkt("Piers z kurczaka", Makroskladniki{ 165.0, 31.0, 0.0, 3.6 }));
+        bazaProduktow.dodajProdukt(Produkt("Ryz bialy", Makroskladniki{ 350.0, 7.0, 79.0, 1.0 }));
+        bazaProduktow.dodajProdukt(Produkt("Jajko", Makroskladniki{ 143.0, 12.6, 0.7, 9.5 }));
+        bazaProduktow.dodajProdukt(Produkt("Banan", Makroskladniki{ 89.0, 1.1, 22.8, 0.3 }));
+        bazaProduktow.dodajProdukt(Produkt("Twarog chudy", Makroskladniki{ 86.0, 18.0, 3.5, 0.5 }));
+        bazaProduktow.dodajProdukt(Produkt("Oliwa z oliwek", Makroskladniki{ 884.0, 0.0, 0.0, 100.0 }));
+        bazaProduktow.dodajProdukt(Produkt("Platki owsiane", Makroskladniki{ 370.0, 13.0, 62.0, 7.0 }));
+        bazaProduktow.dodajProdukt(Produkt("Jablko", Makroskladniki{ 52.0, 0.3, 14.0, 0.2 }));
+        bazaProduktow.dodajProdukt(Produkt("Chleb zytni", Makroskladniki{ 259.0, 6.5, 48.0, 1.8 }));
+        bazaProduktow.dodajProdukt(Produkt("Maslo orzechowe", Makroskladniki{ 588.0, 25.0, 20.0, 50.0 }));
 
-    // Dziennik
+        // Od razu zapisujemy do pliku, żeby baza została utrwalona
+        PlikManager::zapiszProdukty("produkty.txt", bazaProduktow.pobierzWszystkie());
+    }
+    else
+    {
+        // Jeśli plik nie był pusty, normalnie przepisujemy produkty do Twojej bazy
+        for (const auto& prod : pb) {
+            bazaProduktow.dodajProdukt(prod);
+        }
+    }
+
     PlikManager::wczytajDziennik("dziennik.txt", dziennik);
 }
 
 void MainWindow::zapiszDaneDoPlikow()
 {
     PlikManager::zapiszProfil("profil.txt", profil);
-    PlikManager::zapiszProdukty("produkty.txt", produkty);
+    // Zapisywanie bazy przez Twoją klasę!
+    PlikManager::zapiszProdukty("produkty.txt", bazaProduktow.pobierzWszystkie());
     PlikManager::zapiszDziennik("dziennik.txt", dziennik);
 }
 
@@ -690,4 +713,108 @@ void MainWindow::on_buttonZapiszProfil_clicked()
     PlikManager::zapiszDziennik("dziennik.txt", dziennik);
 
     QMessageBox::information(this, "Profil", "Profil zapisany.");
+}
+// --- FUNKCJE ZAKŁADKI PRODUKTY ---
+
+void MainWindow::odswiezTabeleProduktow()
+{
+    ui.tableProdukty->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui.tableProdukty->setSelectionMode(QAbstractItemView::SingleSelection);
+    ui.tableProdukty->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    ui.tableProdukty->setRowCount(0);
+
+    // Użycie Twojej funkcji: pobierzWszystkie()
+    vector<Produkt> wszystkie = bazaProduktow.pobierzWszystkie();
+
+    for (size_t i = 0; i < wszystkie.size(); ++i)
+    {
+        ui.tableProdukty->insertRow(i);
+
+        QString nazwa = QString::fromStdString(wszystkie[i].pobierzNazwe());
+        Makroskladniki makro = wszystkie[i].pobierzMakroNa100g();
+
+        ui.tableProdukty->setItem(i, 0, new QTableWidgetItem(nazwa));
+        ui.tableProdukty->setItem(i, 1, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
+        ui.tableProdukty->setItem(i, 2, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
+        ui.tableProdukty->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
+        ui.tableProdukty->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
+    }
+}
+
+void MainWindow::on_buttonDodajProdukt_clicked()
+{
+    string nazwa = ui.lineEditNazwaProduktu->text().trimmed().toStdString();
+    double kcal = ui.doubleSpinKalorie->value();
+    double bialko = ui.doubleSpinBialko->value();
+    double wegle = ui.doubleSpinWeglowodany->value();
+    double tluszcz = ui.doubleSpinTluszcze->value();
+
+    if (nazwa.empty() || nazwa == "Nazwa produktu")
+    {
+        QMessageBox::warning(this, "Błąd", "Podaj prawidłową nazwę produktu!");
+        return;
+    }
+
+    Makroskladniki noweMakro{ kcal, bialko, wegle, tluszcz };
+    Produkt nowyProdukt(nazwa, noweMakro);
+
+    if (nowyProdukt.czyPoprawny())
+    {
+        // Użycie Twojej funkcji: dodajProdukt()
+        bazaProduktow.dodajProdukt(nowyProdukt);
+        zapiszDaneDoPlikow();
+        odswiezTabeleProduktow();
+
+        QMessageBox::information(this, "Sukces", "Dodano nowy produkt do bazy!");
+    }
+    else
+    {
+        QMessageBox::warning(this, "Błąd", "Wprowadzone dane produktu są niepoprawne!");
+    }
+}
+
+void MainWindow::on_buttonUsunProdukt_clicked()
+{
+    int zaznaczonyWiersz = ui.tableProdukty->currentRow();
+
+    // Użycie Twojej funkcji: usunProduktPoIndeksie()
+    if (bazaProduktow.usunProduktPoIndeksie(zaznaczonyWiersz))
+    {
+        zapiszDaneDoPlikow();
+        odswiezTabeleProduktow();
+        QMessageBox::information(this, "Sukces", "Produkt został usunięty.");
+    }
+    else
+    {
+        QMessageBox::warning(this, "Błąd", "Najpierw kliknij w produkt na liście, który chcesz usunąć!");
+    }
+}
+
+void MainWindow::on_buttonSzukajProduktu_clicked()
+{
+    string szukanaFraza = ui.lineEditSzukajProduktu->text().trimmed().toStdString();
+
+    if (szukanaFraza.empty() || szukanaFraza == "Szukaj produktu") {
+        odswiezTabeleProduktow(); // Resetujemy widok na wszystkie
+        return;
+    }
+
+    // Użycie Twojej funkcji: wyszukajProdukt()
+    vector<Produkt> znalezione = bazaProduktow.wyszukajProdukt(szukanaFraza);
+
+    ui.tableProdukty->setRowCount(0);
+
+    for (size_t i = 0; i < znalezione.size(); ++i)
+    {
+        ui.tableProdukty->insertRow(i);
+        QString nazwa = QString::fromStdString(znalezione[i].pobierzNazwe());
+        Makroskladniki makro = znalezione[i].pobierzMakroNa100g();
+
+        ui.tableProdukty->setItem(i, 0, new QTableWidgetItem(nazwa));
+        ui.tableProdukty->setItem(i, 1, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
+        ui.tableProdukty->setItem(i, 2, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
+        ui.tableProdukty->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
+        ui.tableProdukty->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
+    }
 }

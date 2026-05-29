@@ -7,6 +7,7 @@
 #include "ui_mainwindow.h"
 #include "DziennikZywieniowy.h"
 #include "Produkt.h"
+#include "BazaProduktow.h"
 #include "PlikManager.h"
 #include "ProfilUzytkownika.h"
 
@@ -32,15 +33,20 @@ private slots:
     void on_buttonDodajPrzekaski_clicked();
 
     void on_buttonZapiszProfil_clicked();
+    void on_buttonDodajProdukt_clicked();
+    void on_buttonSzukajProduktu_clicked();
+    void on_buttonUsunProdukt_clicked();
 
 private:
     Ui::MainWindowClass ui;
 
     DziennikZywieniowy dziennik;
-    std::vector<Produkt> produkty;
+    BazaProduktow bazaProduktow;
     ProfilUzytkownika profil;
     QDate aktualnaData;
 
+
+    void odswiezTabeleProduktow();
     void ustawDziennikGui();
     void odswiezDziennik();
 

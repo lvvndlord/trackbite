@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget_1">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="dziennikTab">
        <attribute name="title">
@@ -241,8 +241,8 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-338</y>
-             <width>941</width>
+             <y>0</y>
+             <width>944</width>
              <height>784</height>
             </rect>
            </property>
@@ -1242,141 +1242,154 @@
           <string>Tłuszcze / 100g</string>
          </property>
         </widget>
+        <widget class="QPushButton" name="buttonUsunProdukt">
+         <property name="geometry">
+          <rect>
+           <x>260</x>
+           <y>150</y>
+           <width>101</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Usuń produkt</string>
+         </property>
+        </widget>
        </widget>
       </widget>
-		 <widget class="QWidget" name="profilTab">
-			 <attribute name="title">
-				 <string>Profil</string>
-			 </attribute>
-			 <widget class="QLineEdit" name="lineEditImie">
-				 <property name="geometry">
-					 <rect>
-						 <x>30</x>
-						 <y>40</y>
-						 <width>113</width>
-						 <height>24</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Imię</string>
-				 </property>
-			 </widget>
-			 <widget class="QSpinBox" name="spinWiek">
-				 <property name="geometry">
-					 <rect>
-						 <x>90</x>
-						 <y>70</y>
-						 <width>55</width>
-						 <height>22</height>
-					 </rect>
-				 </property>
-			 </widget>
-			 <widget class="QLabel" name="labelWiek">
-				 <property name="geometry">
-					 <rect>
-						 <x>30</x>
-						 <y>70</y>
-						 <width>49</width>
-						 <height>16</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Wiek</string>
-				 </property>
-			 </widget>
-			 <widget class="QDoubleSpinBox" name="doubleSpinWaga">
-				 <property name="geometry">
-					 <rect>
-						 <x>90</x>
-						 <y>100</y>
-						 <width>70</width>
-						 <height>22</height>
-					 </rect>
-				 </property>
-			 </widget>
-			 <widget class="QLabel" name="labelWaga">
-				 <property name="geometry">
-					 <rect>
-						 <x>30</x>
-						 <y>100</y>
-						 <width>49</width>
-						 <height>16</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Waga</string>
-				 </property>
-			 </widget>
-			 <widget class="QDoubleSpinBox" name="doubleSpinWzrost">
-				 <property name="geometry">
-					 <rect>
-						 <x>90</x>
-						 <y>130</y>
-						 <width>70</width>
-						 <height>22</height>
-					 </rect>
-				 </property>
-			 </widget>
-			 <widget class="QLabel" name="labelWzrost">
-				 <property name="geometry">
-					 <rect>
-						 <x>20</x>
-						 <y>130</y>
-						 <width>49</width>
-						 <height>16</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Wzrost</string>
-				 </property>
-			 </widget>
-			 <widget class="QDoubleSpinBox" name="doubleSpinLimitKalorii">
-				 <property name="geometry">
-					 <rect>
-						 <x>140</x>
-						 <y>170</y>
-						 <width>70</width>
-						 <height>22</height>
-					 </rect>
-				 </property>
-			 </widget>
-			 <widget class="QLabel" name="labelLimitKalorii">
-				 <property name="geometry">
-					 <rect>
-						 <x>10</x>
-						 <y>170</y>
-						 <width>121</width>
-						 <height>16</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Dzienny limit kalorii</string>
-				 </property>
-			 </widget>
-			 <widget class="QPushButton" name="buttonZapiszProfil">
-				 <property name="geometry">
-					 <rect>
-						 <x>70</x>
-						 <y>200</y>
-						 <width>101</width>
-						 <height>31</height>
-					 </rect>
-				 </property>
-				 <property name="text">
-					 <string>Zapisz profil</string>
-				 </property>
-			 </widget>
-		 </widget>
-	 </widget>
- </item>
-</layout>
-</widget>
+      <widget class="QWidget" name="profilTab">
+       <attribute name="title">
+        <string>Profil</string>
+       </attribute>
+       <widget class="QLineEdit" name="lineEditImie">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>40</y>
+          <width>113</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Imię</string>
+        </property>
+       </widget>
+       <widget class="QSpinBox" name="spinWiek">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>70</y>
+          <width>55</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelWiek">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>70</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Wiek</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="doubleSpinWaga">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>100</y>
+          <width>70</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelWaga">
+        <property name="geometry">
+         <rect>
+          <x>30</x>
+          <y>100</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Waga</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="doubleSpinWzrost">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>130</y>
+          <width>70</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelWzrost">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>130</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Wzrost</string>
+        </property>
+       </widget>
+       <widget class="QDoubleSpinBox" name="doubleSpinLimitKalorii">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>170</y>
+          <width>70</width>
+          <height>22</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelLimitKalorii">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>170</y>
+          <width>121</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Dzienny limit kalorii</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="buttonZapiszProfil">
+        <property name="geometry">
+         <rect>
+          <x>70</x>
+          <y>200</y>
+          <width>101</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Zapisz profil</string>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>997</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>
