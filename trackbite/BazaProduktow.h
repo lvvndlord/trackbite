@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 #include <string>
 #include "Produkt.h"
@@ -16,4 +15,7 @@ public:
     bool usunProduktPoIndeksie(int indeks);
     vector<Produkt> wyszukajProdukt(const string& fraza) const;
     vector<Produkt> pobierzWszystkie() const;
+
+    void przelaczUlubiony(const string& nazwa);
+    vector<Produkt> pobierzUlubione() const;
 };

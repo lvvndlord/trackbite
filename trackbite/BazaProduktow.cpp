@@ -1,6 +1,6 @@
 #include "BazaProduktow.h"
-#include <algorithm> // Do użycia funkcji transform
-#include <cctype>    // Do użycia funkcji tolower
+#include <algorithm>
+#include <cctype>
 
 using namespace std;
 
@@ -29,16 +29,13 @@ bool BazaProduktow::usunProduktPoIndeksie(int indeks) {
 vector<Produkt> BazaProduktow::wyszukajProdukt(const string& fraza) const {
     vector<Produkt> wyniki;
 
-    // 1. Zamieniamy wpisaną przez użytkownika frazę na małe litery
     string frazaMale = fraza;
     transform(frazaMale.begin(), frazaMale.end(), frazaMale.begin(), ::tolower);
 
     for (const auto& p : listaProduktow) {
-        // 2. Pobieramy nazwę aktualnie sprawdzanego produktu i też zamieniamy na małe litery
         string nazwaMale = p.pobierzNazwe();
         transform(nazwaMale.begin(), nazwaMale.end(), nazwaMale.begin(), ::tolower);
 
-        // 3. Sprawdzamy, czy fraza (z małych liter) znajduje się w nazwie (z małych liter)
         if (nazwaMale.find(frazaMale) != string::npos) {
             wyniki.push_back(p);
         }
@@ -48,4 +45,23 @@ vector<Produkt> BazaProduktow::wyszukajProdukt(const string& fraza) const {
 
 vector<Produkt> BazaProduktow::pobierzWszystkie() const {
     return listaProduktow;
+}
+
+void BazaProduktow::przelaczUlubiony(const string& nazwa) {
+    for (auto& p : listaProduktow) {
+        if (p.pobierzNazwe() == nazwa) {
+            p.ustawUlubiony(!p.czyUlubiony());
+            break;
+        }
+    }
+}
+
+vector<Produkt> BazaProduktow::pobierzUlubione() const {
+    vector<Produkt> ulubione;
+    for (const auto& p : listaProduktow) {
+        if (p.czyUlubiony()) {
+            ulubione.push_back(p);
+        }
+    }
+    return ulubione;
 }

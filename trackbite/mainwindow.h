@@ -11,6 +11,8 @@
 #include "PlikManager.h"
 #include "ProfilUzytkownika.h"
 
+using namespace std;
+
 class QTableWidget;
 class QLabel;
 
@@ -33,20 +35,19 @@ private slots:
     void on_buttonDodajPrzekaski_clicked();
 
     void on_buttonZapiszProfil_clicked();
+
+    // Nowe funkcje dla zakładki Produkty
     void on_buttonDodajProdukt_clicked();
-    void on_buttonSzukajProduktu_clicked();
-    void on_buttonUsunProdukt_clicked();
+    void on_lineEditSzukajProduktu_textChanged(const QString& arg1);
 
 private:
     Ui::MainWindowClass ui;
 
     DziennikZywieniowy dziennik;
-    BazaProduktow bazaProduktow;
+    BazaProduktow bazaProduktow; // Używamy Twojej klasy zamiast vectora!
     ProfilUzytkownika profil;
     QDate aktualnaData;
 
-
-    void odswiezTabeleProduktow();
     void ustawDziennikGui();
     void odswiezDziennik();
 
@@ -66,4 +67,8 @@ private:
     void zapiszDaneDoPlikow();
 
     QString komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) const;
+
+    // Funkcje pomocnicze dla UI produktów
+    void zaladujWektorDoTabeli(QTableWidget* tabela, const vector<Produkt>& prod);
+    void odswiezTabeleProduktow();
 };

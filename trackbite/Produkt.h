@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-using namespace std; // Zgodnie z poleceniem!
+using namespace std;
 
 class Produkt
 {
@@ -30,10 +30,14 @@ public:
 
     bool czyPoprawny() const;
 
+    bool czyUlubiony() const;
+    void ustawUlubiony(bool stan);
+
 private:
     string nazwa;
     Makroskladniki makroNa100g;
     vector<JednostkaProduktu> jednostki;
+    bool ulubiony;
 
     bool czyNazwaPoprawna(const string& tekst) const;
     bool czyMakroPoprawne(const Makroskladniki& makro) const;

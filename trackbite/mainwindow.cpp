@@ -14,7 +14,15 @@
 #include <algorithm>
 #include <QScrollBar>
 #include <QVBoxLayout>
+#include <QDialog>
+#include <QFormLayout>
+#include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QComboBox>
+#include <QCheckBox>
 
+using namespace std;
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
@@ -23,199 +31,40 @@ MainWindow::MainWindow(QWidget* parent)
     ui.setupUi(this);
     wczytajDaneZPlikow();
     setStyleSheet(R"(
-    QMainWindow {
-        background: #f5f6f8;
-    }
-
-    QTabWidget::pane {
-        border: none;
-        background: #f5f6f8;
-    }
-
-    QTabBar::tab {
-        background: #ffffff;
-        color: #222;
-        padding: 8px 18px;
-        border: 1px solid #e2e5ea;
-        border-bottom: none;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-        margin-right: 4px;
-    }
-
-    QTabBar::tab:selected {
-        background: #f5f6f8;
-        font-weight: 600;
-    }
-
-    QScrollArea {
-        border: none;
-        background: transparent;
-    }
-
-    QScrollArea > QWidget > QWidget {
-        background: transparent;
-    }
-
-    QFrame {
-        background: #ffffff;
-        border: 1px solid #e1e5ea;
-        border-radius: 12px;
-    }
-
-    QFrame QLabel {
-        background: transparent;
-        border: none;
-        color: #202124;
-    }
-
-    QPushButton {
-        background: #eaf6df;
-        color: #2e6b1f;
-        border: 1px solid #cfe8c2;
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-weight: 600;
-    }
-
-    QPushButton:hover {
-        background: #dff0d2;
-    }
-
-    QTableWidget {
-        background: #ffffff;
-        border: 1px solid #eef1f4;
-        border-radius: 8px;
-        gridline-color: transparent;
-        selection-background-color: #e8f5e9;
-        selection-color: #111;
-    }
-
-    QTableWidget::item {
-        padding: 6px;
-        border: none;
-    }
-
-    QHeaderView::section {
-        background: #f7f8fa;
-        color: #333;
-        border: none;
-        border-bottom: 1px solid #e1e5ea;
-        padding: 6px;
-        font-weight: 600;
-    }
-
-    QProgressBar {
-        border: none;
-        background: #edf0f3;
-        border-radius: 5px;
-        height: 8px;
-        text-align: center;
-    }
-
-    QProgressBar::chunk {
-        background: #6fba44;
-        border-radius: 5px;
-    }
-QFrame#frameStatusDnia {
-    background: #ffffff;
-    border: 1px solid #e1e5ea;
-    border-radius: 12px;
-}
-
-QFrame#frameStatZostalo,
-QFrame#frameStatSpozyto,
-QFrame#frameStatLimit {
-    background: #f8faf7;
-    border: 1px solid #e2eadf;
-    border-radius: 10px;
-}
-
-QLabel#labelTytulZostalo,
-QLabel#labelTytulSpozyto,
-QLabel#labelTytulLimit {
-    color: #6b7280;
-    font-size: 11px;
-    font-weight: 500;
-}
-
-QLabel#labelZostaloKalorii,
-QLabel#labelSpozytoKalorii,
-QLabel#labelLimitKalorii_2 {
-    color: #111827;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-QLabel#labelDataDnia {
-    font-size: 15px;
-    font-weight: 700;
-    color: #111827;
-}
-
-QPushButton#buttonPoprzedniDzien,
-QPushButton#buttonNastepnyDzien {
-    background: #eaf6df;
-    color: #2e6b1f;
-    border: 1px solid #cfe8c2;
-    border-radius: 8px;
-    font-weight: 700;
-}
-QFrame#frameStatZostalo {
-    background: #edf8e8;
-    border: 1px solid #cfe8c2;
-    border-radius: 10px;
-}
-
-QLabel#labelZostaloKalorii {
-    color: #2e7d32;
-    font-size: 17px;
-    font-weight: 800;
-}
-
-QScrollArea {
-    border: none;
-    background: transparent;
-}
-
-QScrollArea > QWidget > QWidget {
-    background: transparent;
-}
-
-QScrollBar:vertical {
-    background: transparent;
-    width: 8px;
-    margin: 4px 0 4px 0;
-}
-
-QScrollBar::handle:vertical {
-    background: #cfd6dd;
-    border-radius: 4px;
-    min-height: 40px;
-}
-
-QScrollBar::handle:vertical:hover {
-    background: #aeb8c2;
-}
-
-QScrollBar::add-line:vertical,
-QScrollBar::sub-line:vertical {
-    height: 0px;
-    background: none;
-    border: none;
-}
-
-QScrollBar::add-page:vertical,
-QScrollBar::sub-page:vertical {
-    background: transparent;
-}
-)");
+    QMainWindow { background: #f5f6f8; }
+    QTabWidget::pane { border: none; background: #f5f6f8; }
+    QTabBar::tab { background: #ffffff; color: #222; padding: 8px 18px; border: 1px solid #e2e5ea; border-bottom: none; border-top-left-radius: 8px; border-top-right-radius: 8px; margin-right: 4px; }
+    QTabBar::tab:selected { background: #f5f6f8; font-weight: 600; }
+    QScrollArea { border: none; background: transparent; }
+    QScrollArea > QWidget > QWidget { background: transparent; }
+    QFrame { background: #ffffff; border: 1px solid #e1e5ea; border-radius: 12px; }
+    QFrame QLabel { background: transparent; border: none; color: #202124; }
+    QPushButton { background: #eaf6df; color: #2e6b1f; border: 1px solid #cfe8c2; border-radius: 8px; padding: 6px 12px; font-weight: 600; }
+    QPushButton:hover { background: #dff0d2; }
+    QTableWidget { background: #ffffff; border: 1px solid #eef1f4; border-radius: 8px; gridline-color: transparent; selection-background-color: #e8f5e9; selection-color: #111; }
+    QTableWidget::item { padding: 6px; border: none; }
+    QHeaderView::section { background: #f7f8fa; color: #333; border: none; border-bottom: 1px solid #e1e5ea; padding: 6px; font-weight: 600; }
+    QProgressBar { border: none; background: #edf0f3; border-radius: 5px; height: 8px; text-align: center; }
+    QProgressBar::chunk { background: #6fba44; border-radius: 5px; }
+    QFrame#frameStatusDnia { background: #ffffff; border: 1px solid #e1e5ea; border-radius: 12px; }
+    QFrame#frameStatZostalo, QFrame#frameStatSpozyto, QFrame#frameStatLimit { background: #f8faf7; border: 1px solid #e2eadf; border-radius: 10px; }
+    QLabel#labelTytulZostalo, QLabel#labelTytulSpozyto, QLabel#labelTytulLimit { color: #6b7280; font-size: 11px; font-weight: 500; }
+    QLabel#labelZostaloKalorii, QLabel#labelSpozytoKalorii, QLabel#labelLimitKalorii_2 { color: #111827; font-size: 15px; font-weight: 700; }
+    QLabel#labelDataDnia { font-size: 15px; font-weight: 700; color: #111827; }
+    QPushButton#buttonPoprzedniDzien, QPushButton#buttonNastepnyDzien { background: #eaf6df; color: #2e6b1f; border: 1px solid #cfe8c2; border-radius: 8px; font-weight: 700; }
+    QFrame#frameStatZostalo { background: #edf8e8; border: 1px solid #cfe8c2; border-radius: 10px; }
+    QLabel#labelZostaloKalorii { color: #2e7d32; font-size: 17px; font-weight: 800; }
+    QScrollBar:vertical { background: transparent; width: 8px; margin: 4px 0 4px 0; }
+    QScrollBar::handle:vertical { background: #cfd6dd; border-radius: 4px; min-height: 40px; }
+    QScrollBar::handle:vertical:hover { background: #aeb8c2; }
+    QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; background: none; border: none; }
+    QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; }
+    )");
 
     dziennik.ustawLimityDzienne({ 2200.0, 120.0, 240.0, 70.0 });
 
     ustawDziennikGui();
     odswiezDziennik();
-
     odswiezTabeleProduktow();
 }
 
@@ -228,35 +77,19 @@ void MainWindow::ustawDziennikGui()
 {
     ui.scrollAreaDziennik->setWidgetResizable(true);
     ui.scrollAreaDziennik->setFrameShape(QFrame::NoFrame);
-
     ui.scrollAreaDziennik->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui.scrollAreaDziennik->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    ui.scrollAreaDziennik->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    ui.scrollAreaDziennik->setSizePolicy(
-        QSizePolicy::Expanding,
-        QSizePolicy::Expanding
-    );
-
-    if (ui.scrollAreaDziennik->widget() != nullptr)
-    {
-        ui.scrollAreaDziennik->widget()->setSizePolicy(
-            QSizePolicy::Expanding,
-            QSizePolicy::Minimum
-        );
+    if (ui.scrollAreaDziennik->widget() != nullptr) {
+        ui.scrollAreaDziennik->widget()->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     }
 
     ui.frameStatusDnia->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui.framePodsumowanieDolne->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui.scrollAreaDziennik->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    for (QFrame* frame : {
-        ui.frameSniadanie,
-        ui.frameDrugieSniadanie,
-        ui.frameObiad,
-        ui.frameKolacja,
-        ui.framePrzekaski
-        })
-    {
+    for (QFrame* frame : { ui.frameSniadanie, ui.frameDrugieSniadanie, ui.frameObiad, ui.frameKolacja, ui.framePrzekaski }) {
         frame->setMinimumHeight(64);
         frame->setMaximumHeight(QWIDGETSIZE_MAX);
         frame->setMinimumWidth(0);
@@ -266,13 +99,7 @@ void MainWindow::ustawDziennikGui()
 
     ustawTabelePosilkow();
 
-    for (QProgressBar* pasek : {
-        ui.progressKalorie,
-        ui.progressBialko,
-        ui.progressWeglowodany,
-        ui.progressTluszcz
-        })
-    {
+    for (QProgressBar* pasek : { ui.progressKalorie, ui.progressBialko, ui.progressWeglowodany, ui.progressTluszcz }) {
         pasek->setRange(0, 100);
         pasek->setValue(0);
         pasek->setTextVisible(true);
@@ -281,50 +108,38 @@ void MainWindow::ustawDziennikGui()
 
 void MainWindow::dopasujWysokoscTabeli(QTableWidget* tabela)
 {
-    if (tabela->rowCount() <= 0)
-    {
+    if (tabela->rowCount() <= 0) {
         tabela->setMinimumHeight(0);
         tabela->setMaximumHeight(0);
         return;
     }
-
     const int liczbaWierszy = tabela->rowCount();
     const int wysokoscNaglowka = tabela->horizontalHeader()->height();
     const int wysokoscWiersza = tabela->verticalHeader()->defaultSectionSize();
-
     const int wysokosc = wysokoscNaglowka + liczbaWierszy * wysokoscWiersza + 10;
-
     tabela->setMinimumHeight(wysokosc);
     tabela->setMaximumHeight(wysokosc);
 }
 
 void MainWindow::ustawTabelePosilkow()
 {
-    auto ustawTabele = [](QTableWidget* tabela)
-        {
-            tabela->setColumnCount(7);
-            tabela->setHorizontalHeaderLabels(
-                { "Produkt", "Ilosc", "Gramy", "kcal", "Bialko", "Weglowodany", "Tluszcz" }
-            );
-
-            tabela->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-            tabela->horizontalHeader()->setFixedHeight(30);
-
-            tabela->verticalHeader()->setVisible(false);
-            tabela->verticalHeader()->setDefaultSectionSize(32);
-
-            tabela->setSelectionBehavior(QAbstractItemView::SelectRows);
-            tabela->setSelectionMode(QAbstractItemView::SingleSelection);
-            tabela->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-            tabela->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            tabela->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            tabela->setShowGrid(false);
-            tabela->setAlternatingRowColors(true);
-
-            tabela->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-            tabela->setMinimumHeight(0);
-            tabela->setMaximumHeight(QWIDGETSIZE_MAX);
+    auto ustawTabele = [](QTableWidget* tabela) {
+        tabela->setColumnCount(7);
+        tabela->setHorizontalHeaderLabels({ "Produkt", "Ilosc", "Gramy", "kcal", "Bialko", "Weglowodany", "Tluszcz" });
+        tabela->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+        tabela->horizontalHeader()->setFixedHeight(30);
+        tabela->verticalHeader()->setVisible(false);
+        tabela->verticalHeader()->setDefaultSectionSize(32);
+        tabela->setSelectionBehavior(QAbstractItemView::SelectRows);
+        tabela->setSelectionMode(QAbstractItemView::SingleSelection);
+        tabela->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        tabela->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        tabela->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        tabela->setShowGrid(false);
+        tabela->setAlternatingRowColors(true);
+        tabela->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        tabela->setMinimumHeight(0);
+        tabela->setMaximumHeight(QWIDGETSIZE_MAX);
         };
 
     ustawTabele(ui.tableSniadanie);
@@ -334,171 +149,70 @@ void MainWindow::ustawTabelePosilkow()
     ustawTabele(ui.tablePrzekaski);
 }
 
-void MainWindow::wypelnijTabeleDlaPory(
-    PoraPosilku pora,
-    QTableWidget* tabela,
-    QLabel* labelKcal
-)
+void MainWindow::wypelnijTabeleDlaPory(PoraPosilku pora, QTableWidget* tabela, QLabel* labelKcal)
 {
-    const std::vector<PozycjaDziennika> pozycje =
-        dziennik.pobierzPozycjeDlaPory(pora);
-
+    const vector<PozycjaDziennika> pozycje = dziennik.pobierzPozycjeDlaPory(pora);
     const Makroskladniki sumaPory = dziennik.obliczSumeDlaPory(pora);
+    labelKcal->setText(QString("%1 kcal").arg(sumaPory.kalorie, 0, 'f', 0));
 
-    labelKcal->setText(
-        QString("%1 kcal").arg(sumaPory.kalorie, 0, 'f', 0)
-    );
-
-    if (pozycje.empty())
-    {
+    if (pozycje.empty()) {
         tabela->clearContents();
         tabela->setRowCount(0);
         tabela->setVisible(false);
         tabela->updateGeometry();
-
-        if (tabela->parentWidget() != nullptr)
-        {
-            tabela->parentWidget()->updateGeometry();
-        }
-
+        if (tabela->parentWidget() != nullptr) tabela->parentWidget()->updateGeometry();
         return;
     }
 
     tabela->setVisible(true);
     tabela->setRowCount(static_cast<int>(pozycje.size()));
 
-    for (int i = 0; i < static_cast<int>(pozycje.size()); ++i)
-    {
+    for (int i = 0; i < static_cast<int>(pozycje.size()); ++i) {
         const PozycjaDziennika& pozycja = pozycje[i];
         const Makroskladniki makro = pozycja.obliczMakro();
 
-        tabela->setItem(i, 0, new QTableWidgetItem(
-            QString::fromStdString(pozycja.pobierzNazweProduktu())
-        ));
-
-        tabela->setItem(i, 1, new QTableWidgetItem(
-            QString("%1 %2")
-            .arg(pozycja.pobierzIlosc(), 0, 'f', 2)
-            .arg(QString::fromStdString(pozycja.pobierzJednostke().nazwa))
-        ));
-
-        tabela->setItem(i, 2, new QTableWidgetItem(
-            QString::number(pozycja.pobierzGramy(), 'f', 0)
-        ));
-
-        tabela->setItem(i, 3, new QTableWidgetItem(
-            QString::number(makro.kalorie, 'f', 0)
-        ));
-
-        tabela->setItem(i, 4, new QTableWidgetItem(
-            QString::number(makro.bialko, 'f', 1)
-        ));
-
-        tabela->setItem(i, 5, new QTableWidgetItem(
-            QString::number(makro.weglowodany, 'f', 1)
-        ));
-
-        tabela->setItem(i, 6, new QTableWidgetItem(
-            QString::number(makro.tluszcz, 'f', 1)
-        ));
+        tabela->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(pozycja.pobierzNazweProduktu())));
+        tabela->setItem(i, 1, new QTableWidgetItem(QString("%1 %2").arg(pozycja.pobierzIlosc(), 0, 'f', 2).arg(QString::fromStdString(pozycja.pobierzJednostke().nazwa))));
+        tabela->setItem(i, 2, new QTableWidgetItem(QString::number(pozycja.pobierzGramy(), 'f', 0)));
+        tabela->setItem(i, 3, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
+        tabela->setItem(i, 4, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
+        tabela->setItem(i, 5, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
+        tabela->setItem(i, 6, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
     }
 
     dopasujWysokoscTabeli(tabela);
-
     tabela->updateGeometry();
-
-    if (tabela->parentWidget() != nullptr)
-    {
-        tabela->parentWidget()->updateGeometry();
-    }
+    if (tabela->parentWidget() != nullptr) tabela->parentWidget()->updateGeometry();
 }
 
 void MainWindow::odswiezDziennik()
 {
-    wypelnijTabeleDlaPory(
-        PoraPosilku::Sniadanie,
-        ui.tableSniadanie,
-        ui.labelKcalSniadanie
-    );
-
-    wypelnijTabeleDlaPory(
-        PoraPosilku::DrugieSniadanie,
-        ui.tableDrugieSniadanie,
-        ui.labelKcalDrugieSniadanie
-    );
-
-    wypelnijTabeleDlaPory(
-        PoraPosilku::Obiad,
-        ui.tableObiad,
-        ui.labelKcalObiad
-    );
-
-    wypelnijTabeleDlaPory(
-        PoraPosilku::Kolacja,
-        ui.tableKolacja,
-        ui.labelKcalKolacja
-    );
-
-    wypelnijTabeleDlaPory(
-        PoraPosilku::Przekaski,
-        ui.tablePrzekaski,
-        ui.labelKcalPrzekaski
-    );
+    wypelnijTabeleDlaPory(PoraPosilku::Sniadanie, ui.tableSniadanie, ui.labelKcalSniadanie);
+    wypelnijTabeleDlaPory(PoraPosilku::DrugieSniadanie, ui.tableDrugieSniadanie, ui.labelKcalDrugieSniadanie);
+    wypelnijTabeleDlaPory(PoraPosilku::Obiad, ui.tableObiad, ui.labelKcalObiad);
+    wypelnijTabeleDlaPory(PoraPosilku::Kolacja, ui.tableKolacja, ui.labelKcalKolacja);
+    wypelnijTabeleDlaPory(PoraPosilku::Przekaski, ui.tablePrzekaski, ui.labelKcalPrzekaski);
 
     const Makroskladniki suma = dziennik.obliczSume();
     const Makroskladniki limity = dziennik.pobierzLimityDzienne();
 
-    if (aktualnaData == QDate::currentDate())
-    {
-        ui.labelDataDnia->setText("Dzisiaj");
-    }
-    else if (aktualnaData == QDate::currentDate().addDays(-1))
-    {
-        ui.labelDataDnia->setText("Wczoraj");
-    }
-    else if (aktualnaData == QDate::currentDate().addDays(1))
-    {
-        ui.labelDataDnia->setText("Jutro");
-    }
-    else
-    {
-        ui.labelDataDnia->setText(aktualnaData.toString("dd.MM.yyyy"));
-    }
+    if (aktualnaData == QDate::currentDate()) { ui.labelDataDnia->setText("Dzisiaj"); }
+    else if (aktualnaData == QDate::currentDate().addDays(-1)) { ui.labelDataDnia->setText("Wczoraj"); }
+    else if (aktualnaData == QDate::currentDate().addDays(1)) { ui.labelDataDnia->setText("Jutro"); }
+    else { ui.labelDataDnia->setText(aktualnaData.toString("dd.MM.yyyy")); }
 
-    ui.labelLimitKalorii_2->setText(
-        QString("%1 kcal").arg(limity.kalorie, 0, 'f', 0)
-    );
+    ui.labelLimitKalorii_2->setText(QString("%1 kcal").arg(limity.kalorie, 0, 'f', 0));
+    ui.labelSpozytoKalorii->setText(QString("%1 kcal").arg(suma.kalorie, 0, 'f', 0));
+    ui.labelZostaloKalorii->setText(QString("%1 kcal").arg(dziennik.pozostaleKalorie(), 0, 'f', 0));
+    ui.labelSumaKalorii->setText(QString("Kalorie: %1").arg(suma.kalorie, 0, 'f', 0));
+    ui.labelSumaBialka->setText(QString("Bialko: %1 g").arg(suma.bialko, 0, 'f', 1));
+    ui.labelSumaWeglowodanow->setText(QString("Weglowodany: %1 g").arg(suma.weglowodany, 0, 'f', 1));
+    ui.labelSumaTluszczu->setText(QString("Tluszcz: %1 g").arg(suma.tluszcz, 0, 'f', 1));
 
-    ui.labelSpozytoKalorii->setText(
-        QString("%1 kcal").arg(suma.kalorie, 0, 'f', 0)
-    );
-
-    ui.labelZostaloKalorii->setText(
-        QString("%1 kcal").arg(dziennik.pozostaleKalorie(), 0, 'f', 0)
-    );
-
-    ui.labelSumaKalorii->setText(
-        QString("Kalorie: %1").arg(suma.kalorie, 0, 'f', 0)
-    );
-
-    ui.labelSumaBialka->setText(
-        QString("Bialko: %1 g").arg(suma.bialko, 0, 'f', 1)
-    );
-
-    ui.labelSumaWeglowodanow->setText(
-        QString("Weglowodany: %1 g").arg(suma.weglowodany, 0, 'f', 1)
-    );
-
-    ui.labelSumaTluszczu->setText(
-        QString("Tluszcz: %1 g").arg(suma.tluszcz, 0, 'f', 1)
-    );
-
-    auto ustawProgress = [](QProgressBar* pasek, int procent)
-        {
-            const int wartoscPaska = std::clamp(procent, 0, 100);
-
-            pasek->setValue(wartoscPaska);
-            pasek->setFormat(QString::number(procent) + "%");
+    auto ustawProgress = [](QProgressBar* pasek, int procent) {
+        const int wartoscPaska = clamp(procent, 0, 100);
+        pasek->setValue(wartoscPaska);
+        pasek->setFormat(QString::number(procent) + "%");
         };
 
     ustawProgress(ui.progressKalorie, dziennik.procentKalorii());
@@ -506,58 +220,36 @@ void MainWindow::odswiezDziennik()
     ustawProgress(ui.progressWeglowodany, dziennik.procentWeglowodanow());
     ustawProgress(ui.progressTluszcz, dziennik.procentTluszczu());
 
-    if (ui.scrollAreaDziennik->widget() != nullptr)
-    {
+    if (ui.scrollAreaDziennik->widget() != nullptr) {
         ui.scrollAreaDziennik->widget()->updateGeometry();
-
-        if (ui.scrollAreaDziennik->widget()->layout() != nullptr)
-        {
+        if (ui.scrollAreaDziennik->widget()->layout() != nullptr) {
             ui.scrollAreaDziennik->widget()->layout()->invalidate();
             ui.scrollAreaDziennik->widget()->layout()->activate();
         }
     }
-
     ui.scrollAreaDziennik->updateGeometry();
 }
 
 void MainWindow::dodajProduktTestowyDoPory(PoraPosilku pora)
 {
     const JednostkaProduktu jednostka{ "sztuka", 55.0 };
+    const DziennikZywieniowy::WynikOperacji wynik = dziennik.dodajPozycje("Jajko", 1.0, jednostka, 155.0, 13.0, 1.1, 11.0, pora);
 
-    const DziennikZywieniowy::WynikOperacji wynik = dziennik.dodajPozycje(
-        "Jajko",
-        1.0,
-        jednostka,
-        155.0,
-        13.0,
-        1.1,
-        11.0,
-        pora
-    );
-
-    if (wynik != DziennikZywieniowy::WynikOperacji::Sukces)
-    {
+    if (wynik != DziennikZywieniowy::WynikOperacji::Sukces) {
         QMessageBox::warning(this, "Blad danych", komunikatBledu(wynik));
         return;
     }
-
     odswiezDziennik();
 }
 
-// Wczytywanie / zapisywanie danych
 void MainWindow::wczytajDaneZPlikow()
 {
     ProfilUzytkownika p;
-    if (PlikManager::wczytajProfil("profil.txt", p))
-    {
-        profil = p;
-    }
+    if (PlikManager::wczytajProfil("profil.txt", p)) { profil = p; }
 
-    // Ładowanie bazy przez Twoją klasę!
     vector<Produkt> pb;
     PlikManager::wczytajProdukty("produkty.txt", pb);
-    if (pb.empty())
-    {
+    if (pb.empty()) {
         bazaProduktow.dodajProdukt(Produkt("Piers z kurczaka", Makroskladniki{ 165.0, 31.0, 0.0, 3.6 }));
         bazaProduktow.dodajProdukt(Produkt("Ryz bialy", Makroskladniki{ 350.0, 7.0, 79.0, 1.0 }));
         bazaProduktow.dodajProdukt(Produkt("Jajko", Makroskladniki{ 143.0, 12.6, 0.7, 9.5 }));
@@ -568,16 +260,10 @@ void MainWindow::wczytajDaneZPlikow()
         bazaProduktow.dodajProdukt(Produkt("Jablko", Makroskladniki{ 52.0, 0.3, 14.0, 0.2 }));
         bazaProduktow.dodajProdukt(Produkt("Chleb zytni", Makroskladniki{ 259.0, 6.5, 48.0, 1.8 }));
         bazaProduktow.dodajProdukt(Produkt("Maslo orzechowe", Makroskladniki{ 588.0, 25.0, 20.0, 50.0 }));
-
-        // Od razu zapisujemy do pliku, żeby baza została utrwalona
         PlikManager::zapiszProdukty("produkty.txt", bazaProduktow.pobierzWszystkie());
     }
-    else
-    {
-        // Jeśli plik nie był pusty, normalnie przepisujemy produkty do Twojej bazy
-        for (const auto& prod : pb) {
-            bazaProduktow.dodajProdukt(prod);
-        }
+    else {
+        for (const auto& prod : pb) { bazaProduktow.dodajProdukt(prod); }
     }
 
     PlikManager::wczytajDziennik("dziennik.txt", dziennik);
@@ -586,80 +272,32 @@ void MainWindow::wczytajDaneZPlikow()
 void MainWindow::zapiszDaneDoPlikow()
 {
     PlikManager::zapiszProfil("profil.txt", profil);
-    // Zapisywanie bazy przez Twoją klasę!
     PlikManager::zapiszProdukty("produkty.txt", bazaProduktow.pobierzWszystkie());
     PlikManager::zapiszDziennik("dziennik.txt", dziennik);
 }
 
-void MainWindow::on_buttonDodajSniadanie_clicked()
-{
-    dodajProduktTestowyDoPory(PoraPosilku::Sniadanie);
-}
-
-void MainWindow::on_buttonDodajDrugieSniadanie_clicked()
-{
-    dodajProduktTestowyDoPory(PoraPosilku::DrugieSniadanie);
-}
-
-void MainWindow::on_buttonDodajObiad_clicked()
-{
-    dodajProduktTestowyDoPory(PoraPosilku::Obiad);
-}
-
-void MainWindow::on_buttonDodajKolacja_clicked()
-{
-    dodajProduktTestowyDoPory(PoraPosilku::Kolacja);
-}
-
-void MainWindow::on_buttonDodajPrzekaski_clicked()
-{
-    dodajProduktTestowyDoPory(PoraPosilku::Przekaski);
-}
-
-void MainWindow::on_buttonPoprzedniDzien_clicked()
-{
-    aktualnaData = aktualnaData.addDays(-1);
-    odswiezDziennik();
-}
-
-void MainWindow::on_buttonNastepnyDzien_clicked()
-{
-    aktualnaData = aktualnaData.addDays(1);
-    odswiezDziennik();
-}
-
+void MainWindow::on_buttonDodajSniadanie_clicked() { dodajProduktTestowyDoPory(PoraPosilku::Sniadanie); }
+void MainWindow::on_buttonDodajDrugieSniadanie_clicked() { dodajProduktTestowyDoPory(PoraPosilku::DrugieSniadanie); }
+void MainWindow::on_buttonDodajObiad_clicked() { dodajProduktTestowyDoPory(PoraPosilku::Obiad); }
+void MainWindow::on_buttonDodajKolacja_clicked() { dodajProduktTestowyDoPory(PoraPosilku::Kolacja); }
+void MainWindow::on_buttonDodajPrzekaski_clicked() { dodajProduktTestowyDoPory(PoraPosilku::Przekaski); }
+void MainWindow::on_buttonPoprzedniDzien_clicked() { aktualnaData = aktualnaData.addDays(-1); odswiezDziennik(); }
+void MainWindow::on_buttonNastepnyDzien_clicked() { aktualnaData = aktualnaData.addDays(1); odswiezDziennik(); }
 
 QString MainWindow::komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) const
 {
-    switch (wynik)
-    {
-    case DziennikZywieniowy::WynikOperacji::Sukces:
-        return "Operacja wykonana poprawnie.";
-
-    case DziennikZywieniowy::WynikOperacji::PustaNazwa:
-        return "Nazwa produktu nie moze byc pusta.";
-
-    case DziennikZywieniowy::WynikOperacji::PustaJednostka:
-        return "Nazwa jednostki nie moze byc pusta.";
-
-    case DziennikZywieniowy::WynikOperacji::NiepoprawnaIlosc:
-        return "Ilosc musi byc wieksza od 0.";
-
-    case DziennikZywieniowy::WynikOperacji::NiepoprawnaJednostka:
-        return "Jednostka produktu ma niepoprawna wage w gramach.";
-
-    case DziennikZywieniowy::WynikOperacji::NiepoprawneMakro:
-        return "Dane makroskladnikow sa niepoprawne.";
-
-    case DziennikZywieniowy::WynikOperacji::NiepoprawnyLimit:
-        return "Limit dzienny jest niepoprawny.";
-
-    default:
-        return "Nieznany blad.";
+    switch (wynik) {
+    case DziennikZywieniowy::WynikOperacji::Sukces: return "Operacja wykonana poprawnie.";
+    case DziennikZywieniowy::WynikOperacji::PustaNazwa: return "Nazwa produktu nie moze byc pusta.";
+    case DziennikZywieniowy::WynikOperacji::PustaJednostka: return "Nazwa jednostki nie moze byc pusta.";
+    case DziennikZywieniowy::WynikOperacji::NiepoprawnaIlosc: return "Ilosc musi byc wieksza od 0.";
+    case DziennikZywieniowy::WynikOperacji::NiepoprawnaJednostka: return "Jednostka produktu ma niepoprawna wage w gramach.";
+    case DziennikZywieniowy::WynikOperacji::NiepoprawneMakro: return "Dane makroskladnikow sa niepoprawne.";
+    case DziennikZywieniowy::WynikOperacji::NiepoprawnyLimit: return "Limit dzienny jest niepoprawny.";
+    default: return "Nieznany blad.";
     }
 }
 
-// Zapisz profil (walidacja + autozapis)
 void MainWindow::on_buttonZapiszProfil_clicked()
 {
     const QString imie = ui.lineEditImie->text().trimmed();
@@ -668,36 +306,11 @@ void MainWindow::on_buttonZapiszProfil_clicked()
     const double wzrost = ui.doubleSpinWzrost->value();
     const double limit = ui.doubleSpinLimitKalorii->value();
 
-    if (imie.isEmpty())
-    {
-        QMessageBox::warning(this, "Blad", "Imie nie moze byc puste.");
-        return;
-    }
-
-    // dodatkowa walidacja warunkowa
-    if (wiek < 8 || wiek > 120)
-    {
-        QMessageBox::warning(this, "Blad", "Wiek poza zakresem (8-120). ");
-        return;
-    }
-
-    if (waga < 20.0 || waga > 300.0)
-    {
-        QMessageBox::warning(this, "Blad", "Waga poza zakresem (20-300 kg). ");
-        return;
-    }
-
-    if (wzrost < 50.0 || wzrost > 250.0)
-    {
-        QMessageBox::warning(this, "Blad", "Wzrost poza zakresem (50-250 cm). ");
-        return;
-    }
-
-    if (limit < 800.0 || limit > 10000.0)
-    {
-        QMessageBox::warning(this, "Blad", "Limit kalorii poza zakresem (800-10000). ");
-        return;
-    }
+    if (imie.isEmpty()) { QMessageBox::warning(this, "Blad", "Imie nie moze byc puste."); return; }
+    if (wiek < 8 || wiek > 120) { QMessageBox::warning(this, "Blad", "Wiek poza zakresem (8-120). "); return; }
+    if (waga < 20.0 || waga > 300.0) { QMessageBox::warning(this, "Blad", "Waga poza zakresem (20-300 kg). "); return; }
+    if (wzrost < 50.0 || wzrost > 250.0) { QMessageBox::warning(this, "Blad", "Wzrost poza zakresem (50-250 cm). "); return; }
+    if (limit < 800.0 || limit > 10000.0) { QMessageBox::warning(this, "Blad", "Limit kalorii poza zakresem (800-10000). "); return; }
 
     profil.ustawImie(imie.toStdString());
     profil.ustawWiek(wiek);
@@ -705,116 +318,200 @@ void MainWindow::on_buttonZapiszProfil_clicked()
     profil.ustawWzrost(wzrost);
     profil.ustawLimitKalorii(limit);
 
-    // Autozapis profilu
     PlikManager::zapiszProfil("profil.txt", profil);
-
-    // Ustaw limit w dzienniku i zapisz
     dziennik.ustawLimitKalorii(limit);
     PlikManager::zapiszDziennik("dziennik.txt", dziennik);
 
     QMessageBox::information(this, "Profil", "Profil zapisany.");
 }
-// --- FUNKCJE ZAKŁADKI PRODUKTY ---
+
+// =========================================================================
+// ZAKŁADKA PRODUKTY - WYŚWIETLANIE, SEKCJA ULUBIONE I LIVE-SEARCH W C++
+// =========================================================================
+
+void MainWindow::zaladujWektorDoTabeli(QTableWidget* tabela, const vector<Produkt>& prod)
+{
+    tabela->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tabela->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    // ZMIANA: Zwiększona wysokość wiersza, żeby ikony dobrze wyglądały
+    tabela->verticalHeader()->setDefaultSectionSize(45);
+
+    tabela->setColumnCount(7);
+    tabela->setHorizontalHeaderLabels({ "Nazwa", "kcal", "Białko", "Węglowodany", "Tłuszcze", "Ulubione", "Usuń" });
+
+    tabela->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    tabela->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
+    tabela->horizontalHeader()->setSectionResizeMode(6, QHeaderView::ResizeToContents);
+
+    tabela->setRowCount(0);
+
+    for (int i = 0; i < (int)prod.size(); ++i)
+    {
+        tabela->insertRow(i);
+
+        QString nazwa = QString::fromStdString(prod[i].pobierzNazwe());
+        Makroskladniki makro = prod[i].pobierzMakroNa100g();
+
+        tabela->setItem(i, 0, new QTableWidgetItem(nazwa));
+        tabela->setItem(i, 1, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
+        tabela->setItem(i, 2, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
+        tabela->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
+        tabela->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
+
+        QPushButton* btnGwiazdka = new QPushButton(prod[i].czyUlubiony() ? "★" : "☆");
+        btnGwiazdka->setStyleSheet(prod[i].czyUlubiony()
+            ? "color: gold; font-size: 24px; border: none; background: transparent;"
+            : "color: #bbb; font-size: 24px; border: none; background: transparent;");
+        tabela->setCellWidget(i, 5, btnGwiazdka);
+
+        connect(btnGwiazdka, &QPushButton::clicked, [this, nazwa]() {
+            bazaProduktow.przelaczUlubiony(nazwa.toStdString());
+            zapiszDaneDoPlikow();
+            odswiezTabeleProduktow();
+            });
+
+        QPushButton* btnUsun = new QPushButton("🗑️");
+        btnUsun->setStyleSheet("color: #e74c3c; font-size: 20px; border: none; background: transparent;");
+        tabela->setCellWidget(i, 6, btnUsun);
+
+        connect(btnUsun, &QPushButton::clicked, [this, nazwa]() {
+            QMessageBox::StandardButton odpowiedz;
+            odpowiedz = QMessageBox::question(this, "Usuwanie produktu",
+                "Czy na pewno chcesz trwale usunąć produkt:\n" + nazwa + "?",
+                QMessageBox::Yes | QMessageBox::No);
+
+            if (odpowiedz == QMessageBox::Yes) {
+                bazaProduktow.usunProdukt(nazwa.toStdString());
+                zapiszDaneDoPlikow();
+                odswiezTabeleProduktow();
+            }
+            });
+    }
+}
 
 void MainWindow::odswiezTabeleProduktow()
 {
-    ui.tableProdukty->setSelectionBehavior(QAbstractItemView::SelectRows);
-    ui.tableProdukty->setSelectionMode(QAbstractItemView::SingleSelection);
-    ui.tableProdukty->setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-    ui.tableProdukty->setRowCount(0);
-
-    // Użycie Twojej funkcji: pobierzWszystkie()
-    vector<Produkt> wszystkie = bazaProduktow.pobierzWszystkie();
-
-    for (size_t i = 0; i < wszystkie.size(); ++i)
-    {
-        ui.tableProdukty->insertRow(i);
-
-        QString nazwa = QString::fromStdString(wszystkie[i].pobierzNazwe());
-        Makroskladniki makro = wszystkie[i].pobierzMakroNa100g();
-
-        ui.tableProdukty->setItem(i, 0, new QTableWidgetItem(nazwa));
-        ui.tableProdukty->setItem(i, 1, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
-        ui.tableProdukty->setItem(i, 2, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
-        ui.tableProdukty->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
-        ui.tableProdukty->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
+    string fraza = ui.lineEditSzukajProduktu->text().toStdString();
+    if (fraza.empty() || fraza == "Zacznij pisac, aby wyszukac...") {
+        zaladujWektorDoTabeli(ui.tableProdukty, bazaProduktow.pobierzWszystkie());
     }
+    else {
+        zaladujWektorDoTabeli(ui.tableProdukty, bazaProduktow.wyszukajProdukt(fraza));
+    }
+
+    zaladujWektorDoTabeli(ui.tableUlubione, bazaProduktow.pobierzUlubione());
+}
+
+void MainWindow::on_lineEditSzukajProduktu_textChanged(const QString& arg1)
+{
+    odswiezTabeleProduktow();
 }
 
 void MainWindow::on_buttonDodajProdukt_clicked()
 {
-    string nazwa = ui.lineEditNazwaProduktu->text().trimmed().toStdString();
-    double kcal = ui.doubleSpinKalorie->value();
-    double bialko = ui.doubleSpinBialko->value();
-    double wegle = ui.doubleSpinWeglowodany->value();
-    double tluszcz = ui.doubleSpinTluszcze->value();
+    QDialog dialog(this);
+    dialog.setWindowTitle("Dodaj nowy produkt");
+    dialog.setMinimumWidth(380);
+    dialog.setStyleSheet("QDialog { background-color: #ffffff; }");
 
-    if (nazwa.empty() || nazwa == "Nazwa produktu")
-    {
-        QMessageBox::warning(this, "Błąd", "Podaj prawidłową nazwę produktu!");
-        return;
+    QFormLayout layout(&dialog);
+    layout.setSpacing(15);
+    layout.setLabelAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+
+    QLineEdit editNazwa(&dialog);
+    editNazwa.setPlaceholderText("np. Kurczak, Chipsy");
+    editNazwa.setMinimumHeight(30);
+
+    QDoubleSpinBox spinKcal(&dialog), spinBialko(&dialog), spinWegle(&dialog), spinTluszcz(&dialog);
+    for (auto spin : { &spinKcal, &spinBialko, &spinWegle, &spinTluszcz }) {
+        spin->setMaximum(10000.0);
+        spin->setDecimals(1);
+        spin->setMinimumHeight(30);
+        spin->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     }
+    spinKcal.setDecimals(0);
 
-    Makroskladniki noweMakro{ kcal, bialko, wegle, tluszcz };
-    Produkt nowyProdukt(nazwa, noweMakro);
+    QComboBox comboJednostka(&dialog);
+    // Zmieniony tekst domyślny, żeby wszystko było jasne bez checkboxów
+    comboJednostka.addItems({ "Brak (wpisuję makro na 100g)", "sztuka", "opakowanie", "porcja", "ml", "lyzka", "szklanka" });
+    comboJednostka.setMinimumHeight(30);
 
-    if (nowyProdukt.czyPoprawny())
-    {
-        // Użycie Twojej funkcji: dodajProdukt()
-        bazaProduktow.dodajProdukt(nowyProdukt);
-        zapiszDaneDoPlikow();
-        odswiezTabeleProduktow();
+    QDoubleSpinBox spinWagaJednostki(&dialog);
+    spinWagaJednostki.setMaximum(5000.0);
+    spinWagaJednostki.setDecimals(0);
+    spinWagaJednostki.setMinimumHeight(30);
+    spinWagaJednostki.setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-        QMessageBox::information(this, "Sukces", "Dodano nowy produkt do bazy!");
-    }
-    else
-    {
-        QMessageBox::warning(this, "Błąd", "Wprowadzone dane produktu są niepoprawne!");
-    }
-}
+    auto dodajWiersz = [&](const QString& tekst, QWidget* pole) {
+        QLabel* label = new QLabel(tekst, &dialog);
+        label->setMinimumWidth(150); // Zwiększone odrobinkę, żeby napisy idealnie się mieściły
+        label->setStyleSheet("font-weight: bold; color: #444;");
+        layout.addRow(label, pole);
+        };
 
-void MainWindow::on_buttonUsunProdukt_clicked()
-{
-    int zaznaczonyWiersz = ui.tableProdukty->currentRow();
+    dodajWiersz("Nazwa produktu:", &editNazwa);
+    dodajWiersz("Kalorie (kcal):", &spinKcal);
+    dodajWiersz("Białko (g):", &spinBialko);
+    dodajWiersz("Węglowodany (g):", &spinWegle);
+    dodajWiersz("Tłuszcze (g):", &spinTluszcz);
 
-    // Użycie Twojej funkcji: usunProduktPoIndeksie()
-    if (bazaProduktow.usunProduktPoIndeksie(zaznaczonyWiersz))
-    {
-        zapiszDaneDoPlikow();
-        odswiezTabeleProduktow();
-        QMessageBox::information(this, "Sukces", "Produkt został usunięty.");
-    }
-    else
-    {
-        QMessageBox::warning(this, "Błąd", "Najpierw kliknij w produkt na liście, który chcesz usunąć!");
-    }
-}
+    QFrame* linia = new QFrame(&dialog);
+    linia->setFrameShape(QFrame::HLine);
+    linia->setStyleSheet("color: #e1e5ea; margin-top: 5px; margin-bottom: 5px;");
+    layout.addRow(linia);
 
-void MainWindow::on_buttonSzukajProduktu_clicked()
-{
-    string szukanaFraza = ui.lineEditSzukajProduktu->text().trimmed().toStdString();
+    dodajWiersz("Opcjonalna miara:", &comboJednostka);
+    dodajWiersz("Waga miary (w gramach):", &spinWagaJednostki);
 
-    if (szukanaFraza.empty() || szukanaFraza == "Szukaj produktu") {
-        odswiezTabeleProduktow(); // Resetujemy widok na wszystkie
-        return;
-    }
+    QPushButton btnZapisz("Zapisz produkt", &dialog);
+    btnZapisz.setMinimumHeight(40);
+    btnZapisz.setStyleSheet("background-color: #eaf6df; color: #2e6b1f; font-weight: bold; font-size: 14px; border-radius: 6px; margin-top: 10px;");
+    layout.addRow(&btnZapisz);
 
-    // Użycie Twojej funkcji: wyszukajProdukt()
-    vector<Produkt> znalezione = bazaProduktow.wyszukajProdukt(szukanaFraza);
+    connect(&btnZapisz, &QPushButton::clicked, &dialog, &QDialog::accept);
 
-    ui.tableProdukty->setRowCount(0);
+    if (dialog.exec() == QDialog::Accepted) {
+        string nazwa = editNazwa.text().trimmed().toStdString();
 
-    for (size_t i = 0; i < znalezione.size(); ++i)
-    {
-        ui.tableProdukty->insertRow(i);
-        QString nazwa = QString::fromStdString(znalezione[i].pobierzNazwe());
-        Makroskladniki makro = znalezione[i].pobierzMakroNa100g();
+        if (nazwa.empty()) {
+            QMessageBox::warning(this, "Blad", "Nazwa produktu nie moze byc pusta!");
+            return;
+        }
 
-        ui.tableProdukty->setItem(i, 0, new QTableWidgetItem(nazwa));
-        ui.tableProdukty->setItem(i, 1, new QTableWidgetItem(QString::number(makro.kalorie, 'f', 0)));
-        ui.tableProdukty->setItem(i, 2, new QTableWidgetItem(QString::number(makro.bialko, 'f', 1)));
-        ui.tableProdukty->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
-        ui.tableProdukty->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
+        // Zbieramy to, co użytkownik wpisał w pola
+        double finalKcal = spinKcal.value();
+        double finalBialko = spinBialko.value();
+        double finalWegle = spinWegle.value();
+        double finalTluszcz = spinTluszcz.value();
+
+        // AUTOMAGIA: Jeśli wybrano jednostkę (czyli cokolwiek poza indeksem 0) i wpisano wagę,
+        // program automatycznie wie, że wpisane makro dotyczy tej wagi i przelicza to na 100g.
+        if (comboJednostka.currentIndex() != 0 && spinWagaJednostki.value() > 0) {
+            double waga = spinWagaJednostki.value();
+
+            finalKcal = (finalKcal / waga) * 100.0;
+            finalBialko = (finalBialko / waga) * 100.0;
+            finalWegle = (finalWegle / waga) * 100.0;
+            finalTluszcz = (finalTluszcz / waga) * 100.0;
+        }
+
+        Makroskladniki noweMakro{ finalKcal, finalBialko, finalWegle, finalTluszcz };
+        Produkt nowyProdukt(nazwa, noweMakro);
+
+        if (nowyProdukt.czyPoprawny()) {
+            // Dodajemy tę zdefiniowaną miarę (np. "porcja" 40g) do obiektu
+            if (comboJednostka.currentIndex() != 0 && spinWagaJednostki.value() > 0) {
+                nowyProdukt.dodajJednostke(comboJednostka.currentText().toStdString(), spinWagaJednostki.value());
+            }
+
+            bazaProduktow.dodajProdukt(nowyProdukt);
+            zapiszDaneDoPlikow();
+            odswiezTabeleProduktow();
+            QMessageBox::information(this, "Sukces", "Produkt zostal pomyslnie dodany do bazy danych!");
+        }
+        else {
+            QMessageBox::warning(this, "Blad", "Wprowadzone wartosci makroskladnikow sa niepoprawne!");
+        }
     }
 }
