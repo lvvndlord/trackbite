@@ -1081,25 +1081,12 @@
           <rect>
            <x>20</x>
            <y>10</y>
-           <width>391</width>
+           <width>462</width>
            <height>31</height>
           </rect>
          </property>
          <property name="text">
           <string>Szukaj produktu</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="buttonSzukajProduktu">
-         <property name="geometry">
-          <rect>
-           <x>420</x>
-           <y>10</y>
-           <width>71</width>
-           <height>31</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Szukaj</string>
          </property>
         </widget>
        </widget>

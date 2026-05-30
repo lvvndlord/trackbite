@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <optional>
 
 namespace
 {
@@ -13,6 +14,32 @@ namespace
     bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
     {
         return std::isfinite(wartosc) && wartosc >= minimum && wartosc <= maksimum;
+    }
+
+    std::optional<std::size_t> indeksGlobalnyDlaPory(
+        const std::vector<PozycjaDziennika>& pozycje,
+        PoraPosilku pora,
+        std::size_t indeksWPorze
+    )
+    {
+        std::size_t licznik = 0;
+
+        for (std::size_t i = 0; i < pozycje.size(); ++i)
+        {
+            if (pozycje[i].pobierzPorePosilku() != pora)
+            {
+                continue;
+            }
+
+            if (licznik == indeksWPorze)
+            {
+                return i;
+            }
+
+            ++licznik;
+        }
+
+        return std::nullopt;
     }
 }
 
@@ -118,6 +145,59 @@ bool DziennikZywieniowy::usunPozycje(std::size_t indeks)
     return true;
 }
 
+bool DziennikZywieniowy::usunPozycjeDlaPory(PoraPosilku pora, std::size_t indeksWPorze)
+{
+    const std::optional<std::size_t> indeks =
+        indeksGlobalnyDlaPory(pozycje, pora, indeksWPorze);
+
+    if (!indeks.has_value())
+    {
+        return false;
+    }
+
+    return usunPozycje(*indeks);
+}
+
+DziennikZywieniowy::WynikOperacji DziennikZywieniowy::edytujPozycjeDlaPory(
+    PoraPosilku pora,
+    std::size_t indeksWPorze,
+    double ilosc,
+    const JednostkaProduktu& jednostka
+)
+{
+    const std::optional<std::size_t> indeks =
+        indeksGlobalnyDlaPory(pozycje, pora, indeksWPorze);
+
+    if (!indeks.has_value())
+    {
+        return WynikOperacji::NiepoprawnaIlosc;
+    }
+
+    const PozycjaDziennika& stara = pozycje[*indeks];
+
+    const WynikOperacji wynikWalidacji = walidujPozycje(
+        stara.pobierzNazweProduktu(),
+        ilosc,
+        jednostka,
+        stara.pobierzMakroNa100g()
+    );
+
+    if (wynikWalidacji != WynikOperacji::Sukces)
+    {
+        return wynikWalidacji;
+    }
+
+    pozycje[*indeks] = PozycjaDziennika(
+        stara.pobierzNazweProduktu(),
+        ilosc,
+        jednostka,
+        stara.pobierzMakroNa100g(),
+        stara.pobierzPorePosilku()
+    );
+
+    return WynikOperacji::Sukces;
+}
+
 std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(PoraPosilku pora) const
 {
     std::vector<PozycjaDziennika> wynik;
@@ -152,6 +232,7 @@ void DziennikZywieniowy::wyczysc()
 {
     pozycje.clear();
 }
+
 
 const std::vector<PozycjaDziennika>& DziennikZywieniowy::pobierzPozycje() const
 {

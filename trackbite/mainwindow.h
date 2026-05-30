@@ -32,6 +32,7 @@ private slots:
     void on_buttonDodajPrzekaski_clicked();
 
     void on_buttonZapiszProfil_clicked();
+    void on_buttonDodajProdukt_clicked();
 
 private:
     Ui::MainWindowClass ui;
@@ -43,6 +44,7 @@ private:
 
     void ustawDziennikGui();
     void odswiezDziennik();
+    void odswiezTabeleProduktow();
 
     bool aktualizujeUi = false;
 
@@ -53,8 +55,27 @@ private:
         QLabel* labelKcal
     );
 
-    void dodajProduktTestowyDoPory(PoraPosilku pora);
+    void dodajProduktDoPory(PoraPosilku pora);
     void dopasujWysokoscTabeli(QTableWidget* tabela);
+    void usunPozycjeWPorze(PoraPosilku pora, int indeksWiersza);
+    void edytujPozycjeWPorze(PoraPosilku pora, int indeksWiersza);
+    void podlaczEdycjePozycji(QTableWidget* tabela, PoraPosilku pora);
+
+    std::vector<JednostkaProduktu> pobierzJednostkiDlaNazwy(
+        const std::string& nazwaProduktu,
+        const JednostkaProduktu* domyslnaJednostka = nullptr
+    ) const;
+
+    bool pokazDialogIlosci(
+        const QString& tytulOkna,
+        const std::string& nazwaProduktu,
+        const Makroskladniki& makroNa100g,
+        const std::vector<JednostkaProduktu>& dostepneJednostki,
+        double domyslnaIlosc,
+        const JednostkaProduktu& domyslnaJednostka,
+        double& wybranaIlosc,
+        JednostkaProduktu& wybranaJednostka
+    );
 
     void wczytajDaneZPlikow();
     void zapiszDaneDoPlikow();

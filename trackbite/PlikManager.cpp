@@ -3,6 +3,15 @@
 #include <fstream>
 #include <sstream>
 
+// --- Dodane nagłówki do obsługi JSON ---
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QByteArray>
+#include <QString>
+// ---------------------------------------
+
 namespace
 {
 	std::string poraPosilkuNaTekst(PoraPosilku pora)
@@ -105,73 +114,110 @@ namespace
 
 bool PlikManager::zapiszProdukty(const std::string& sciezka, const std::vector<Produkt>& produkty)
 {
-	std::ofstream out(sciezka);
-	if (!out) return false;
+    QJsonArray tablicaProduktow;
 
-	// Format: jedna linia na produkt: nazwa|kcal|bialko|weglowodany|tluszcz|jednostka1:gramy;jednostka2:gramy;
-	for (const Produkt& p : produkty)
-	{
-		out << p.pobierzNazwe() << "|";
-		const Makroskladniki m = p.pobierzMakroNa100g();
-		out << m.kalorie << "|" << m.bialko << "|" << m.weglowodany << "|" << m.tluszcz << "|";
+    for (const Produkt& p : produkty)
+    {
+        QJsonObject prodObj;
+        prodObj["nazwa"] = QString::fromStdString(p.pobierzNazwe());
 
-		for (const JednostkaProduktu& j : p.pobierzJednostki())
-		{
-			out << j.nazwa << ":" << j.gramyNaJednostke << ";";
-		}
+        const Makroskladniki m = p.pobierzMakroNa100g();
+        prodObj["kalorie"] = m.kalorie;
+        prodObj["bialko"] = m.bialko;
+        prodObj["weglowodany"] = m.weglowodany;
+        prodObj["tluszcz"] = m.tluszcz;
 
-		out << "\n";
-	}
+        QJsonArray jednostkiArr;
+        for (const JednostkaProduktu& j : p.pobierzJednostki())
+        {
+            QJsonObject jedObj;
+            jedObj["nazwa"] = QString::fromStdString(j.nazwa);
+            jedObj["gramyNaJednostke"] = j.gramyNaJednostke;
+            jednostkiArr.append(jedObj);
+        }
+        prodObj["jednostki"] = jednostkiArr;
 
-	return true;
+        tablicaProduktow.append(prodObj);
+    }
+
+    QJsonObject root;
+    root["produkty"] = tablicaProduktow;
+
+    QJsonDocument doc(root);
+    QFile plik(QString::fromStdString(sciezka));
+    
+    // Otwieramy plik do nadpisania
+    if (!plik.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        return false;
+    }
+
+    plik.write(doc.toJson());
+    plik.close();
+
+    return true;
 }
 
 bool PlikManager::wczytajProdukty(const std::string& sciezka, std::vector<Produkt>& produkty)
 {
-	std::ifstream in(sciezka);
-	if (!in) return false;
+    QFile plik(QString::fromStdString(sciezka));
+    
+    // Otwieramy plik do odczytu
+    if (!plik.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        return false;
+    }
 
-	std::string line;
+    QByteArray dane = plik.readAll();
+    plik.close();
 
-	while (std::getline(in, line))
-	{
-		if (line.empty()) continue;
+    // Parsowanie surowego tekstu do dokumentu JSON
+    QJsonDocument doc = QJsonDocument::fromJson(dane);
+    if (!doc.isObject()) 
+    {
+        return false;
+    }
 
-		std::stringstream ss(line);
-		std::string nazwa;
-		if (!std::getline(ss, nazwa, '|')) continue;
+    QJsonObject root = doc.object();
+    if (!root.contains("produkty") || !root["produkty"].isArray()) 
+    {
+        return false;
+    }
 
-		std::string token;
-		std::getline(ss, token, '|'); double kcal = std::stod(token);
-		std::getline(ss, token, '|'); double bialko = std::stod(token);
-		std::getline(ss, token, '|'); double weglowodany = std::stod(token);
-		std::getline(ss, token, '|'); double tluszcz = std::stod(token);
+    // Pobranie tablicy produktów
+    QJsonArray tablicaProduktow = root["produkty"].toArray();
+    for (int i = 0; i < tablicaProduktow.size(); ++i)
+    {
+        QJsonObject prodObj = tablicaProduktow[i].toObject();
 
-		Produkt p(nazwa, Makroskladniki{ kcal, bialko, weglowodany, tluszcz });
+        std::string nazwa = prodObj["nazwa"].toString().toStdString();
+        double kcal = prodObj["kalorie"].toDouble();
+        double bialko = prodObj["bialko"].toDouble();
+        double weglowodany = prodObj["weglowodany"].toDouble();
+        double tluszcz = prodObj["tluszcz"].toDouble();
 
-		std::string jednostkiStr;
-		if (std::getline(ss, jednostkiStr, '|'))
-		{
-			std::stringstream js(jednostkiStr);
-			std::string jtok;
-			while (std::getline(js, jtok, ';'))
-			{
-				if (jtok.empty()) continue;
-				const size_t pos = jtok.find(':');
-				if (pos == std::string::npos) continue;
-				const std::string jn = jtok.substr(0, pos);
-				const double gr = std::stod(jtok.substr(pos + 1));
-				p.dodajJednostke(jn, gr);
-			}
-		}
+        Produkt p(nazwa, Makroskladniki{ kcal, bialko, weglowodany, tluszcz });
 
-		if (p.czyPoprawny())
-		{
-			produkty.push_back(p);
-		}
-	}
+        // Pobranie tablicy zagnieżdżonej - jednostek
+        if (prodObj.contains("jednostki") && prodObj["jednostki"].isArray())
+        {
+            QJsonArray jednostkiArr = prodObj["jednostki"].toArray();
+            for (int j = 0; j < jednostkiArr.size(); ++j)
+            {
+                QJsonObject jedObj = jednostkiArr[j].toObject();
+                std::string nazwaJednostki = jedObj["nazwa"].toString().toStdString();
+                double gramy = jedObj["gramyNaJednostke"].toDouble();
+                p.dodajJednostke(nazwaJednostki, gramy);
+            }
+        }
 
-	return true;
+        if (p.czyPoprawny())
+        {
+            produkty.push_back(p);
+        }
+    }
+
+    return true;
 }
 
 bool PlikManager::zapiszProfil(const std::string& sciezka, const ProfilUzytkownika& profil)

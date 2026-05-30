@@ -71,6 +71,15 @@ public:
     );
 
     bool usunPozycje(std::size_t indeks);
+    bool usunPozycjeDlaPory(PoraPosilku pora, std::size_t indeksWPorze);
+
+    WynikOperacji edytujPozycjeDlaPory(
+        PoraPosilku pora,
+        std::size_t indeksWPorze,
+        double ilosc,
+        const JednostkaProduktu& jednostka
+    );
+
     void wyczysc();
 
     const std::vector<PozycjaDziennika>& pobierzPozycje() const;
