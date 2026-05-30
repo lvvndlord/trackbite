@@ -14,15 +14,12 @@ public:
     const std::string& pobierzCel() const;
     double pobierzLimitKalorii() const;
 
-    void ustawImie(const std::string& imie);
-    void ustawWiek(int wiek);
-    void ustawWage(double waga);
-    void ustawWzrost(double wzrost);
-    void ustawCel(const std::string& cel);
-    void ustawLimitKalorii(double limit);
-
-    bool zapiszDoPliku(const std::string& sciezka) const;
-    bool wczytajZPliku(const std::string& sciezka);
+    void ustawImie(const std::string& noweImie);
+    void ustawWiek(int nowyWiek);
+    void ustawWage(double nowaWaga);
+    void ustawWzrost(double nowyWzrost);
+    void ustawCel(const std::string& nowyCel);
+    void ustawLimitKalorii(double nowyLimit);
 
 private:
     std::string imie;

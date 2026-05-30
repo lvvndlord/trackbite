@@ -1,7 +1,7 @@
 #include "DziennikZywieniowy.h"
 
-#include <algorithm>
 #include <cmath>
+#include <optional>
 
 namespace
 {
@@ -12,7 +12,35 @@ namespace
 
     bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
     {
-        return std::isfinite(wartosc) && wartosc >= minimum && wartosc <= maksimum;
+        return std::isfinite(wartosc)
+            && wartosc >= minimum
+            && wartosc <= maksimum;
+    }
+
+    std::optional<std::size_t> znajdzIndeksGlobalnyDlaPory(
+        const std::vector<PozycjaDziennika>& pozycje,
+        PoraPosilku pora,
+        std::size_t indeksWPorze
+    )
+    {
+        std::size_t licznik = 0;
+
+        for (std::size_t i = 0; i < pozycje.size(); ++i)
+        {
+            if (pozycje[i].pobierzPorePosilku() != pora)
+            {
+                continue;
+            }
+
+            if (licznik == indeksWPorze)
+            {
+                return i;
+            }
+
+            ++licznik;
+        }
+
+        return std::nullopt;
     }
 }
 
@@ -28,13 +56,7 @@ PozycjaDziennika::PozycjaDziennika(
     jednostka(jednostka),
     makroNa100g(makroNa100g),
     poraPosilku(poraPosilku)
-{
-}
-
-PoraPosilku PozycjaDziennika::pobierzPorePosilku() const
-{
-    return poraPosilku;
-}
+{}
 
 const std::string& PozycjaDziennika::pobierzNazweProduktu() const
 {
@@ -59,6 +81,20 @@ double PozycjaDziennika::pobierzGramy() const
 const Makroskladniki& PozycjaDziennika::pobierzMakroNa100g() const
 {
     return makroNa100g;
+}
+
+PoraPosilku PozycjaDziennika::pobierzPorePosilku() const
+{
+    return poraPosilku;
+}
+
+void PozycjaDziennika::zmienIloscIJednostke(
+    double nowaIlosc,
+    const JednostkaProduktu& nowaJednostka
+)
+{
+    ilosc = nowaIlosc;
+    jednostka = nowaJednostka;
 }
 
 Makroskladniki PozycjaDziennika::obliczMakro() const
@@ -114,11 +150,75 @@ bool DziennikZywieniowy::usunPozycje(std::size_t indeks)
         return false;
     }
 
-    pozycje.erase(pozycje.begin() + static_cast<std::ptrdiff_t>(indeks));
+    pozycje.erase(
+        pozycje.begin() + static_cast<std::ptrdiff_t>(indeks)
+    );
+
     return true;
 }
 
-std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(PoraPosilku pora) const
+bool DziennikZywieniowy::usunPozycjeDlaPory(
+    PoraPosilku pora,
+    std::size_t indeksWPorze
+)
+{
+    const std::optional<std::size_t> indeksGlobalny =
+        znajdzIndeksGlobalnyDlaPory(pozycje, pora, indeksWPorze);
+
+    if (!indeksGlobalny.has_value())
+    {
+        return false;
+    }
+
+    return usunPozycje(indeksGlobalny.value());
+}
+
+DziennikZywieniowy::WynikOperacji DziennikZywieniowy::edytujPozycjeDlaPory(
+    PoraPosilku pora,
+    std::size_t indeksWPorze,
+    double ilosc,
+    const JednostkaProduktu& jednostka
+)
+{
+    const std::optional<std::size_t> indeksGlobalny =
+        znajdzIndeksGlobalnyDlaPory(pozycje, pora, indeksWPorze);
+
+    if (!indeksGlobalny.has_value())
+    {
+        return WynikOperacji::NiepoprawnaIlosc;
+    }
+
+    PozycjaDziennika& pozycja = pozycje[indeksGlobalny.value()];
+
+    const WynikOperacji wynikWalidacji = walidujPozycje(
+        pozycja.pobierzNazweProduktu(),
+        ilosc,
+        jednostka,
+        pozycja.pobierzMakroNa100g()
+    );
+
+    if (wynikWalidacji != WynikOperacji::Sukces)
+    {
+        return wynikWalidacji;
+    }
+
+    pozycja.zmienIloscIJednostke(ilosc, jednostka);
+    return WynikOperacji::Sukces;
+}
+
+void DziennikZywieniowy::wyczysc()
+{
+    pozycje.clear();
+}
+
+const std::vector<PozycjaDziennika>& DziennikZywieniowy::pobierzPozycje() const
+{
+    return pozycje;
+}
+
+std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(
+    PoraPosilku pora
+) const
 {
     std::vector<PozycjaDziennika> wynik;
 
@@ -133,6 +233,18 @@ std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(PoraPosi
     return wynik;
 }
 
+Makroskladniki DziennikZywieniowy::obliczSume() const
+{
+    Makroskladniki suma;
+
+    for (const PozycjaDziennika& pozycja : pozycje)
+    {
+        suma += pozycja.obliczMakro();
+    }
+
+    return suma;
+}
+
 Makroskladniki DziennikZywieniowy::obliczSumeDlaPory(PoraPosilku pora) const
 {
     Makroskladniki suma;
@@ -143,28 +255,6 @@ Makroskladniki DziennikZywieniowy::obliczSumeDlaPory(PoraPosilku pora) const
         {
             suma += pozycja.obliczMakro();
         }
-    }
-
-    return suma;
-}
-
-void DziennikZywieniowy::wyczysc()
-{
-    pozycje.clear();
-}
-
-const std::vector<PozycjaDziennika>& DziennikZywieniowy::pobierzPozycje() const
-{
-    return pozycje;
-}
-
-Makroskladniki DziennikZywieniowy::obliczSume() const
-{
-    Makroskladniki suma;
-
-    for (const PozycjaDziennika& pozycja : pozycje)
-    {
-        suma += pozycja.obliczMakro();
     }
 
     return suma;
@@ -207,22 +297,34 @@ double DziennikZywieniowy::pozostaleKalorie() const
 
 int DziennikZywieniowy::procentKalorii() const
 {
-    return procentWartosci(obliczSume().kalorie, limityDzienne.kalorie);
+    return procentWartosci(
+        obliczSume().kalorie,
+        limityDzienne.kalorie
+    );
 }
 
 int DziennikZywieniowy::procentBialka() const
 {
-    return procentWartosci(obliczSume().bialko, limityDzienne.bialko);
+    return procentWartosci(
+        obliczSume().bialko,
+        limityDzienne.bialko
+    );
 }
 
 int DziennikZywieniowy::procentWeglowodanow() const
 {
-    return procentWartosci(obliczSume().weglowodany, limityDzienne.weglowodany);
+    return procentWartosci(
+        obliczSume().weglowodany,
+        limityDzienne.weglowodany
+    );
 }
 
 int DziennikZywieniowy::procentTluszczu() const
 {
-    return procentWartosci(obliczSume().tluszcz, limityDzienne.tluszcz);
+    return procentWartosci(
+        obliczSume().tluszcz,
+        limityDzienne.tluszcz
+    );
 }
 
 DziennikZywieniowy::WynikOperacji DziennikZywieniowy::walidujPozycje(
@@ -270,5 +372,7 @@ int DziennikZywieniowy::procentWartosci(double wartosc, double limit) const
         return 0;
     }
 
-    return static_cast<int>(std::round((wartosc / limit) * 100.0));
+    return static_cast<int>(
+        std::round((wartosc / limit) * 100.0)
+        );
 }

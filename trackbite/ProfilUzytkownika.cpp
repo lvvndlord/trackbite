@@ -1,67 +1,93 @@
 #include "ProfilUzytkownika.h"
 
-#include <fstream>
-#include <sstream>
+#include <cmath>
 
-const std::string& ProfilUzytkownika::pobierzImie() const { return imie; }
-int ProfilUzytkownika::pobierzWiek() const { return wiek; }
-double ProfilUzytkownika::pobierzWage() const { return waga; }
-double ProfilUzytkownika::pobierzWzrost() const { return wzrost; }
-const std::string& ProfilUzytkownika::pobierzCel() const { return cel; }
-double ProfilUzytkownika::pobierzLimitKalorii() const { return limitKalorii; }
-
-void ProfilUzytkownika::ustawImie(const std::string& i) { imie = i; }
-void ProfilUzytkownika::ustawWiek(int w) { wiek = w; }
-void ProfilUzytkownika::ustawWage(double w) { waga = w; }
-void ProfilUzytkownika::ustawWzrost(double z) { wzrost = z; }
-void ProfilUzytkownika::ustawCel(const std::string& c) { cel = c; }
-void ProfilUzytkownika::ustawLimitKalorii(double l) { limitKalorii = l; }
-
-bool ProfilUzytkownika::zapiszDoPliku(const std::string& sciezka) const
+namespace
 {
-    std::ofstream out(sciezka);
-
-    if (!out)
+    bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
     {
-        return false;
+        return std::isfinite(wartosc)
+            && wartosc >= minimum
+            && wartosc <= maksimum;
     }
-
-    out << imie << "\n";
-    out << wiek << "\n";
-    out << waga << "\n";
-    out << wzrost << "\n";
-    out << cel << "\n";
-    out << limitKalorii << "\n";
-
-    return true;
 }
 
-bool ProfilUzytkownika::wczytajZPliku(const std::string& sciezka)
+const std::string& ProfilUzytkownika::pobierzImie() const
 {
-    std::ifstream in(sciezka);
+    return imie;
+}
 
-    if (!in)
+int ProfilUzytkownika::pobierzWiek() const
+{
+    return wiek;
+}
+
+double ProfilUzytkownika::pobierzWage() const
+{
+    return waga;
+}
+
+double ProfilUzytkownika::pobierzWzrost() const
+{
+    return wzrost;
+}
+
+const std::string& ProfilUzytkownika::pobierzCel() const
+{
+    return cel;
+}
+
+double ProfilUzytkownika::pobierzLimitKalorii() const
+{
+    return limitKalorii;
+}
+
+void ProfilUzytkownika::ustawImie(const std::string& noweImie)
+{
+    imie = noweImie;
+}
+
+void ProfilUzytkownika::ustawWiek(int nowyWiek)
+{
+    if (nowyWiek < 0 || nowyWiek > 120)
     {
-        return false;
+        return;
     }
 
-    std::string line;
+    wiek = nowyWiek;
+}
 
-    if (!std::getline(in, imie)) return false;
+void ProfilUzytkownika::ustawWage(double nowaWaga)
+{
+    if (!czyLiczbaWZakresie(nowaWaga, 0.0, 500.0))
+    {
+        return;
+    }
 
-    if (!std::getline(in, line)) return false;
-    wiek = std::stoi(line);
+    waga = nowaWaga;
+}
 
-    if (!std::getline(in, line)) return false;
-    waga = std::stod(line);
+void ProfilUzytkownika::ustawWzrost(double nowyWzrost)
+{
+    if (!czyLiczbaWZakresie(nowyWzrost, 0.0, 250.0))
+    {
+        return;
+    }
 
-    if (!std::getline(in, line)) return false;
-    wzrost = std::stod(line);
+    wzrost = nowyWzrost;
+}
 
-    if (!std::getline(in, cel)) return false;
+void ProfilUzytkownika::ustawCel(const std::string& nowyCel)
+{
+    cel = nowyCel;
+}
 
-    if (!std::getline(in, line)) return false;
-    limitKalorii = std::stod(line);
+void ProfilUzytkownika::ustawLimitKalorii(double nowyLimit)
+{
+    if (!czyLiczbaWZakresie(nowyLimit, 1.0, 10000.0))
+    {
+        return;
+    }
 
-    return true;
+    limitKalorii = nowyLimit;
 }

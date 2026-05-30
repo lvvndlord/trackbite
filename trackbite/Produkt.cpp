@@ -3,6 +3,21 @@
 #include <algorithm>
 #include <cmath>
 
+namespace
+{
+    bool czyTekstNiepusty(const std::string& tekst)
+    {
+        return tekst.find_first_not_of(" \t\n\r") != std::string::npos;
+    }
+
+    bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
+    {
+        return std::isfinite(wartosc)
+            && wartosc >= minimum
+            && wartosc <= maksimum;
+    }
+}
+
 Produkt::Produkt()
 {
     dodajDomyslnaJednostkeGram();
@@ -55,7 +70,10 @@ bool Produkt::ustawMakroNa100g(const Makroskladniki& noweMakro)
     return true;
 }
 
-bool Produkt::dodajJednostke(const std::string& nazwaJednostki, double gramyNaJednostke)
+bool Produkt::dodajJednostke(
+    const std::string& nazwaJednostki,
+    double gramyNaJednostke
+)
 {
     if (!czyJednostkaPoprawna(nazwaJednostki, gramyNaJednostke))
     {
@@ -73,13 +91,12 @@ bool Produkt::dodajJednostke(const std::string& nazwaJednostki, double gramyNaJe
 
 bool Produkt::usunJednostke(const std::string& nazwaJednostki)
 {
-    // Jednostki "g" nie usuwamy, bo każdy produkt musi dać się dodać w gramach.
     if (nazwaJednostki == "g")
     {
         return false;
     }
 
-    const auto iterator = std::remove_if(
+    const auto iterator = std::find_if(
         jednostki.begin(),
         jednostki.end(),
         [&nazwaJednostki](const JednostkaProduktu& jednostka)
@@ -93,11 +110,13 @@ bool Produkt::usunJednostke(const std::string& nazwaJednostki)
         return false;
     }
 
-    jednostki.erase(iterator, jednostki.end());
+    jednostki.erase(iterator);
     return true;
 }
 
-const JednostkaProduktu* Produkt::znajdzJednostke(const std::string& nazwaJednostki) const
+const JednostkaProduktu* Produkt::znajdzJednostke(
+    const std::string& nazwaJednostki
+) const
 {
     const auto iterator = std::find_if(
         jednostki.begin(),
@@ -124,33 +143,36 @@ bool Produkt::czyPoprawny() const
         && czyJednostkaIstnieje("g");
 }
 
+bool Produkt::czyUlubiony() const
+{
+    return ulubiony;
+}
+
+void Produkt::ustawUlubiony(bool stan)
+{
+    ulubiony = stan;
+}
+
 bool Produkt::czyNazwaPoprawna(const std::string& tekst) const
 {
-    return tekst.find_first_not_of(" \t\n\r") != std::string::npos;
+    return czyTekstNiepusty(tekst);
 }
 
 bool Produkt::czyMakroPoprawne(const Makroskladniki& makro) const
 {
-    return std::isfinite(makro.kalorie)
-        && std::isfinite(makro.bialko)
-        && std::isfinite(makro.weglowodany)
-        && std::isfinite(makro.tluszcz)
-        && makro.kalorie >= 0.0
-        && makro.kalorie <= 1000.0
-        && makro.bialko >= 0.0
-        && makro.bialko <= 100.0
-        && makro.weglowodany >= 0.0
-        && makro.weglowodany <= 100.0
-        && makro.tluszcz >= 0.0
-        && makro.tluszcz <= 100.0;
+    return czyLiczbaWZakresie(makro.kalorie, 0.0, 1000.0)
+        && czyLiczbaWZakresie(makro.bialko, 0.0, 100.0)
+        && czyLiczbaWZakresie(makro.weglowodany, 0.0, 100.0)
+        && czyLiczbaWZakresie(makro.tluszcz, 0.0, 100.0);
 }
 
-bool Produkt::czyJednostkaPoprawna(const std::string& nazwaJednostki, double gramyNaJednostke) const
+bool Produkt::czyJednostkaPoprawna(
+    const std::string& nazwaJednostki,
+    double gramyNaJednostke
+) const
 {
     return czyNazwaPoprawna(nazwaJednostki)
-        && std::isfinite(gramyNaJednostke)
-        && gramyNaJednostke > 0.0
-        && gramyNaJednostke <= 5000.0;
+        && czyLiczbaWZakresie(gramyNaJednostke, 0.01, 5000.0);
 }
 
 bool Produkt::czyJednostkaIstnieje(const std::string& nazwaJednostki) const

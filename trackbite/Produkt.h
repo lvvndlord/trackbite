@@ -29,10 +29,14 @@ public:
 
     bool czyPoprawny() const;
 
+    bool czyUlubiony() const;
+    void ustawUlubiony(bool stan);
+
 private:
     std::string nazwa;
     Makroskladniki makroNa100g;
     std::vector<JednostkaProduktu> jednostki;
+    bool ulubiony = false;
 
     bool czyNazwaPoprawna(const std::string& tekst) const;
     bool czyMakroPoprawne(const Makroskladniki& makro) const;

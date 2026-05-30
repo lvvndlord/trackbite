@@ -1,333 +1,433 @@
 #include "PlikManager.h"
 
-#include <fstream>
-#include <sstream>
+#include <QFile>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QString>
 
 namespace
 {
-	std::string poraPosilkuNaTekst(PoraPosilku pora)
-	{
-		switch (pora)
-		{
-		case PoraPosilku::Sniadanie:
-			return "Sniadanie";
+    QString poraPosilkuNaTekst(PoraPosilku pora)
+    {
+        switch (pora)
+        {
+        case PoraPosilku::Sniadanie:
+            return "Sniadanie";
 
-		case PoraPosilku::DrugieSniadanie:
-			return "DrugieSniadanie";
+        case PoraPosilku::DrugieSniadanie:
+            return "DrugieSniadanie";
 
-		case PoraPosilku::Obiad:
-			return "Obiad";
+        case PoraPosilku::Obiad:
+            return "Obiad";
 
-		case PoraPosilku::Kolacja:
-			return "Kolacja";
+        case PoraPosilku::Kolacja:
+            return "Kolacja";
 
-		case PoraPosilku::Przekaski:
-			return "Przekaski";
+        case PoraPosilku::Przekaski:
+            return "Przekaski";
 
-		default:
-			return "Sniadanie";
-		}
-	}
+        default:
+            return "Sniadanie";
+        }
+    }
 
-	bool tekstNaPorePosilku(const std::string& tekst, PoraPosilku& pora)
-	{
-		if (tekst == "Sniadanie")
-		{
-			pora = PoraPosilku::Sniadanie;
-			return true;
-		}
+    bool tekstNaPorePosilku(const QString& tekst, PoraPosilku& pora)
+    {
+        if (tekst == "Sniadanie")
+        {
+            pora = PoraPosilku::Sniadanie;
+            return true;
+        }
 
-		if (tekst == "DrugieSniadanie")
-		{
-			pora = PoraPosilku::DrugieSniadanie;
-			return true;
-		}
+        if (tekst == "DrugieSniadanie")
+        {
+            pora = PoraPosilku::DrugieSniadanie;
+            return true;
+        }
 
-		if (tekst == "Obiad")
-		{
-			pora = PoraPosilku::Obiad;
-			return true;
-		}
+        if (tekst == "Obiad")
+        {
+            pora = PoraPosilku::Obiad;
+            return true;
+        }
 
-		if (tekst == "Kolacja")
-		{
-			pora = PoraPosilku::Kolacja;
-			return true;
-		}
+        if (tekst == "Kolacja")
+        {
+            pora = PoraPosilku::Kolacja;
+            return true;
+        }
 
-		if (tekst == "Przekaski")
-		{
-			pora = PoraPosilku::Przekaski;
-			return true;
-		}
+        if (tekst == "Przekaski")
+        {
+            pora = PoraPosilku::Przekaski;
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	bool parsujDouble(const std::string& tekst, double& wynik)
-	{
-		try
-		{
-			size_t pozycja = 0;
-			wynik = std::stod(tekst, &pozycja);
-			return pozycja == tekst.size();
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
+    bool zapiszJsonDoPliku(const std::string& sciezka, const QJsonObject& root)
+    {
+        QFile plik(QString::fromStdString(sciezka));
 
-	bool parsujJednostke(const std::string& tekst, JednostkaProduktu& jednostka)
-	{
-		const size_t pozycjaDwukropka = tekst.find(':');
+        if (!plik.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            return false;
+        }
 
-		if (pozycjaDwukropka == std::string::npos)
-		{
-			jednostka = { tekst, 1.0 };
-			return !tekst.empty();
-		}
+        const QJsonDocument dokument(root);
+        plik.write(dokument.toJson(QJsonDocument::Indented));
+        plik.close();
 
-		const std::string nazwa = tekst.substr(0, pozycjaDwukropka);
-		const std::string gramyTekst = tekst.substr(pozycjaDwukropka + 1);
+        return true;
+    }
 
-		double gramy = 0.0;
+    bool wczytajJsonZPliku(const std::string& sciezka, QJsonObject& root)
+    {
+        QFile plik(QString::fromStdString(sciezka));
 
-		if (nazwa.empty() || !parsujDouble(gramyTekst, gramy) || gramy <= 0.0)
-		{
-			return false;
-		}
+        if (!plik.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            return false;
+        }
 
-		jednostka = { nazwa, gramy };
-		return true;
-	}
+        const QByteArray dane = plik.readAll();
+        plik.close();
+
+        QJsonParseError bladParsowania;
+        const QJsonDocument dokument = QJsonDocument::fromJson(dane, &bladParsowania);
+
+        if (bladParsowania.error != QJsonParseError::NoError || !dokument.isObject())
+        {
+            return false;
+        }
+
+        root = dokument.object();
+        return true;
+    }
+
+    QJsonObject makroDoJson(const Makroskladniki& makro)
+    {
+        QJsonObject obiekt;
+
+        obiekt["kalorie"] = makro.kalorie;
+        obiekt["bialko"] = makro.bialko;
+        obiekt["weglowodany"] = makro.weglowodany;
+        obiekt["tluszcz"] = makro.tluszcz;
+
+        return obiekt;
+    }
+
+    Makroskladniki makroZJson(const QJsonObject& obiekt)
+    {
+        return {
+            obiekt["kalorie"].toDouble(),
+            obiekt["bialko"].toDouble(),
+            obiekt["weglowodany"].toDouble(),
+            obiekt["tluszcz"].toDouble()
+        };
+    }
+
+    QJsonObject jednostkaDoJson(const JednostkaProduktu& jednostka)
+    {
+        QJsonObject obiekt;
+
+        obiekt["nazwa"] = QString::fromStdString(jednostka.nazwa);
+        obiekt["gramyNaJednostke"] = jednostka.gramyNaJednostke;
+
+        return obiekt;
+    }
+
+    bool jednostkaZJson(const QJsonObject& obiekt, JednostkaProduktu& jednostka)
+    {
+        const QString nazwa = obiekt["nazwa"].toString();
+        const double gramyNaJednostke = obiekt["gramyNaJednostke"].toDouble();
+
+        if (nazwa.trimmed().isEmpty() || gramyNaJednostke <= 0.0)
+        {
+            return false;
+        }
+
+        jednostka = {
+            nazwa.toStdString(),
+            gramyNaJednostke
+        };
+
+        return true;
+    }
 }
 
-bool PlikManager::zapiszProdukty(const std::string& sciezka, const std::vector<Produkt>& produkty)
+bool PlikManager::zapiszProdukty(
+    const std::string& sciezka,
+    const std::vector<Produkt>& produkty
+)
 {
-	std::ofstream out(sciezka);
-	if (!out) return false;
+    QJsonArray produktyArray;
 
-	// Format: jedna linia na produkt: nazwa|kcal|bialko|weglowodany|tluszcz|jednostka1:gramy;jednostka2:gramy;
-	for (const Produkt& p : produkty)
-	{
-		out << p.pobierzNazwe() << "|";
-		const Makroskladniki m = p.pobierzMakroNa100g();
-		out << m.kalorie << "|" << m.bialko << "|" << m.weglowodany << "|" << m.tluszcz << "|";
+    for (const Produkt& produkt : produkty)
+    {
+        QJsonObject produktJson;
 
-		for (const JednostkaProduktu& j : p.pobierzJednostki())
-		{
-			out << j.nazwa << ":" << j.gramyNaJednostke << ";";
-		}
+        produktJson["nazwa"] = QString::fromStdString(produkt.pobierzNazwe());
+        produktJson["makroNa100g"] = makroDoJson(produkt.pobierzMakroNa100g());
+        produktJson["ulubiony"] = produkt.czyUlubiony();
 
-		out << "\n";
-	}
+        QJsonArray jednostkiArray;
 
-	return true;
+        for (const JednostkaProduktu& jednostka : produkt.pobierzJednostki())
+        {
+            jednostkiArray.append(jednostkaDoJson(jednostka));
+        }
+
+        produktJson["jednostki"] = jednostkiArray;
+
+        produktyArray.append(produktJson);
+    }
+
+    QJsonObject root;
+    root["produkty"] = produktyArray;
+
+    return zapiszJsonDoPliku(sciezka, root);
 }
 
-bool PlikManager::wczytajProdukty(const std::string& sciezka, std::vector<Produkt>& produkty)
+bool PlikManager::wczytajProdukty(
+    const std::string& sciezka,
+    std::vector<Produkt>& produkty
+)
 {
-	std::ifstream in(sciezka);
-	if (!in) return false;
+    QJsonObject root;
 
-	std::string line;
+    if (!wczytajJsonZPliku(sciezka, root))
+    {
+        return false;
+    }
 
-	while (std::getline(in, line))
-	{
-		if (line.empty()) continue;
+    if (!root.contains("produkty") || !root["produkty"].isArray())
+    {
+        return false;
+    }
 
-		std::stringstream ss(line);
-		std::string nazwa;
-		if (!std::getline(ss, nazwa, '|')) continue;
+    std::vector<Produkt> wczytaneProdukty;
+    const QJsonArray produktyArray = root["produkty"].toArray();
 
-		std::string token;
-		std::getline(ss, token, '|'); double kcal = std::stod(token);
-		std::getline(ss, token, '|'); double bialko = std::stod(token);
-		std::getline(ss, token, '|'); double weglowodany = std::stod(token);
-		std::getline(ss, token, '|'); double tluszcz = std::stod(token);
+    for (const QJsonValue& produktValue : produktyArray)
+    {
+        if (!produktValue.isObject())
+        {
+            continue;
+        }
 
-		Produkt p(nazwa, Makroskladniki{ kcal, bialko, weglowodany, tluszcz });
+        const QJsonObject produktJson = produktValue.toObject();
 
-		std::string jednostkiStr;
-		if (std::getline(ss, jednostkiStr, '|'))
-		{
-			std::stringstream js(jednostkiStr);
-			std::string jtok;
-			while (std::getline(js, jtok, ';'))
-			{
-				if (jtok.empty()) continue;
-				const size_t pos = jtok.find(':');
-				if (pos == std::string::npos) continue;
-				const std::string jn = jtok.substr(0, pos);
-				const double gr = std::stod(jtok.substr(pos + 1));
-				p.dodajJednostke(jn, gr);
-			}
-		}
+        const std::string nazwa = produktJson["nazwa"].toString().toStdString();
 
-		if (p.czyPoprawny())
-		{
-			produkty.push_back(p);
-		}
-	}
+        if (!produktJson["makroNa100g"].isObject())
+        {
+            continue;
+        }
 
-	return true;
+        const Makroskladniki makroNa100g =
+            makroZJson(produktJson["makroNa100g"].toObject());
+
+        Produkt produkt(nazwa, makroNa100g);
+        produkt.ustawUlubiony(produktJson["ulubiony"].toBool(false));
+
+        if (produktJson["jednostki"].isArray())
+        {
+            const QJsonArray jednostkiArray = produktJson["jednostki"].toArray();
+
+            for (const QJsonValue& jednostkaValue : jednostkiArray)
+            {
+                if (!jednostkaValue.isObject())
+                {
+                    continue;
+                }
+
+                JednostkaProduktu jednostka;
+
+                if (jednostkaZJson(jednostkaValue.toObject(), jednostka))
+                {
+                    produkt.dodajJednostke(
+                        jednostka.nazwa,
+                        jednostka.gramyNaJednostke
+                    );
+                }
+            }
+        }
+
+        if (produkt.czyPoprawny())
+        {
+            wczytaneProdukty.push_back(produkt);
+        }
+    }
+
+    produkty = wczytaneProdukty;
+    return true;
 }
 
-bool PlikManager::zapiszProfil(const std::string& sciezka, const ProfilUzytkownika& profil)
+bool PlikManager::zapiszProfil(
+    const std::string& sciezka,
+    const ProfilUzytkownika& profil
+)
 {
-	return profil.zapiszDoPliku(sciezka);
+    QJsonObject root;
+
+    root["imie"] = QString::fromStdString(profil.pobierzImie());
+    root["wiek"] = profil.pobierzWiek();
+    root["waga"] = profil.pobierzWage();
+    root["wzrost"] = profil.pobierzWzrost();
+    root["cel"] = QString::fromStdString(profil.pobierzCel());
+    root["limitKalorii"] = profil.pobierzLimitKalorii();
+
+    return zapiszJsonDoPliku(sciezka, root);
 }
 
-bool PlikManager::wczytajProfil(const std::string& sciezka, ProfilUzytkownika& profil)
+bool PlikManager::wczytajProfil(
+    const std::string& sciezka,
+    ProfilUzytkownika& profil
+)
 {
-	return profil.wczytajZPliku(sciezka);
-}
-bool PlikManager::zapiszDziennik(const std::string& sciezka, const DziennikZywieniowy& dziennik)
-{
-	std::ofstream out(sciezka);
+    QJsonObject root;
 
-	if (!out)
-	{
-		return false;
-	}
+    if (!wczytajJsonZPliku(sciezka, root))
+    {
+        return false;
+    }
 
-	const Makroskladniki limity = dziennik.pobierzLimityDzienne();
+    ProfilUzytkownika wczytanyProfil;
 
-	out << limity.kalorie << "|"
-		<< limity.bialko << "|"
-		<< limity.weglowodany << "|"
-		<< limity.tluszcz << "\n";
+    wczytanyProfil.ustawImie(root["imie"].toString().toStdString());
+    wczytanyProfil.ustawWiek(root["wiek"].toInt());
+    wczytanyProfil.ustawWage(root["waga"].toDouble());
+    wczytanyProfil.ustawWzrost(root["wzrost"].toDouble());
+    wczytanyProfil.ustawCel(root["cel"].toString().toStdString());
+    wczytanyProfil.ustawLimitKalorii(root["limitKalorii"].toDouble(2000.0));
 
-	for (const PozycjaDziennika& pozycja : dziennik.pobierzPozycje())
-	{
-		const Makroskladniki makroNa100g = pozycja.pobierzMakroNa100g();
-		const JednostkaProduktu jednostka = pozycja.pobierzJednostke();
-
-		out << poraPosilkuNaTekst(pozycja.pobierzPorePosilku()) << "|"
-			<< pozycja.pobierzNazweProduktu() << "|"
-			<< pozycja.pobierzIlosc() << "|"
-			<< jednostka.nazwa << ":" << jednostka.gramyNaJednostke << "|"
-			<< makroNa100g.kalorie << "|"
-			<< makroNa100g.bialko << "|"
-			<< makroNa100g.weglowodany << "|"
-			<< makroNa100g.tluszcz << "\n";
-	}
-
-	return true;
+    profil = wczytanyProfil;
+    return true;
 }
 
-bool PlikManager::wczytajDziennik(const std::string& sciezka, DziennikZywieniowy& dziennik)
+bool PlikManager::zapiszDziennik(
+    const std::string& sciezka,
+    const DziennikZywieniowy& dziennik
+)
 {
-	std::ifstream in(sciezka);
+    QJsonObject root;
 
-	if (!in)
-	{
-		return false;
-	}
+    root["limityDzienne"] = makroDoJson(dziennik.pobierzLimityDzienne());
 
-	std::string line;
+    QJsonArray pozycjeArray;
 
-	if (!std::getline(in, line))
-	{
-		return false;
-	}
+    for (const PozycjaDziennika& pozycja : dziennik.pobierzPozycje())
+    {
+        QJsonObject pozycjaJson;
 
-	std::stringstream ss(line);
-	std::string token;
+        pozycjaJson["poraPosilku"] = poraPosilkuNaTekst(pozycja.pobierzPorePosilku());
+        pozycjaJson["nazwaProduktu"] =
+            QString::fromStdString(pozycja.pobierzNazweProduktu());
+        pozycjaJson["ilosc"] = pozycja.pobierzIlosc();
+        pozycjaJson["jednostka"] = jednostkaDoJson(pozycja.pobierzJednostke());
+        pozycjaJson["makroNa100g"] = makroDoJson(pozycja.pobierzMakroNa100g());
 
-	double limitKcal = 0.0;
-	double limitBialko = 0.0;
-	double limitWeglowodany = 0.0;
-	double limitTluszcz = 0.0;
+        pozycjeArray.append(pozycjaJson);
+    }
 
-	if (!std::getline(ss, token, '|') || !parsujDouble(token, limitKcal)) return false;
-	if (!std::getline(ss, token, '|') || !parsujDouble(token, limitBialko)) return false;
-	if (!std::getline(ss, token, '|') || !parsujDouble(token, limitWeglowodany)) return false;
-	if (!std::getline(ss, token, '|') || !parsujDouble(token, limitTluszcz)) return false;
+    root["pozycje"] = pozycjeArray;
 
-	DziennikZywieniowy nowyDziennik;
+    return zapiszJsonDoPliku(sciezka, root);
+}
 
-	if (!nowyDziennik.ustawLimityDzienne({
-		limitKcal,
-		limitBialko,
-		limitWeglowodany,
-		limitTluszcz
-		}))
-	{
-		return false;
-	}
+bool PlikManager::wczytajDziennik(
+    const std::string& sciezka,
+    DziennikZywieniowy& dziennik
+)
+{
+    QJsonObject root;
 
-	while (std::getline(in, line))
-	{
-		if (line.empty())
-		{
-			continue;
-		}
+    if (!wczytajJsonZPliku(sciezka, root))
+    {
+        return false;
+    }
 
-		std::stringstream ls(line);
+    if (!root["limityDzienne"].isObject())
+    {
+        return false;
+    }
 
-		std::string poraTekst;
-		std::string nazwa;
-		std::string iloscTekst;
-		std::string jednostkaTekst;
-		std::string kcalTekst;
-		std::string bialkoTekst;
-		std::string weglowodanyTekst;
-		std::string tluszczTekst;
+    DziennikZywieniowy wczytanyDziennik;
 
-		if (!std::getline(ls, poraTekst, '|')) continue;
-		if (!std::getline(ls, nazwa, '|')) continue;
-		if (!std::getline(ls, iloscTekst, '|')) continue;
-		if (!std::getline(ls, jednostkaTekst, '|')) continue;
-		if (!std::getline(ls, kcalTekst, '|')) continue;
-		if (!std::getline(ls, bialkoTekst, '|')) continue;
-		if (!std::getline(ls, weglowodanyTekst, '|')) continue;
-		if (!std::getline(ls, tluszczTekst, '|')) continue;
+    const Makroskladniki limity =
+        makroZJson(root["limityDzienne"].toObject());
 
-		PoraPosilku pora;
+    if (!wczytanyDziennik.ustawLimityDzienne(limity))
+    {
+        return false;
+    }
 
-		if (!tekstNaPorePosilku(poraTekst, pora))
-		{
-			continue;
-		}
+    if (root["pozycje"].isArray())
+    {
+        const QJsonArray pozycjeArray = root["pozycje"].toArray();
 
-		double ilosc = 0.0;
-		double kcal = 0.0;
-		double bialko = 0.0;
-		double weglowodany = 0.0;
-		double tluszcz = 0.0;
+        for (const QJsonValue& pozycjaValue : pozycjeArray)
+        {
+            if (!pozycjaValue.isObject())
+            {
+                continue;
+            }
 
-		if (!parsujDouble(iloscTekst, ilosc)) continue;
-		if (!parsujDouble(kcalTekst, kcal)) continue;
-		if (!parsujDouble(bialkoTekst, bialko)) continue;
-		if (!parsujDouble(weglowodanyTekst, weglowodany)) continue;
-		if (!parsujDouble(tluszczTekst, tluszcz)) continue;
+            const QJsonObject pozycjaJson = pozycjaValue.toObject();
 
-		JednostkaProduktu jednostka;
+            PoraPosilku pora;
 
-		if (!parsujJednostke(jednostkaTekst, jednostka))
-		{
-			continue;
-		}
+            if (!tekstNaPorePosilku(
+                pozycjaJson["poraPosilku"].toString(),
+                pora
+            ))
+            {
+                continue;
+            }
 
-		const DziennikZywieniowy::WynikOperacji wynik = nowyDziennik.dodajPozycje(
-			nazwa,
-			ilosc,
-			jednostka,
-			kcal,
-			bialko,
-			weglowodany,
-			tluszcz,
-			pora
-		);
+            if (!pozycjaJson["jednostka"].isObject() ||
+                !pozycjaJson["makroNa100g"].isObject())
+            {
+                continue;
+            }
 
-		if (wynik != DziennikZywieniowy::WynikOperacji::Sukces)
-		{
-			continue;
-		}
-	}
+            JednostkaProduktu jednostka;
 
-	dziennik = nowyDziennik;
-	return true;
+            if (!jednostkaZJson(pozycjaJson["jednostka"].toObject(), jednostka))
+            {
+                continue;
+            }
+
+            const std::string nazwaProduktu =
+                pozycjaJson["nazwaProduktu"].toString().toStdString();
+
+            const double ilosc = pozycjaJson["ilosc"].toDouble();
+
+            const Makroskladniki makroNa100g =
+                makroZJson(pozycjaJson["makroNa100g"].toObject());
+
+            const DziennikZywieniowy::WynikOperacji wynik =
+                wczytanyDziennik.dodajPozycje(
+                    nazwaProduktu,
+                    ilosc,
+                    jednostka,
+                    makroNa100g.kalorie,
+                    makroNa100g.bialko,
+                    makroNa100g.weglowodany,
+                    makroNa100g.tluszcz,
+                    pora
+                );
+
+            if (wynik != DziennikZywieniowy::WynikOperacji::Sukces)
+            {
+                continue;
+            }
+        }
+    }
+
+    dziennik = wczytanyDziennik;
+    return true;
 }
