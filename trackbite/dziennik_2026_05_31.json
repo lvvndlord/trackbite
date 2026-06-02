@@ -1,0 +1,25 @@
+{
+    "limityDzienne": {
+        "bialko": 120,
+        "kalorie": 4445,
+        "tluszcz": 70,
+        "weglowodany": 240
+    },
+    "pozycje": [
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 180,
+                "nazwa": "sztuka"
+            },
+            "makroNa100g": {
+                "bialko": 0.3,
+                "kalorie": 52,
+                "tluszcz": 0.2,
+                "weglowodany": 14
+            },
+            "nazwaProduktu": "Jabłko",
+            "poraPosilku": "Sniadanie"
+        }
+    ]
+}

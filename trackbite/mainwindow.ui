@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget_1">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="dziennikTab">
        <attribute name="title">
@@ -1155,31 +1155,34 @@
        <widget class="QLineEdit" name="lineEditImie">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>40</y>
+          <x>140</x>
+          <y>60</y>
           <width>113</width>
           <height>24</height>
          </rect>
         </property>
         <property name="text">
-         <string>Imię</string>
+         <string/>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinWiek">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>70</y>
-          <width>55</width>
+          <x>140</x>
+          <y>90</y>
+          <width>91</width>
           <height>22</height>
          </rect>
+        </property>
+        <property name="minimum">
+         <number>7</number>
         </property>
        </widget>
        <widget class="QLabel" name="labelWiek">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>70</y>
+          <x>40</x>
+          <y>90</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -1191,18 +1194,30 @@
        <widget class="QDoubleSpinBox" name="doubleSpinWaga">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>100</y>
-          <width>70</width>
+          <x>140</x>
+          <y>120</y>
+          <width>91</width>
           <height>22</height>
          </rect>
+        </property>
+        <property name="suffix">
+         <string> kg</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>20.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
         </property>
        </widget>
        <widget class="QLabel" name="labelWaga">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>100</y>
+          <x>40</x>
+          <y>120</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -1214,18 +1229,30 @@
        <widget class="QDoubleSpinBox" name="doubleSpinWzrost">
         <property name="geometry">
          <rect>
-          <x>90</x>
-          <y>130</y>
-          <width>70</width>
+          <x>140</x>
+          <y>150</y>
+          <width>91</width>
           <height>22</height>
          </rect>
+        </property>
+        <property name="suffix">
+         <string> cm</string>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>100.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>250.000000000000000</double>
         </property>
        </widget>
        <widget class="QLabel" name="labelWzrost">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>130</y>
+          <x>40</x>
+          <y>150</y>
           <width>49</width>
           <height>16</height>
          </rect>
@@ -1234,42 +1261,189 @@
          <string>Wzrost</string>
         </property>
        </widget>
-       <widget class="QDoubleSpinBox" name="doubleSpinLimitKalorii">
+       <widget class="QComboBox" name="comboBoxCel">
         <property name="geometry">
          <rect>
           <x>140</x>
-          <y>170</y>
-          <width>70</width>
+          <y>180</y>
+          <width>131</width>
+          <height>24</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>Budowa masy</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Utrata masy</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Utrzymanie masy</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxDocelowa">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>210</y>
+          <width>101</width>
           <height>22</height>
          </rect>
         </property>
+        <property name="suffix">
+         <string> kg</string>
+        </property>
+        <property name="decimals">
+         <number>0</number>
+        </property>
+        <property name="minimum">
+         <double>20.000000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>300.000000000000000</double>
+        </property>
        </widget>
-       <widget class="QLabel" name="labelLimitKalorii">
+       <widget class="QDoubleSpinBox" name="doubleSpinBoxTempo">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>170</y>
-          <width>121</width>
+          <x>140</x>
+          <y>240</y>
+          <width>101</width>
+          <height>22</height>
+         </rect>
+        </property>
+        <property name="suffix">
+         <string> kg/tydz</string>
+        </property>
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="minimum">
+         <double>0.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1.500000000000000</double>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>190</y>
+          <width>49</width>
           <height>16</height>
          </rect>
         </property>
         <property name="text">
-         <string>Dzienny limit kalorii</string>
+         <string>Cel</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="buttonZapiszProfil">
+       <widget class="QLabel" name="label_2">
         <property name="geometry">
          <rect>
-          <x>70</x>
-          <y>200</y>
-          <width>101</width>
-          <height>31</height>
+          <x>40</x>
+          <y>210</y>
+          <width>91</width>
+          <height>16</height>
          </rect>
         </property>
         <property name="text">
-         <string>Zapisz profil</string>
+         <string>Waga docelowa</string>
         </property>
        </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>20</y>
+          <width>131</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Profil i cele</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="labelWiek_2">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>60</y>
+          <width>31</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Imię</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>240</y>
+          <width>49</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Tempo</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>270</y>
+          <width>591</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Szacowany czas do celu: </string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>40</x>
+          <y>290</y>
+          <width>631</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Automatyczny cel kalorii: </string>
+        </property>
+       </widget>
+       <zorder>doubleSpinWzrost</zorder>
+       <zorder>doubleSpinWaga</zorder>
+       <zorder>lineEditImie</zorder>
+       <zorder>spinWiek</zorder>
+       <zorder>labelWiek</zorder>
+       <zorder>labelWaga</zorder>
+       <zorder>labelWzrost</zorder>
+       <zorder>comboBoxCel</zorder>
+       <zorder>doubleSpinBoxDocelowa</zorder>
+       <zorder>doubleSpinBoxTempo</zorder>
+       <zorder>label</zorder>
+       <zorder>label_2</zorder>
+       <zorder>label_3</zorder>
+       <zorder>labelWiek_2</zorder>
+       <zorder>label_4</zorder>
+       <zorder>label_5</zorder>
+       <zorder>label_6</zorder>
       </widget>
      </widget>
     </item>

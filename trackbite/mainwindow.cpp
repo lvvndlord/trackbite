@@ -50,119 +50,208 @@ namespace
     {
         return R"(
             QMainWindow {
-                background: #f5f6f8;
+                background: #0f172a;
+                color: #e5e7eb;
+            }
+
+            QWidget {
+                color: #e5e7eb;
+                font-family: "Segoe UI";
+                font-size: 9.5pt;
             }
 
             QTabWidget::pane {
-                border: none;
-                background: #f5f6f8;
+                border: 1px solid #1f2937;
+                background: #111827;
+                border-radius: 12px;
+                top: -1px;
             }
 
             QTabBar::tab {
-                background: #ffffff;
-                color: #222;
+                background: #1f2937;
+                color: #cbd5e1;
                 padding: 8px 18px;
-                border: 1px solid #e2e5ea;
+                border: 1px solid #334155;
                 border-bottom: none;
-                border-top-left-radius: 8px;
-                border-top-right-radius: 8px;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
                 margin-right: 4px;
-            }
-
-            QTabBar::tab:selected {
-                background: #f5f6f8;
+                min-width: 90px;
                 font-weight: 600;
             }
 
+            QTabBar::tab:selected {
+                background: #111827;
+                color: #ffffff;
+                border-color: #4b5563;
+            }
+
+            QTabBar::tab:hover:!selected {
+                background: #273244;
+                color: #ffffff;
+            }
+
             QFrame {
-                background: #ffffff;
-                border: 1px solid #e1e5ea;
-                border-radius: 12px;
+                background: #111827;
+                border: 1px solid #263244;
+                border-radius: 14px;
             }
 
-            QFrame QLabel {
-                background: transparent;
-                border: none;
-                color: #202124;
-            }
-
-            QFrame#frameStatusDnia {
-                background: #ffffff;
-                border: 1px solid #e1e5ea;
-                border-radius: 12px;
-            }
-
+            QFrame#frameStatusDnia,
+            QFrame#framePodsumowanieDolne,
+            QFrame#frame,
+            QFrame#frameProfilCard,
             QFrame#frameStatZostalo,
             QFrame#frameStatSpozyto,
             QFrame#frameStatLimit {
-                background: #f8faf7;
-                border: 1px solid #e2eadf;
-                border-radius: 10px;
+                background: #111827;
+                border: 1px solid #263244;
+                border-radius: 14px;
+            }
+
+            QFrame#frameProfilCard {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0b1220, stop:1 #111827);
+                border: 1px solid #334155;
+                border-radius: 16px;
             }
 
             QFrame#frameStatZostalo {
-                background: #edf8e8;
-                border: 1px solid #cfe8c2;
-                border-radius: 10px;
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #06281a, stop:1 #0f3d2a);
+                border: 1px solid #1f7a55;
+            }
+
+            QLabel {
+                background: transparent;
+                border: none;
+                color: #e5e7eb;
             }
 
             QLabel#labelTytulZostalo,
             QLabel#labelTytulSpozyto,
             QLabel#labelTytulLimit {
-                color: #6b7280;
+                color: #94a3b8;
                 font-size: 11px;
-                font-weight: 500;
+                font-weight: 600;
+                letter-spacing: 0.3px;
             }
 
             QLabel#labelZostaloKalorii,
             QLabel#labelSpozytoKalorii,
-            QLabel#labelLimitKalorii_2 {
-                color: #111827;
-                font-size: 15px;
+            QLabel#labelLimitKalorii_2,
+            QLabel#labelDataDnia,
+            QLabel#labelSzacowanyCzas,
+            QLabel#labelAutoKcalProfil {
+                color: #f8fafc;
                 font-weight: 700;
             }
 
             QLabel#labelZostaloKalorii {
-                color: #2e7d32;
-                font-size: 17px;
+                color: #86efac;
+                font-size: 18px;
                 font-weight: 800;
             }
 
             QLabel#labelDataDnia {
-                color: #111827;
                 font-size: 15px;
                 font-weight: 700;
             }
 
+            QLabel#labelSzacowanyCzas {
+                color: #dbeafe;
+                font-size: 11pt;
+                font-weight: 500;
+            }
+
+            QLabel#labelAutoKcalProfil {
+                color: #86efac;
+                font-size: 11pt;
+            }
+
+            QLabel#label_3 {
+                color: #ffffff;
+                font-size: 16px;
+                font-weight: 700;
+            }
+
+            QLabel#label_4,
+            QLabel#label_5,
+            QLabel#label_6 {
+                color: #ffffff;
+                font-size: 11pt;
+                font-weight: 400;
+            }
+
             QPushButton {
-                background: #eaf6df;
-                color: #2e6b1f;
-                border: 1px solid #cfe8c2;
-                border-radius: 8px;
-                padding: 6px 12px;
+                background: #2563eb;
+                color: #ffffff;
+                border: 1px solid #3b82f6;
+                border-radius: 10px;
+                padding: 7px 14px;  
                 font-weight: 600;
             }
 
             QPushButton:hover {
-                background: #dff0d2;
+                background: #3b82f6;
+            }
+
+            QPushButton:pressed {
+                background: #1d4ed8;
             }
 
             QPushButton#buttonPoprzedniDzien,
             QPushButton#buttonNastepnyDzien {
-                background: #eaf6df;
-                color: #2e6b1f;
-                border: 1px solid #cfe8c2;
-                border-radius: 8px;
+                background: #1f2937;
+                color: #e5e7eb;
+                border: 1px solid #334155;
+                border-radius: 10px;
                 font-weight: 700;
             }
 
+            QPushButton#buttonPoprzedniDzien:hover,
+            QPushButton#buttonNastepnyDzien:hover {
+                background: #334155;
+            }
+
+            QLineEdit,
+            QSpinBox,
+            QDoubleSpinBox,
+            QComboBox {
+                background: #0b1220;
+                color: #f8fafc;
+                border: 1px solid #334155;
+                border-radius: 10px;
+                padding: 5px 10px;
+                selection-background-color: #2563eb;
+                selection-color: #ffffff;
+                min-height: 18px;
+            }
+
+            QLineEdit:focus,
+            QSpinBox:focus,
+            QDoubleSpinBox:focus,
+            QComboBox:focus {
+                border: 1px solid #60a5fa;
+            }
+
+            QComboBox::drop-down {
+                border: none;
+                width: 24px;
+            }
+
+            QComboBox QAbstractItemView {
+                background: #0b1220;
+                color: #f8fafc;
+                selection-background-color: #2563eb;
+                border: 1px solid #334155;
+            }
+
             QTableWidget {
-                background: #ffffff;
-                border: 1px solid #eef1f4;
-                border-radius: 8px;
-                gridline-color: transparent;
-                selection-background-color: #e8f5e9;
-                selection-color: #111;
+                background: #0b1220;
+                border: 1px solid #263244;
+                border-radius: 10px;
+                gridline-color: #1f2937;
+                selection-background-color: #1e3a8a;
+                selection-color: #ffffff;
             }
 
             QTableWidget::item {
@@ -171,25 +260,26 @@ namespace
             }
 
             QHeaderView::section {
-                background: #f7f8fa;
-                color: #333;
+                background: #111827;
+                color: #e5e7eb;
                 border: none;
-                border-bottom: 1px solid #e1e5ea;
-                padding: 6px;
-                font-weight: 600;
+                border-bottom: 1px solid #334155;
+                padding: 7px;
+                font-weight: 700;
             }
 
             QProgressBar {
-                border: none;
-                background: #edf0f3;
-                border-radius: 5px;
-                height: 8px;
+                border: 1px solid #334155;
+                background: #0b1220;
+                border-radius: 6px;
+                height: 10px;
                 text-align: center;
+                color: #e5e7eb;
             }
 
             QProgressBar::chunk {
-                background: #6fba44;
-                border-radius: 5px;
+                background: #22c55e;
+                border-radius: 6px;
             }
 
             QScrollArea {
@@ -203,18 +293,18 @@ namespace
 
             QScrollBar:vertical {
                 background: transparent;
-                width: 8px;
+                width: 10px;
                 margin: 4px 0 4px 0;
             }
 
             QScrollBar::handle:vertical {
-                background: #cfd6dd;
-                border-radius: 4px;
+                background: #475569;
+                border-radius: 5px;
                 min-height: 40px;
             }
 
             QScrollBar::handle:vertical:hover {
-                background: #aeb8c2;
+                background: #64748b;
             }
 
             QScrollBar::add-line:vertical,
@@ -269,26 +359,69 @@ MainWindow::MainWindow(QWidget* parent)
     ui.setupUi(this);
     setStyleSheet(stylAplikacji());
 
-    ui.doubleSpinLimitKalorii->setRange(800.0, 10000.0);
-    ui.doubleSpinWaga->setRange(20.0, 300.0);
-    ui.doubleSpinWzrost->setRange(50.0, 250.0);
-
     ui.lineEditSzukajProduktu->clear();
     ui.lineEditSzukajProduktu->setPlaceholderText("Szukaj produktu...");
 
     ui.lineEditImie->setPlaceholderText("Imię...");
 
+    utworzSekcjeCeluProfilu();
+
     wczytajDaneZPlikow();
 
-    ui.lineEditImie->setText(QString::fromStdString(profil.pobierzImie()));
-    ui.spinWiek->setValue(profil.pobierzWiek());
-    ui.doubleSpinWaga->setValue(profil.pobierzWage());
-    ui.doubleSpinWzrost->setValue(profil.pobierzWzrost());
-    ui.doubleSpinLimitKalorii->setValue(profil.pobierzLimitKalorii());
+    aktualizujeUi = true;
+
+    limitKaloriiAuto = std::round(profil.pobierzLimitKalorii());
+
+    if (comboCelTyp != nullptr)
+    {
+        const QString cel = QString::fromStdString(profil.pobierzCel());
+        const int indeks = comboCelTyp->findText(cel);
+        comboCelTyp->setCurrentIndex(indeks >= 0 ? indeks : 0);
+    }
+
+    if (spinWagaDocelowa != nullptr)
+    {
+        spinWagaDocelowa->setValue(std::round(profil.pobierzWageDocelowa()));
+    }
+
+    if (spinTempoWagi != nullptr)
+    {
+        spinTempoWagi->setValue(profil.pobierzTempoZmianyWagiTygodniowo());
+    }
+
+    if (ui.lineEditImie != nullptr)
+    {
+        ui.lineEditImie->setText(QString::fromStdString(profil.pobierzImie()));
+    }
+
+    if (ui.spinWiek != nullptr)
+    {
+        ui.spinWiek->setRange(8, 120);
+        ui.spinWiek->setValue(profil.pobierzWiek());
+    }
+
+    if (ui.doubleSpinWaga != nullptr)
+    {
+        ui.doubleSpinWaga->setRange(20.0, 400.0);
+        ui.doubleSpinWaga->setDecimals(0);
+        ui.doubleSpinWaga->setSuffix(" kg");
+        ui.doubleSpinWaga->setValue(std::round(profil.pobierzWage()));
+    }
+
+    if (ui.doubleSpinWzrost != nullptr)
+    {
+        ui.doubleSpinWzrost->setRange(100.0, 250.0);
+        ui.doubleSpinWzrost->setDecimals(0);
+        ui.doubleSpinWzrost->setSuffix(" cm");
+        ui.doubleSpinWzrost->setValue(std::round(profil.pobierzWzrost()));
+    }
+
+    aktualizujeUi = false;
 
     ustawDziennikGui();
     odswiezTabeleProduktow();
     odswiezDziennik();
+    odswiezSekcjeCelu();
 
     ui.tableProdukty->verticalHeader()->setVisible(false);
     ui.tableUlubione->verticalHeader()->setVisible(false);
@@ -297,6 +430,366 @@ MainWindow::MainWindow(QWidget* parent)
 MainWindow::~MainWindow()
 {
     zapiszDaneDoPlikow();
+}
+
+void MainWindow::utworzSekcjeCeluProfilu()
+{
+    // Podpinanie kontrolek po objectName z UI (żeby działało nawet gdy nazwy nie są członkami ui.xxx)
+    comboCelTyp = ui.profilTab->findChild<QComboBox*>("comboBoxCel");
+
+    if (comboCelTyp == nullptr)
+    {
+        comboCelTyp = ui.profilTab->findChild<QComboBox*>("comboCelTyp");
+    }
+
+    spinWagaDocelowa = ui.profilTab->findChild<QDoubleSpinBox*>("doubleSpinBoxDocelowa");
+
+    if (spinWagaDocelowa == nullptr)
+    {
+        spinWagaDocelowa = ui.profilTab->findChild<QDoubleSpinBox*>("doubleSpinWagaDocelowa");
+    }
+
+    spinTempoWagi = ui.profilTab->findChild<QDoubleSpinBox*>("doubleSpinBoxTempo");
+
+    if (spinTempoWagi == nullptr)
+    {
+        spinTempoWagi = ui.profilTab->findChild<QDoubleSpinBox*>("doubleSpinTempoWagi");
+    }
+
+    labelSzacowanyCzas = ui.profilTab->findChild<QLabel*>("label_5");
+
+    if (labelSzacowanyCzas == nullptr)
+    {
+        labelSzacowanyCzas = ui.profilTab->findChild<QLabel*>("labelSzacowanyCzas");
+    }
+
+    labelAutoKalorie = ui.profilTab->findChild<QLabel*>("label_6");
+
+    if (labelAutoKalorie == nullptr)
+    {
+        labelAutoKalorie = ui.profilTab->findChild<QLabel*>("labelAutoKcalProfil");
+    }
+
+    // Gdy etykiety nie istnieją w UI, utwórz je automatycznie
+    if (labelSzacowanyCzas == nullptr)
+    {
+        labelSzacowanyCzas = new QLabel(ui.profilTab);
+        labelSzacowanyCzas->setObjectName("label_5");
+        labelSzacowanyCzas->setGeometry(QRect(40, 260, 460, 20));
+        labelSzacowanyCzas->show();
+    }
+
+    if (labelAutoKalorie == nullptr)
+    {
+        labelAutoKalorie = new QLabel(ui.profilTab);
+        labelAutoKalorie->setObjectName("label_6");
+        labelAutoKalorie->setGeometry(QRect(40, 285, 460, 20));
+        labelAutoKalorie->show();
+    }
+
+    if (comboCelTyp != nullptr)
+    {
+        comboCelTyp->setStyleSheet("QComboBox { min-height: 24px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; padding: 2px 8px; }");
+    }
+
+    if (QFrame* frameProfil = ui.profilTab->findChild<QFrame*>("frame"))
+    {
+        frameProfil->setStyleSheet(
+            "QFrame#frame {"
+            "background: #ffffff;"
+            "border: 1px solid #e1e5ea;"
+            "border-radius: 12px;"
+            "}"
+        );
+    }
+
+    if (spinWagaDocelowa != nullptr)
+    {
+        spinWagaDocelowa->setRange(20.0, 400.0);
+        spinWagaDocelowa->setDecimals(0);
+        spinWagaDocelowa->setSuffix(" kg");
+    }
+
+    if (spinTempoWagi != nullptr)
+    {
+        spinTempoWagi->setRange(0.1, 2.0);
+        spinTempoWagi->setDecimals(1);
+        spinTempoWagi->setSingleStep(0.1);
+        spinTempoWagi->setSuffix(" kg/tydz");
+    }
+
+    if (labelSzacowanyCzas != nullptr)
+    {
+        labelSzacowanyCzas->setText("Szacowany czas do celu: -");
+        labelSzacowanyCzas->setStyleSheet("font-weight: 600; color: #1f2937;");
+        labelSzacowanyCzas->raise();
+    }
+
+    if (labelAutoKalorie != nullptr)
+    {
+        labelAutoKalorie->setText("Automatyczny cel kalorii: -");
+        labelAutoKalorie->setStyleSheet("font-weight: 700; color: #2e7d32;");
+        labelAutoKalorie->raise();
+    }
+
+    if (comboCelTyp != nullptr)
+    {
+        connect(
+            comboCelTyp,
+            QOverload<int>::of(&QComboBox::currentIndexChanged),
+            this,
+            [this](int)
+            {
+                zastosujProfilZUiIAutozapis(false);
+            }
+        );
+    }
+
+    if (spinWagaDocelowa != nullptr)
+    {
+        connect(
+            spinWagaDocelowa,
+            QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this,
+            [this](double)
+            {
+                zastosujProfilZUiIAutozapis(false);
+            }
+        );
+    }
+
+    if (spinTempoWagi != nullptr)
+    {
+        connect(
+            spinTempoWagi,
+            QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            this,
+            [this](double)
+            {
+                zastosujProfilZUiIAutozapis(false);
+            }
+        );
+    }
+
+    connect(
+        ui.lineEditImie,
+        &QLineEdit::editingFinished,
+        this,
+        [this]()
+        {
+            zastosujProfilZUiIAutozapis(false);
+        }
+    );
+
+    connect(
+        ui.spinWiek,
+        QOverload<int>::of(&QSpinBox::valueChanged),
+        this,
+        [this](int)
+        {
+            zastosujProfilZUiIAutozapis(false);
+        }
+    );
+
+    connect(
+        ui.doubleSpinWaga,
+        QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+        this,
+        [this](double)
+        {
+            zastosujProfilZUiIAutozapis(false);
+        }
+    );
+
+    connect(
+        ui.doubleSpinWzrost,
+        QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+        this,
+        [this](double)
+        {
+            zastosujProfilZUiIAutozapis(false);
+        }
+    );
+}
+
+void MainWindow::odswiezSekcjeCelu()
+{
+    if (labelSzacowanyCzas == nullptr || spinWagaDocelowa == nullptr || spinTempoWagi == nullptr)
+    {
+        return;
+    }
+
+    ProfilUzytkownika tymczasowy = profil;
+    tymczasowy.ustawWage(ui.doubleSpinWaga->value());
+    tymczasowy.ustawWageDocelowa(spinWagaDocelowa->value());
+    tymczasowy.ustawTempoZmianyWagiTygodniowo(spinTempoWagi->value());
+
+    const Makroskladniki suma = dziennik.obliczSume();
+    const Makroskladniki limity = dziennik.pobierzLimityDzienne();
+
+    if (!tymczasowy.maPoprawnyCelWagi())
+    {
+        labelSzacowanyCzas->setText(
+            QString("Szacowany czas do celu: - | Dzisiaj: %1 / %2 kcal")
+            .arg(suma.kalorie, 0, 'f', 0)
+            .arg(limity.kalorie, 0, 'f', 0)
+        );
+        return;
+    }
+
+    const int dni = tymczasowy.obliczSzacowaneDniDoCelu();
+    const int tygodnie = dni / 7;
+    const int pozostaleDni = dni % 7;
+
+    labelSzacowanyCzas->setText(
+        QString("Szacowany czas do celu: ok. %1 tyg. %2 dni | Dzisiaj: %3 / %4 kcal")
+        .arg(tygodnie)
+        .arg(pozostaleDni)
+        .arg(suma.kalorie, 0, 'f', 0)
+        .arg(limity.kalorie, 0, 'f', 0)
+    );
+}
+
+void MainWindow::przeliczAutomatycznyLimitKalorii()
+{
+    if (comboCelTyp == nullptr || spinWagaDocelowa == nullptr || spinTempoWagi == nullptr)
+    {
+        return;
+    }
+
+    const double waga = ui.doubleSpinWaga->value();
+    const double wzrost = ui.doubleSpinWzrost->value();
+    const int wiek = ui.spinWiek->value();
+    const double wagaDocelowa = spinWagaDocelowa->value();
+
+    if (waga < 20.0 || waga > 400.0 || wzrost < 100.0 || wzrost > 250.0 || wiek < 8 || wiek > 120)
+    {
+        return;
+    }
+
+    const double bmr = 10.0 * waga + 6.25 * wzrost - 5.0 * static_cast<double>(wiek) + 5.0;
+    const double tdee = bmr * 1.4;
+
+    const double tempo = spinTempoWagi->value();
+    const double kcalNaDzienZmiana = (tempo * 7700.0) / 7.0;
+
+    const double roznicaKg = wagaDocelowa - waga;
+    double docelowyLimit = tdee;
+
+    if (roznicaKg < -0.1)
+    {
+        docelowyLimit = tdee - kcalNaDzienZmiana;
+    }
+    else if (roznicaKg > 0.1)
+    {
+        docelowyLimit = tdee + kcalNaDzienZmiana;
+    }
+
+    docelowyLimit = std::clamp(docelowyLimit, 800.0, 10000.0);
+
+    limitKaloriiAuto = std::round(docelowyLimit);
+
+    profil.ustawLimitKalorii(limitKaloriiAuto);
+    dziennik.ustawLimitKalorii(limitKaloriiAuto);
+
+    if (labelAutoKalorie != nullptr)
+    {
+        labelAutoKalorie->setText(
+            QString("Automatyczny cel kalorii: %1 kcal").arg(limitKaloriiAuto, 0, 'f', 0)
+        );
+    }
+}
+
+void MainWindow::zastosujProfilZUiIAutozapis(bool pokazKomunikatyBledu)
+{
+    if (aktualizujeUi)
+    {
+        return;
+    }
+
+    if (comboCelTyp == nullptr || spinWagaDocelowa == nullptr || spinTempoWagi == nullptr)
+    {
+        return;
+    }
+
+    const QString imie = ui.lineEditImie->text().trimmed();
+    const int wiek = ui.spinWiek->value();
+    const double waga = ui.doubleSpinWaga->value();
+    const double wzrost = ui.doubleSpinWzrost->value();
+    const QString cel = comboCelTyp->currentText();
+    const double wagaDocelowa = spinWagaDocelowa->value();
+    const double tempo = spinTempoWagi->value();
+
+    if (imie.isEmpty())
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Imię nie może być puste.");
+        }
+        return;
+    }
+
+    if (wiek < 8 || wiek > 120)
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Wiek poza zakresem 8-120.");
+        }
+        return;
+    }
+
+    if (waga < 20.0 || waga > 400.0)
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Waga poza zakresem 20-400 kg.");
+        }
+        return;
+    }
+
+    if (wzrost < 100.0 || wzrost > 250.0)
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Wzrost poza zakresem 100-250 cm.");
+        }
+        return;
+    }
+
+    if (wagaDocelowa < 20.0 || wagaDocelowa > 400.0)
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Waga docelowa poza zakresem 20-400 kg.");
+        }
+        return;
+    }
+
+    if (tempo < 0.1 || tempo > 2.0)
+    {
+        if (pokazKomunikatyBledu)
+        {
+            QMessageBox::warning(this, "Błąd", "Tempo musi być w zakresie 0.1-2.0 kg/tydzień.");
+        }
+        return;
+    }
+
+    profil.ustawImie(imie.toStdString());
+    profil.ustawWiek(wiek);
+    profil.ustawWage(waga);
+    profil.ustawWzrost(wzrost);
+    profil.ustawCel(cel.toStdString());
+    profil.ustawWageDocelowa(wagaDocelowa);
+    profil.ustawTempoZmianyWagiTygodniowo(tempo);
+
+    przeliczAutomatycznyLimitKalorii();
+
+    profil.ustawLimitKalorii(limitKaloriiAuto);
+    dziennik.ustawLimitKalorii(limitKaloriiAuto);
+
+    zapiszDaneDoPlikow();
+    odswiezDziennik();
+    odswiezSekcjeCelu();
 }
 
 void MainWindow::ustawDziennikGui()
@@ -563,6 +1056,8 @@ void MainWindow::wypelnijTabeleDlaPory(
 
 void MainWindow::odswiezDziennik()
 {
+    odswiezSekcjeCelu();
+
     wypelnijTabeleDlaPory(
         PoraPosilku::Sniadanie,
         ui.tableSniadanie,
@@ -1277,58 +1772,6 @@ void MainWindow::on_buttonDodajKolacja_clicked()
 void MainWindow::on_buttonDodajPrzekaski_clicked()
 {
     dodajProduktDoPory(PoraPosilku::Przekaski);
-}
-
-void MainWindow::on_buttonZapiszProfil_clicked()
-{
-    const QString imie = ui.lineEditImie->text().trimmed();
-    const int wiek = ui.spinWiek->value();
-    const double waga = ui.doubleSpinWaga->value();
-    const double wzrost = ui.doubleSpinWzrost->value();
-    const double limit = ui.doubleSpinLimitKalorii->value();
-
-    if (imie.isEmpty())
-    {
-        QMessageBox::warning(this, "Błąd", "Imię nie może być puste.");
-        return;
-    }
-
-    if (wiek < 8 || wiek > 120)
-    {
-        QMessageBox::warning(this, "Błąd", "Wiek poza zakresem 8-120.");
-        return;
-    }
-
-    if (waga < 20.0 || waga > 300.0)
-    {
-        QMessageBox::warning(this, "Błąd", "Waga poza zakresem 20-300 kg.");
-        return;
-    }
-
-    if (wzrost < 50.0 || wzrost > 250.0)
-    {
-        QMessageBox::warning(this, "Błąd", "Wzrost poza zakresem 50-250 cm.");
-        return;
-    }
-
-    if (limit < 800.0 || limit > 10000.0)
-    {
-        QMessageBox::warning(this, "Błąd", "Limit kalorii poza zakresem 800-10000.");
-        return;
-    }
-
-    profil.ustawImie(imie.toStdString());
-    profil.ustawWiek(wiek);
-    profil.ustawWage(waga);
-    profil.ustawWzrost(wzrost);
-    profil.ustawLimitKalorii(limit);
-
-    dziennik.ustawLimitKalorii(limit);
-
-    zapiszDaneDoPlikow();
-    odswiezDziennik();
-
-    QMessageBox::information(this, "Profil", "Profil zapisany.");
 }
 
 void MainWindow::zaladujWektorDoTabeli(

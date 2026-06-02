@@ -1,0 +1,25 @@
+{
+    "limityDzienne": {
+        "bialko": 120,
+        "kalorie": 3000,
+        "tluszcz": 70,
+        "weglowodany": 240
+    },
+    "pozycje": [
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 1,
+                "nazwa": "g"
+            },
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 86,
+                "tluszcz": 0.5,
+                "weglowodany": 3.5
+            },
+            "nazwaProduktu": "Twaróg chudy",
+            "poraPosilku": "Sniadanie"
+        }
+    ]
+}

@@ -279,6 +279,8 @@ bool PlikManager::zapiszProfil(
     root["wzrost"] = profil.pobierzWzrost();
     root["cel"] = QString::fromStdString(profil.pobierzCel());
     root["limitKalorii"] = profil.pobierzLimitKalorii();
+    root["wagaDocelowa"] = profil.pobierzWageDocelowa();
+    root["tempoZmianyWagiTygodniowo"] = profil.pobierzTempoZmianyWagiTygodniowo();
 
     return zapiszJsonDoPliku(sciezka, root);
 }
@@ -303,6 +305,8 @@ bool PlikManager::wczytajProfil(
     wczytanyProfil.ustawWzrost(root["wzrost"].toDouble());
     wczytanyProfil.ustawCel(root["cel"].toString().toStdString());
     wczytanyProfil.ustawLimitKalorii(root["limitKalorii"].toDouble(2000.0));
+    wczytanyProfil.ustawWageDocelowa(root["wagaDocelowa"].toDouble(0.0));
+    wczytanyProfil.ustawTempoZmianyWagiTygodniowo(root["tempoZmianyWagiTygodniowo"].toDouble(0.0));
 
     profil = wczytanyProfil;
     return true;
