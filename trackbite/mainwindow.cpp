@@ -50,245 +50,173 @@ namespace
     {
         return R"(
             QMainWindow {
-                background: #0f172a;
-                color: #e5e7eb;
+                background: #f5f7fb;
             }
 
             QWidget {
-                color: #e5e7eb;
+                color: #0f172a;
                 font-family: "Segoe UI";
                 font-size: 9.5pt;
             }
 
+            QWidget#centralWidget,
+            QWidget#dziennikTab,
+            QWidget#produktyTab,
+            QWidget#profilTab,
+            QWidget#scrollAreaWidgetContents,
+            QWidget#produktyContent,
+            QWidget#profilContent {
+                background: #f5f7fb;
+            }
+
             QTabWidget::pane {
-                border: 1px solid #1f2937;
-                background: #111827;
-                border-radius: 12px;
+                border: none;
+                background: #f5f7fb;
                 top: -1px;
             }
 
             QTabBar::tab {
-                background: #1f2937;
-                color: #cbd5e1;
-                padding: 8px 18px;
-                border: 1px solid #334155;
+                background: #e2e8f0;
+                color: #334155;
+                padding: 10px 22px;
+                border: 1px solid #cbd5e1;
                 border-bottom: none;
-                border-top-left-radius: 10px;
-                border-top-right-radius: 10px;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
                 margin-right: 4px;
-                min-width: 90px;
-                font-weight: 600;
+                min-width: 92px;
+                font-weight: 800;
             }
 
             QTabBar::tab:selected {
-                background: #111827;
-                color: #ffffff;
-                border-color: #4b5563;
+                background: #ffffff;
+                color: #15803d;
+                border-color: #dbe4ee;
             }
 
             QTabBar::tab:hover:!selected {
-                background: #273244;
-                color: #ffffff;
+                background: #edf2f7;
+                color: #0f172a;
             }
 
-            QFrame {
-                background: #111827;
-                border: 1px solid #263244;
-                border-radius: 14px;
-            }
-
-            QFrame#frameStatusDnia,
-            QFrame#framePodsumowanieDolne,
-            QFrame#frame,
-            QFrame#frameProfilCard,
-            QFrame#frameStatZostalo,
-            QFrame#frameStatSpozyto,
-            QFrame#frameStatLimit {
-                background: #111827;
-                border: 1px solid #263244;
-                border-radius: 14px;
-            }
-
-            QFrame#frameProfilCard {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #0b1220, stop:1 #111827);
-                border: 1px solid #334155;
-                border-radius: 16px;
-            }
-
-            QFrame#frameStatZostalo {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #06281a, stop:1 #0f3d2a);
-                border: 1px solid #1f7a55;
+            QScrollArea,
+            QScrollArea > QWidget,
+            QScrollArea > QWidget > QWidget {
+                background: transparent;
+                border: none;
             }
 
             QLabel {
                 background: transparent;
                 border: none;
-                color: #e5e7eb;
+                color: #334155;
             }
 
-            QLabel#labelTytulZostalo,
-            QLabel#labelTytulSpozyto,
-            QLabel#labelTytulLimit {
-                color: #94a3b8;
-                font-size: 11px;
-                font-weight: 600;
-                letter-spacing: 0.3px;
+            QFrame {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 20px;
             }
 
-            QLabel#labelZostaloKalorii,
-            QLabel#labelSpozytoKalorii,
-            QLabel#labelLimitKalorii_2,
-            QLabel#labelDataDnia,
-            QLabel#labelSzacowanyCzas,
-            QLabel#labelAutoKcalProfil {
-                color: #f8fafc;
-                font-weight: 700;
-            }
-
-            QLabel#labelZostaloKalorii {
-                color: #86efac;
-                font-size: 18px;
-                font-weight: 800;
-            }
-
-            QLabel#labelDataDnia {
-                font-size: 15px;
-                font-weight: 700;
-            }
-
-            QLabel#labelSzacowanyCzas {
-                color: #dbeafe;
-                font-size: 11pt;
-                font-weight: 500;
-            }
-
-            QLabel#labelAutoKcalProfil {
-                color: #86efac;
-                font-size: 11pt;
-            }
-
-            QLabel#label_3 {
-                color: #ffffff;
-                font-size: 16px;
-                font-weight: 700;
-            }
-
-            QLabel#label_4,
-            QLabel#label_5,
-            QLabel#label_6 {
-                color: #ffffff;
-                font-size: 11pt;
-                font-weight: 400;
-            }
-
-            QPushButton {
-                background: #2563eb;
-                color: #ffffff;
-                border: 1px solid #3b82f6;
-                border-radius: 10px;
-                padding: 7px 14px;  
-                font-weight: 600;
-            }
-
-            QPushButton:hover {
-                background: #3b82f6;
-            }
-
-            QPushButton:pressed {
-                background: #1d4ed8;
-            }
-
-            QPushButton#buttonPoprzedniDzien,
-            QPushButton#buttonNastepnyDzien {
-                background: #1f2937;
-                color: #e5e7eb;
-                border: 1px solid #334155;
-                border-radius: 10px;
-                font-weight: 700;
-            }
-
-            QPushButton#buttonPoprzedniDzien:hover,
-            QPushButton#buttonNastepnyDzien:hover {
-                background: #334155;
+            QLabel {
+                background: transparent;
+                border: none;
+                color: #334155;
             }
 
             QLineEdit,
             QSpinBox,
             QDoubleSpinBox,
             QComboBox {
-                background: #0b1220;
-                color: #f8fafc;
-                border: 1px solid #334155;
-                border-radius: 10px;
-                padding: 5px 10px;
-                selection-background-color: #2563eb;
+                background: #ffffff;
+                color: #0f172a;
+                border: 1px solid #cbd5e1;
+                border-radius: 14px;
+                padding: 8px 12px;
+                min-height: 28px;
+                selection-background-color: #22c55e;
                 selection-color: #ffffff;
-                min-height: 18px;
             }
 
             QLineEdit:focus,
             QSpinBox:focus,
             QDoubleSpinBox:focus,
             QComboBox:focus {
-                border: 1px solid #60a5fa;
+                border: 2px solid #22c55e;
+                padding: 7px 11px;
             }
 
             QComboBox::drop-down {
                 border: none;
-                width: 24px;
+                width: 30px;
             }
 
             QComboBox QAbstractItemView {
-                background: #0b1220;
-                color: #f8fafc;
-                selection-background-color: #2563eb;
-                border: 1px solid #334155;
+                background: #ffffff;
+                color: #0f172a;
+                border: 1px solid #cbd5e1;
+                selection-background-color: #dcfce7;
+                selection-color: #14532d;
+            }
+
+            QPushButton {
+                background: #22c55e;
+                color: #ffffff;
+                border: none;
+                border-radius: 14px;
+                padding: 9px 16px;
+                font-weight: 800;
+            }
+
+            QPushButton:hover {
+                background: #16a34a;
+            }
+
+            QPushButton:pressed {
+                background: #15803d;
             }
 
             QTableWidget {
-                background: #0b1220;
-                border: 1px solid #263244;
-                border-radius: 10px;
-                gridline-color: #1f2937;
-                selection-background-color: #1e3a8a;
-                selection-color: #ffffff;
+                background: #ffffff;
+                color: #0f172a;
+                border: 1px solid #e5e7eb;
+                border-radius: 14px;
+                gridline-color: #e5e7eb;
+                selection-background-color: #dcfce7;
+                selection-color: #14532d;
+                alternate-background-color: #f8fafc;
             }
 
             QTableWidget::item {
-                padding: 6px;
+                color: #0f172a;
+                padding: 8px;
                 border: none;
             }
 
             QHeaderView::section {
-                background: #111827;
-                color: #e5e7eb;
+                background: #f8fafc;
+                color: #475569;
                 border: none;
-                border-bottom: 1px solid #334155;
-                padding: 7px;
-                font-weight: 700;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 8px;
+                font-weight: 800;
             }
 
             QProgressBar {
-                border: 1px solid #334155;
-                background: #0b1220;
-                border-radius: 6px;
-                height: 10px;
+                background: #e2e8f0;
+                border: none;
+                border-radius: 7px;
+                min-height: 14px;
+                max-height: 14px;
                 text-align: center;
-                color: #e5e7eb;
+                color: #0f172a;
+                font-size: 9px;
+                font-weight: 800;
             }
 
             QProgressBar::chunk {
                 background: #22c55e;
-                border-radius: 6px;
-            }
-
-            QScrollArea {
-                border: none;
-                background: transparent;
-            }
-
-            QScrollArea > QWidget > QWidget {
-                background: transparent;
+                border-radius: 7px;
             }
 
             QScrollBar:vertical {
@@ -298,26 +226,396 @@ namespace
             }
 
             QScrollBar::handle:vertical {
-                background: #475569;
+                background: #cbd5e1;
                 border-radius: 5px;
                 min-height: 40px;
             }
 
             QScrollBar::handle:vertical:hover {
-                background: #64748b;
+                background: #94a3b8;
             }
 
             QScrollBar::add-line:vertical,
-            QScrollBar::sub-line:vertical {
+            QScrollBar::sub-line:vertical,
+            QScrollBar::add-page:vertical,
+            QScrollBar::sub-page:vertical {
                 height: 0px;
                 background: none;
                 border: none;
             }
 
-            QScrollBar::add-page:vertical,
-            QScrollBar::sub-page:vertical {
-                background: transparent;
+            /* DZIENNIK */
+            QFrame#frameStatusDnia,
+            QFrame#frameProduktyHero,
+            QFrame#frameProfilHero {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #16a34a, stop:1 #22c55e);
+                border: none;
+                border-radius: 26px;
             }
+
+            QLabel#labelDziennikTitle,
+            QLabel#labelProduktyTitle,
+            QLabel#label_3 {
+                color: #ffffff;
+                font-size: 26px;
+                font-weight: 900;
+            }
+
+            QLabel#labelDziennikSubtitle,
+            QLabel#labelProduktySubtitle,
+            QLabel#labelProfilSubtitle {
+                color: #dcfce7;
+                font-size: 11pt;
+                font-weight: 600;
+            }
+
+            QLabel#labelDataDnia {
+                color: #ffffff;
+                font-size: 20px;
+                font-weight: 900;
+            }
+
+            QPushButton#buttonPoprzedniDzien,
+            QPushButton#buttonNastepnyDzien {
+                background: #dcfce7;
+                color: #15803d;
+                border: 1px solid #bbf7d0;
+                border-radius: 22px;
+                padding: 0;
+                font-size: 28px;
+                font-weight: 900;
+            }
+
+            QPushButton#buttonPoprzedniDzien:hover,
+            QPushButton#buttonNastepnyDzien:hover {
+                background: #bbf7d0;
+            }
+
+            QFrame#frameStatZostalo,
+            QFrame#frameStatSpozyto,
+            QFrame#frameStatLimit {
+                background: #ffffff;
+                border: 1px solid #bbf7d0;
+                border-radius: 18px;
+            }
+
+            QLabel#labelTytulZostalo,
+            QLabel#labelTytulSpozyto,
+            QLabel#labelTytulLimit {
+                color: #64748b;
+                font-size: 10pt;
+                font-weight: 800;
+            }
+
+            QLabel#labelZostaloKalorii,
+            QLabel#labelSpozytoKalorii,
+            QLabel#labelLimitKalorii_2 {
+                color: #0f172a;
+                font-size: 17px;
+                font-weight: 900;
+            }
+
+            QLabel#labelZostaloKalorii {
+                color: #15803d;
+            }
+
+            QFrame#frameSniadanie,
+            QFrame#frameDrugieSniadanie,
+            QFrame#frameObiad,
+            QFrame#framePrzekaski,
+            QFrame#frameKolacja,
+            QFrame#framePodsumowanieDolne,
+            QFrame#frameProduktySearch,
+            QFrame#frameProduktyTable,
+            QFrame#frameProfilDane,
+            QFrame#frameProfilCel,
+            QFrame#frameProfilSummary {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 22px;
+            }
+
+            QFrame#framePodsumowanieDolne {
+                background: #ffffff;
+                border: 1px solid #dbe4ee;
+                border-radius: 22px;
+            }
+
+            QWidget#headerSniadanie,
+            QWidget#headerDrugieSniadanie,
+            QWidget#headerObiad,
+            QWidget#headerPrzekaski,
+            QWidget#headerKolacja {
+                background: #ffffff;
+                border: none;
+            }
+
+            QLabel#labelTytulSniadanie,
+            QLabel#labelTytulDrugieSniadanie,
+            QLabel#labelTytulObiad,
+            QLabel#labelTytulPrzekaski,
+            QLabel#labelTytulKolacja,
+            QLabel#labelProduktySearchTitle,
+            QLabel#labelProduktyWszystkieTitle,
+            QLabel#labelProduktyUlubioneTitle,
+            QLabel#labelProfilSekcjaDane,
+            QLabel#labelProfilSekcjaCel,
+            QLabel#labelProfilSummaryTitle {
+                color: #0f172a;
+                font-size: 16px;
+                font-weight: 900;
+            }
+
+            QLabel#labelKcalSniadanie,
+            QLabel#labelKcalDrugieSniadanie,
+            QLabel#labelKcalObiad,
+            QLabel#labelKcalPrzekaski,
+            QLabel#labelKcalKolacja,
+            QLabel#labelProfilOpisDane,
+            QLabel#labelProfilOpisCel,
+            QLabel#labelProfilMetricTitleCzas,
+            QLabel#labelProfilMetricTitleKcal {
+                color: #64748b;
+                font-size: 10pt;
+                font-weight: 800;
+            }
+
+            QPushButton#buttonDodajSniadanie,
+            QPushButton#buttonDodajDrugieSniadanie,
+            QPushButton#buttonDodajObiad,
+            QPushButton#buttonDodajPrzekaski,
+            QPushButton#buttonDodajKolacja {
+                background: #22c55e;
+                color: #ffffff;
+                border: none;
+                border-radius: 21px;
+                padding: 0px;
+                min-width: 42px;
+                max-width: 42px;
+                min-height: 42px;
+                max-height: 42px;
+                font-size: 22px;
+                font-weight: 900;
+                text-align: center;
+            }
+
+            QPushButton#buttonDodajSniadanie:hover,
+            QPushButton#buttonDodajDrugieSniadanie:hover,
+            QPushButton#buttonDodajObiad:hover,
+            QPushButton#buttonDodajPrzekaski:hover,
+            QPushButton#buttonDodajKolacja:hover,
+            QPushButton#buttonDodajProdukt:hover {
+                background: #16a34a;
+            }
+
+            QFrame#frameMakroKalorie,
+            QFrame#frameMakroBialko,
+            QFrame#frameMakroWeglowodany,
+            QFrame#frameMakroTluszcz,
+            QFrame#frameProfilMetricCzas,
+            QFrame#frameProfilMetricKcal {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 18px;
+            }
+
+            QFrame#frameProfilMetricKcal {
+                background: #ecfdf5;
+                border: 1px solid #bbf7d0;
+            }
+
+            QLabel#labelSumaKalorii,
+            QLabel#labelSumaBialka,
+            QLabel#labelSumaWeglowodanow,
+            QLabel#labelSumaTluszczu,
+            QLabel#label_5,
+            QLabel#label_6 {
+                color: #0f172a;
+                font-weight: 900;
+            }
+
+            QLabel#label_6 {
+                color: #15803d;
+            }
+
+            /* PRODUKTY */
+            QPushButton#buttonDodajProdukt {
+                background: #ffffff;
+                color: #15803d;
+                border: 1px solid #bbf7d0;
+                border-radius: 16px;
+                padding: 10px 18px;
+                font-weight: 900;
+            }
+
+            QPushButton#buttonDodajProdukt:hover {
+                background: #ecfdf5;
+            }
+
+            QTableWidget#tableProdukty,
+            QTableWidget#tableUlubione {
+                min-height: 360px;
+            }
+
+            /* PROFIL */
+            QLabel#labelWiek,
+            QLabel#labelWaga,
+            QLabel#labelWzrost,
+            QLabel#labelWiek_2,
+            QLabel#label,
+            QLabel#label_2,
+            QLabel#label_4 {
+                color: #475569;
+                font-weight: 800;
+            }
+
+
+            /* POPRAWKI: etykiety w kartach nie mogą dziedziczyć QFrame */
+            QLabel,
+            QFrame QLabel {
+                background: transparent;
+                border: none;
+            }
+
+            QFrame#frameProduktyTable {
+                background: #ffffff;
+                border: 1px solid #e5e7eb;
+                border-radius: 22px;
+            }
+
+            QTabWidget#tabWidgetProduktyListy::pane {
+                background: #ffffff;
+                border: none;
+                top: -1px;
+            }
+
+            QTabWidget#tabWidgetProduktyListy QTabBar::tab {
+                background: #f1f5f9;
+                color: #475569;
+                border: 1px solid #dbe4ee;
+                border-bottom: none;
+                border-top-left-radius: 14px;
+                border-top-right-radius: 14px;
+                padding: 10px 24px;
+                margin-right: 6px;
+                min-width: 120px;
+                font-weight: 900;
+            }
+
+            QTabWidget#tabWidgetProduktyListy QTabBar::tab:selected {
+                background: #ffffff;
+                color: #15803d;
+                border-color: #bbf7d0;
+            }
+
+            QTabWidget#tabWidgetProduktyListy QWidget {
+                background: #ffffff;
+            }
+
+            QFrame#framePodsumowanieDolne {
+                border-radius: 18px;
+            }
+
+            QFrame#frameMakroKalorie,
+            QFrame#frameMakroBialko,
+            QFrame#frameMakroWeglowodany,
+            QFrame#frameMakroTluszcz {
+                border-radius: 16px;
+            }
+
+            QLabel#labelSumaKalorii,
+            QLabel#labelSumaBialka,
+            QLabel#labelSumaWeglowodanow,
+            QLabel#labelSumaTluszczu {
+                color: #0f172a;
+                font-size: 13px;
+                font-weight: 900;
+            }
+
+            QDialog#dialogFit {
+                background: #f5f7fb;
+            }
+
+            QDialog#dialogFit QLabel {
+                color: #334155;
+                background: transparent;
+                border: none;
+            }
+
+            QDialog#dialogFit QLabel#dialogTitle {
+                color: #0f172a;
+                font-size: 20px;
+                font-weight: 900;
+            }
+
+            QDialog#dialogFit QLabel#dialogSubtitle,
+            QDialog#dialogFit QLabel#dialogPreview {
+                color: #64748b;
+                font-size: 10pt;
+                font-weight: 700;
+            }
+
+            QDialog#dialogFit QLineEdit,
+            QDialog#dialogFit QSpinBox,
+            QDialog#dialogFit QDoubleSpinBox,
+            QDialog#dialogFit QComboBox {
+                background: #ffffff;
+                color: #0f172a;
+                border: 1px solid #cbd5e1;
+                border-radius: 14px;
+                padding: 9px 12px;
+                min-height: 30px;
+            }
+
+            QDialog#dialogFit QLineEdit:focus,
+            QDialog#dialogFit QDoubleSpinBox:focus,
+            QDialog#dialogFit QComboBox:focus {
+                border: 2px solid #22c55e;
+                padding: 8px 11px;
+            }
+
+            QDialog#dialogFit QListWidget {
+                background: #ffffff;
+                color: #0f172a;
+                border: 1px solid #e5e7eb;
+                border-radius: 16px;
+                padding: 8px;
+            }
+
+            QDialog#dialogFit QListWidget::item {
+                min-height: 34px;
+                padding: 8px 10px;
+                border-radius: 10px;
+            }
+
+            QDialog#dialogFit QListWidget::item:selected {
+                background: #dcfce7;
+                color: #14532d;
+            }
+
+            QDialog#dialogFit QPushButton {
+                background: #22c55e;
+                color: #ffffff;
+                border: none;
+                border-radius: 14px;
+                padding: 10px 18px;
+                min-width: 96px;
+                font-weight: 900;
+            }
+
+            QDialog#dialogFit QPushButton:hover {
+                background: #16a34a;
+            }
+
+            QDialog#dialogFit QPushButton#buttonSecondary {
+                background: #e2e8f0;
+                color: #334155;
+            }
+
+            QDialog#dialogFit QPushButton#buttonSecondary:hover {
+                background: #cbd5e1;
+            }
+
         )";
     }
 
@@ -328,18 +626,27 @@ namespace
         pasek->setValue(wartoscPaska);
         pasek->setFormat(QString::number(procent) + "%");
 
-        if (procent > 100)
-        {
-            pasek->setStyleSheet(
-                "QProgressBar::chunk { background: #ef4444; border-radius: 5px; }"
-            );
-        }
-        else
-        {
-            pasek->setStyleSheet(
-                "QProgressBar::chunk { background: #6fba44; border-radius: 5px; }"
-            );
-        }
+        const QString kolor = procent > 100 ? "#ef4444" : "#22c55e";
+
+        pasek->setStyleSheet(
+            QString(
+                "QProgressBar {"
+                "background: #e2e8f0;"
+                "border: none;"
+                "border-radius: 7px;"
+                "min-height: 14px;"
+                "max-height: 14px;"
+                "text-align: center;"
+                "color: #0f172a;"
+                "font-size: 9px;"
+                "font-weight: 700;"
+                "}"
+                "QProgressBar::chunk {"
+                "background: %1;"
+                "border-radius: 7px;"
+                "}"
+            ).arg(kolor)
+        );
     }
 
     bool czyTaSamaJednostka(
@@ -487,22 +794,6 @@ void MainWindow::utworzSekcjeCeluProfilu()
         labelAutoKalorie->show();
     }
 
-    if (comboCelTyp != nullptr)
-    {
-        comboCelTyp->setStyleSheet("QComboBox { min-height: 24px; background: #ffffff; border: 1px solid #d1d5db; border-radius: 6px; padding: 2px 8px; }");
-    }
-
-    if (QFrame* frameProfil = ui.profilTab->findChild<QFrame*>("frame"))
-    {
-        frameProfil->setStyleSheet(
-            "QFrame#frame {"
-            "background: #ffffff;"
-            "border: 1px solid #e1e5ea;"
-            "border-radius: 12px;"
-            "}"
-        );
-    }
-
     if (spinWagaDocelowa != nullptr)
     {
         spinWagaDocelowa->setRange(20.0, 400.0);
@@ -521,14 +812,12 @@ void MainWindow::utworzSekcjeCeluProfilu()
     if (labelSzacowanyCzas != nullptr)
     {
         labelSzacowanyCzas->setText("Szacowany czas do celu: -");
-        labelSzacowanyCzas->setStyleSheet("font-weight: 600; color: #1f2937;");
         labelSzacowanyCzas->raise();
     }
 
     if (labelAutoKalorie != nullptr)
     {
         labelAutoKalorie->setText("Automatyczny cel kalorii: -");
-        labelAutoKalorie->setStyleSheet("font-weight: 700; color: #2e7d32;");
         labelAutoKalorie->raise();
     }
 
@@ -810,6 +1099,24 @@ void MainWindow::ustawDziennikGui()
 
     ui.frameStatusDnia->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     ui.framePodsumowanieDolne->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    ui.framePodsumowanieDolne->setMinimumHeight(118);
+    ui.framePodsumowanieDolne->setMaximumHeight(142);
+
+    ui.buttonPoprzedniDzien->setFixedSize(44, 44);
+    ui.buttonNastepnyDzien->setFixedSize(44, 44);
+
+    for (QPushButton* przyciskDodawania : {
+        ui.buttonDodajSniadanie,
+        ui.buttonDodajDrugieSniadanie,
+        ui.buttonDodajObiad,
+        ui.buttonDodajKolacja,
+        ui.buttonDodajPrzekaski
+        })
+    {
+        przyciskDodawania->setFixedSize(42, 42);
+        przyciskDodawania->setCursor(Qt::PointingHandCursor);
+        przyciskDodawania->setText("+");
+    }
 
     for (QFrame* frame : {
         ui.frameSniadanie,
@@ -819,7 +1126,7 @@ void MainWindow::ustawDziennikGui()
         ui.framePrzekaski
         })
     {
-        frame->setMinimumHeight(64);
+        frame->setMinimumHeight(82);
         frame->setMaximumHeight(QWIDGETSIZE_MAX);
         frame->setMinimumWidth(0);
         frame->setMaximumWidth(QWIDGETSIZE_MAX);
@@ -852,29 +1159,32 @@ void MainWindow::ustawTabelePosilkow()
                 "Gramy",
                 "kcal",
                 "Białko",
-                "Węglowodany",
+                "Węgle",
                 "Tłuszcz",
                 ""
                 });
 
-            for (int kolumna = 0; kolumna < 7; ++kolumna)
+            QHeaderView* naglowek = tabela->horizontalHeader();
+            naglowek->setSectionResizeMode(0, QHeaderView::Stretch);
+
+            for (int kolumna = 1; kolumna <= 6; ++kolumna)
             {
-                tabela->horizontalHeader()->setSectionResizeMode(
-                    kolumna,
-                    QHeaderView::Stretch
-                );
+                naglowek->setSectionResizeMode(kolumna, QHeaderView::ResizeToContents);
             }
 
-            tabela->horizontalHeader()->setSectionResizeMode(7, QHeaderView::Fixed);
-            tabela->setColumnWidth(7, 36);
-            tabela->horizontalHeader()->setFixedHeight(30);
+            naglowek->setSectionResizeMode(7, QHeaderView::Fixed);
+            tabela->setColumnWidth(7, 48);
+            naglowek->setMinimumSectionSize(58);
+            naglowek->setFixedHeight(34);
 
             tabela->verticalHeader()->setVisible(false);
-            tabela->verticalHeader()->setDefaultSectionSize(32);
+            tabela->verticalHeader()->setDefaultSectionSize(40);
 
             tabela->setSelectionBehavior(QAbstractItemView::SelectRows);
             tabela->setSelectionMode(QAbstractItemView::SingleSelection);
             tabela->setEditTriggers(QAbstractItemView::NoEditTriggers);
+            tabela->setTextElideMode(Qt::ElideRight);
+            tabela->setWordWrap(false);
 
             tabela->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
             tabela->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -930,7 +1240,7 @@ void MainWindow::dopasujWysokoscTabeli(QTableWidget* tabela)
     const int liczbaWierszy = tabela->rowCount();
     const int wysokoscNaglowka = tabela->horizontalHeader()->height();
     const int wysokoscWiersza = tabela->verticalHeader()->defaultSectionSize();
-    const int wysokosc = wysokoscNaglowka + liczbaWierszy * wysokoscWiersza + 10;
+    const int wysokosc = wysokoscNaglowka + liczbaWierszy * wysokoscWiersza + 14;
 
     tabela->setMinimumHeight(wysokosc);
     tabela->setMaximumHeight(wysokosc);
@@ -1009,7 +1319,7 @@ void MainWindow::wypelnijTabeleDlaPory(
         ));
 
         auto* przyciskUsun = new QPushButton(QStringLiteral("×"), tabela);
-        przyciskUsun->setFixedSize(28, 28);
+        przyciskUsun->setFixedSize(32, 32);
         przyciskUsun->setCursor(Qt::PointingHandCursor);
         przyciskUsun->setToolTip("Usuń pozycję");
         przyciskUsun->setStyleSheet(R"(
@@ -1128,8 +1438,8 @@ void MainWindow::odswiezDziennik()
         ui.frameStatZostalo->setStyleSheet(
             "QFrame#frameStatZostalo {"
             "background: #fef2f2;"
-            "border: 1px solid #fca5a5;"
-            "border-radius: 10px;"
+            "border: 1px solid #fecaca;"
+            "border-radius: 18px;"
             "}"
         );
     }
@@ -1142,9 +1452,9 @@ void MainWindow::odswiezDziennik()
         ui.labelZostaloKalorii->setStyleSheet("color: #2e7d32;");
         ui.frameStatZostalo->setStyleSheet(
             "QFrame#frameStatZostalo {"
-            "background: #edf8e8;"
-            "border: 1px solid #cfe8c2;"
-            "border-radius: 10px;"
+            "background: #f0fdf4;"
+            "border: 1px solid #bbf7d0;"
+            "border-radius: 18px;"
             "}"
         );
     }
@@ -1286,24 +1596,36 @@ bool MainWindow::pokazDialogIlosci(
     }
 
     QDialog dialog(this);
+    dialog.setObjectName("dialogFit");
     dialog.setWindowTitle(tytulOkna);
     dialog.setModal(true);
+    dialog.setStyleSheet(styleSheet());
+    dialog.setMinimumWidth(440);
+    dialog.setMinimumHeight(330);
 
     auto* layout = new QVBoxLayout(&dialog);
+    layout->setContentsMargins(24, 22, 24, 20);
+    layout->setSpacing(14);
 
-    auto* etykietaProdukt = new QLabel(
-        QString("<b>%1</b>").arg(QString::fromStdString(nazwaProduktu)),
-        &dialog
-    );
+    auto* etykietaProdukt = new QLabel(QString::fromStdString(nazwaProduktu), &dialog);
+    etykietaProdukt->setObjectName("dialogTitle");
+    etykietaProdukt->setWordWrap(true);
     layout->addWidget(etykietaProdukt);
+
+    auto* etykietaOpis = new QLabel("Wybierz ilość i jednostkę. Podgląd makro przelicza się automatycznie.", &dialog);
+    etykietaOpis->setObjectName("dialogSubtitle");
+    etykietaOpis->setWordWrap(true);
+    layout->addWidget(etykietaOpis);
 
     auto* spinIlosc = new QDoubleSpinBox(&dialog);
     spinIlosc->setRange(0.01, 10000.0);
     spinIlosc->setDecimals(2);
     spinIlosc->setSingleStep(0.5);
     spinIlosc->setValue(domyslnaIlosc);
+    spinIlosc->setMinimumHeight(46);
 
     auto* comboJednostka = new QComboBox(&dialog);
+    comboJednostka->setMinimumHeight(46);
 
     int indeksDomyslnejJednostki = 0;
 
@@ -1326,7 +1648,19 @@ bool MainWindow::pokazDialogIlosci(
 
     comboJednostka->setCurrentIndex(indeksDomyslnejJednostki);
 
+    auto* formularz = new QFormLayout();
+    formularz->setContentsMargins(0, 4, 0, 0);
+    formularz->setSpacing(12);
+    formularz->setLabelAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    formularz->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+    formularz->addRow("Ilość", spinIlosc);
+    formularz->addRow("Jednostka", comboJednostka);
+    layout->addLayout(formularz);
+
     auto* etykietaPodgladu = new QLabel(&dialog);
+    etykietaPodgladu->setObjectName("dialogPreview");
+    etykietaPodgladu->setWordWrap(true);
+    layout->addWidget(etykietaPodgladu);
 
     auto odswiezPodglad = [&]()
         {
@@ -1344,8 +1678,7 @@ bool MainWindow::pokazDialogIlosci(
             const Makroskladniki makro = makroNa100g.przeliczNaGramy(gramy);
 
             etykietaPodgladu->setText(
-                QString("<b>Razem:</b> %1 g | <b>%2 kcal</b><br/>"
-                    "B: %3 g | W: %4 g | T: %5 g")
+                QString("Razem: <b>%1 g</b>  |  <b>%2 kcal</b><br/>B: %3 g  |  W: %4 g  |  T: %5 g")
                 .arg(gramy, 0, 'f', 0)
                 .arg(makro.kalorie, 0, 'f', 0)
                 .arg(makro.bialko, 0, 'f', 1)
@@ -1374,18 +1707,14 @@ bool MainWindow::pokazDialogIlosci(
         }
     );
 
-    auto* formularz = new QFormLayout();
-    formularz->addRow("Ilość:", spinIlosc);
-    formularz->addRow("Jednostka:", comboJednostka);
-
-    layout->addLayout(formularz);
-    layout->addWidget(etykietaPodgladu);
-
     auto* przyciski = new QDialogButtonBox(
         QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
         &dialog
     );
 
+    przyciski->button(QDialogButtonBox::Ok)->setText("OK");
+    przyciski->button(QDialogButtonBox::Cancel)->setText("Anuluj");
+    przyciski->button(QDialogButtonBox::Cancel)->setObjectName("buttonSecondary");
     layout->addWidget(przyciski);
 
     connect(przyciski, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
@@ -1422,30 +1751,50 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     }
 
     QDialog dialogListy(this);
+    dialogListy.setObjectName("dialogFit");
     dialogListy.setWindowTitle("Wybierz produkt");
-    dialogListy.resize(380, 460);
+    dialogListy.setStyleSheet(styleSheet());
+    dialogListy.setMinimumSize(520, 560);
     dialogListy.setModal(true);
 
     auto* layoutListy = new QVBoxLayout(&dialogListy);
+    layoutListy->setContentsMargins(24, 22, 24, 20);
+    layoutListy->setSpacing(14);
+
+    auto* tytul = new QLabel("Wybierz produkt", &dialogListy);
+    tytul->setObjectName("dialogTitle");
+    layoutListy->addWidget(tytul);
+
+    auto* opis = new QLabel("Wyszukaj produkt i zatwierdź wybór. Dwuklik też dodaje produkt do posiłku.", &dialogListy);
+    opis->setObjectName("dialogSubtitle");
+    opis->setWordWrap(true);
+    layoutListy->addWidget(opis);
 
     auto* poleWyszukiwania = new QLineEdit(&dialogListy);
     poleWyszukiwania->setPlaceholderText("Szukaj produktu...");
+    poleWyszukiwania->setMinimumHeight(46);
     layoutListy->addWidget(poleWyszukiwania);
 
     auto* listaProduktow = new QListWidget(&dialogListy);
+    listaProduktow->setMinimumHeight(330);
+    listaProduktow->setSpacing(2);
 
     for (const Produkt& produkt : produkty)
     {
         listaProduktow->addItem(QString::fromStdString(produkt.pobierzNazwe()));
     }
 
-    layoutListy->addWidget(listaProduktow);
+    listaProduktow->setCurrentRow(0);
+    layoutListy->addWidget(listaProduktow, 1);
 
     auto* przyciskiListy = new QDialogButtonBox(
         QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
         &dialogListy
     );
 
+    przyciskiListy->button(QDialogButtonBox::Ok)->setText("Wybierz");
+    przyciskiListy->button(QDialogButtonBox::Cancel)->setText("Anuluj");
+    przyciskiListy->button(QDialogButtonBox::Cancel)->setObjectName("buttonSecondary");
     layoutListy->addWidget(przyciskiListy);
 
     connect(
@@ -1454,16 +1803,29 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
         &dialogListy,
         [listaProduktow](const QString& tekst)
         {
+            int pierwszyWidoczny = -1;
+
             for (int i = 0; i < listaProduktow->count(); ++i)
             {
                 QListWidgetItem* element = listaProduktow->item(i);
 
-                if (element != nullptr)
+                if (element == nullptr)
                 {
-                    element->setHidden(
-                        !element->text().contains(tekst, Qt::CaseInsensitive)
-                    );
+                    continue;
                 }
+
+                const bool ukryty = !element->text().contains(tekst, Qt::CaseInsensitive);
+                element->setHidden(ukryty);
+
+                if (!ukryty && pierwszyWidoczny < 0)
+                {
+                    pierwszyWidoczny = i;
+                }
+            }
+
+            if (pierwszyWidoczny >= 0)
+            {
+                listaProduktow->setCurrentRow(pierwszyWidoczny);
             }
         }
     );
@@ -1473,6 +1835,11 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     connect(przyciskiListy, &QDialogButtonBox::rejected, &dialogListy, &QDialog::reject);
 
     if (dialogListy.exec() != QDialog::Accepted || listaProduktow->currentItem() == nullptr)
+    {
+        return;
+    }
+
+    if (listaProduktow->currentItem()->isHidden())
     {
         return;
     }
@@ -1784,26 +2151,44 @@ void MainWindow::zaladujWektorDoTabeli(
         "Nazwa",
         "kcal",
         "Białko",
-        "Węglowodany",
+        "Węgle",
         "Tłuszcz",
-        "Ulubione",
-        "Usuń"
+        "★",
+        "×"
         });
 
     tabela->setSelectionBehavior(QAbstractItemView::SelectRows);
+    tabela->setSelectionMode(QAbstractItemView::SingleSelection);
     tabela->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    tabela->verticalHeader()->setVisible(false);
-    tabela->verticalHeader()->setDefaultSectionSize(42);
+    tabela->setTextElideMode(Qt::ElideRight);
+    tabela->setWordWrap(false);
+    tabela->setAlternatingRowColors(true);
+    tabela->setShowGrid(false);
 
-    tabela->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    tabela->horizontalHeader()->setSectionResizeMode(5, QHeaderView::ResizeToContents);
-    tabela->horizontalHeader()->setSectionResizeMode(6, QHeaderView::ResizeToContents);
+    tabela->verticalHeader()->setVisible(false);
+    tabela->verticalHeader()->setDefaultSectionSize(44);
+
+    QHeaderView* naglowek = tabela->horizontalHeader();
+    naglowek->setFixedHeight(36);
+    naglowek->setMinimumSectionSize(54);
+    naglowek->setSectionResizeMode(0, QHeaderView::Stretch);
+
+    for (int kolumna = 1; kolumna <= 4; ++kolumna)
+    {
+        naglowek->setSectionResizeMode(kolumna, QHeaderView::ResizeToContents);
+    }
+
+    naglowek->setSectionResizeMode(5, QHeaderView::Fixed);
+    naglowek->setSectionResizeMode(6, QHeaderView::Fixed);
+    tabela->setColumnWidth(5, 56);
+    tabela->setColumnWidth(6, 56);
 
     tabela->setRowCount(0);
 
     for (int i = 0; i < static_cast<int>(produkty.size()); ++i)
     {
         tabela->insertRow(i);
+        tabela->setRowHeight(i, 44);
 
         const Produkt& produkt = produkty[static_cast<std::size_t>(i)];
         const QString nazwa = QString::fromStdString(produkt.pobierzNazwe());
@@ -1815,12 +2200,22 @@ void MainWindow::zaladujWektorDoTabeli(
         tabela->setItem(i, 3, new QTableWidgetItem(QString::number(makro.weglowodany, 'f', 1)));
         tabela->setItem(i, 4, new QTableWidgetItem(QString::number(makro.tluszcz, 'f', 1)));
 
+        for (int kolumna = 1; kolumna <= 4; ++kolumna)
+        {
+            if (QTableWidgetItem* element = tabela->item(i, kolumna))
+            {
+                element->setTextAlignment(Qt::AlignCenter);
+            }
+        }
+
         auto* przyciskUlubione = new QPushButton(produkt.czyUlubiony() ? "★" : "☆", tabela);
+        przyciskUlubione->setFixedSize(34, 34);
         przyciskUlubione->setCursor(Qt::PointingHandCursor);
+        przyciskUlubione->setToolTip(produkt.czyUlubiony() ? "Usuń z ulubionych" : "Dodaj do ulubionych");
         przyciskUlubione->setStyleSheet(
             produkt.czyUlubiony()
-            ? "color: #f59e0b; font-size: 22px; border: none; background: transparent;"
-            : "color: #9ca3af; font-size: 22px; border: none; background: transparent;"
+            ? "QPushButton { color: #f59e0b; font-size: 22px; border: none; background: transparent; padding: 0px; } QPushButton:hover { background: #fef3c7; border-radius: 10px; }"
+            : "QPushButton { color: #94a3b8; font-size: 22px; border: none; background: transparent; padding: 0px; } QPushButton:hover { background: #f1f5f9; border-radius: 10px; }"
         );
 
         tabela->setCellWidget(i, 5, przyciskUlubione);
@@ -1838,13 +2233,22 @@ void MainWindow::zaladujWektorDoTabeli(
         );
 
         auto* przyciskUsun = new QPushButton(QStringLiteral("×"), tabela);
+        przyciskUsun->setFixedSize(34, 34);
         przyciskUsun->setCursor(Qt::PointingHandCursor);
+        przyciskUsun->setToolTip("Usuń produkt");
         przyciskUsun->setStyleSheet(
+            "QPushButton {"
             "color: #dc2626;"
-            "font-size: 20px;"
-            "font-weight: 700;"
+            "font-size: 22px;"
+            "font-weight: 900;"
             "border: none;"
             "background: transparent;"
+            "padding: 0px;"
+            "}"
+            "QPushButton:hover {"
+            "background: #fee2e2;"
+            "border-radius: 10px;"
+            "}"
         );
 
         tabela->setCellWidget(i, 6, przyciskUsun);
@@ -1874,6 +2278,8 @@ void MainWindow::zaladujWektorDoTabeli(
             }
         );
     }
+
+    tabela->resizeRowsToContents();
 }
 
 void MainWindow::odswiezTabeleProduktow()
@@ -1909,22 +2315,44 @@ void MainWindow::on_lineEditSzukajProduktu_textChanged(const QString&)
 void MainWindow::on_buttonDodajProdukt_clicked()
 {
     QDialog dialog(this);
+    dialog.setObjectName("dialogFit");
     dialog.setWindowTitle("Dodaj nowy produkt");
-    dialog.setMinimumWidth(400);
+    dialog.setStyleSheet(styleSheet());
+    dialog.setMinimumWidth(560);
     dialog.setModal(true);
 
-    QFormLayout layout(&dialog);
-    layout.setSpacing(12);
-    layout.setLabelAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    auto* layout = new QVBoxLayout(&dialog);
+    layout->setContentsMargins(24, 22, 24, 20);
+    layout->setSpacing(14);
+
+    auto* tytul = new QLabel("Dodaj produkt", &dialog);
+    tytul->setObjectName("dialogTitle");
+    layout->addWidget(tytul);
+
+    auto* opis = new QLabel("Wpisz wartości odżywcze na 100 g. Dodatkową jednostkę dodawaj tylko wtedy, gdy znasz jej wagę.", &dialog);
+    opis->setObjectName("dialogSubtitle");
+    opis->setWordWrap(true);
+    layout->addWidget(opis);
+
+    auto* formularz = new QFormLayout();
+    formularz->setContentsMargins(0, 4, 0, 0);
+    formularz->setSpacing(12);
+    formularz->setLabelAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    formularz->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
     QLineEdit editNazwa(&dialog);
     editNazwa.setPlaceholderText("np. Jajko, Ryż biały, Banan");
-    editNazwa.setMinimumHeight(30);
+    editNazwa.setMinimumHeight(46);
 
     QDoubleSpinBox spinKcal(&dialog);
     QDoubleSpinBox spinBialko(&dialog);
     QDoubleSpinBox spinWegle(&dialog);
     QDoubleSpinBox spinTluszcz(&dialog);
+
+    for (QDoubleSpinBox* spin : { &spinKcal, &spinBialko, &spinWegle, &spinTluszcz })
+    {
+        spin->setMinimumHeight(46);
+    }
 
     spinKcal.setRange(0.0, 1000.0);
     spinBialko.setRange(0.0, 100.0);
@@ -1937,6 +2365,7 @@ void MainWindow::on_buttonDodajProdukt_clicked()
     spinTluszcz.setDecimals(1);
 
     QComboBox comboJednostka(&dialog);
+    comboJednostka.setMinimumHeight(46);
     comboJednostka.addItems({
         "Brak - wartości są na 100 g",
         "sztuka",
@@ -1952,22 +2381,25 @@ void MainWindow::on_buttonDodajProdukt_clicked()
     spinWagaJednostki.setDecimals(0);
     spinWagaJednostki.setValue(0.0);
     spinWagaJednostki.setSuffix(" g");
+    spinWagaJednostki.setMinimumHeight(46);
 
     auto dodajWiersz = [&](const QString& tekst, QWidget* pole)
         {
             auto* label = new QLabel(tekst, &dialog);
-            label->setMinimumWidth(165);
-            label->setStyleSheet("font-weight: 600; color: #444;");
-            layout.addRow(label, pole);
+            label->setMinimumWidth(170);
+            label->setStyleSheet("font-weight: 800; color: #475569;");
+            formularz->addRow(label, pole);
         };
 
-    dodajWiersz("Nazwa produktu:", &editNazwa);
-    dodajWiersz("Kalorie na 100 g:", &spinKcal);
-    dodajWiersz("Białko na 100 g:", &spinBialko);
-    dodajWiersz("Węglowodany na 100 g:", &spinWegle);
-    dodajWiersz("Tłuszcz na 100 g:", &spinTluszcz);
-    dodajWiersz("Dodatkowa jednostka:", &comboJednostka);
-    dodajWiersz("Waga jednostki:", &spinWagaJednostki);
+    dodajWiersz("Nazwa produktu", &editNazwa);
+    dodajWiersz("Kalorie / 100 g", &spinKcal);
+    dodajWiersz("Białko / 100 g", &spinBialko);
+    dodajWiersz("Węglowodany / 100 g", &spinWegle);
+    dodajWiersz("Tłuszcz / 100 g", &spinTluszcz);
+    dodajWiersz("Dodatkowa jednostka", &comboJednostka);
+    dodajWiersz("Waga jednostki", &spinWagaJednostki);
+
+    layout->addLayout(formularz);
 
     QDialogButtonBox przyciski(
         QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
@@ -1976,8 +2408,9 @@ void MainWindow::on_buttonDodajProdukt_clicked()
 
     przyciski.button(QDialogButtonBox::Ok)->setText("Zapisz produkt");
     przyciski.button(QDialogButtonBox::Cancel)->setText("Anuluj");
+    przyciski.button(QDialogButtonBox::Cancel)->setObjectName("buttonSecondary");
 
-    layout.addRow(&przyciski);
+    layout->addWidget(&przyciski);
 
     connect(&przyciski, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
     connect(&przyciski, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
