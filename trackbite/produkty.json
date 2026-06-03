@@ -1,0 +1,192 @@
+{
+    "produkty": [
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 31,
+                "kalorie": 165,
+                "tluszcz": 3.6,
+                "weglowodany": 0
+            },
+            "nazwa": "Pierś z kurczaka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 7,
+                "kalorie": 350,
+                "tluszcz": 1,
+                "weglowodany": 79
+            },
+            "nazwa": "Ryż biały",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 55,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 12.6,
+                "kalorie": 143,
+                "tluszcz": 9.5,
+                "weglowodany": 0.7
+            },
+            "nazwa": "Jajko",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 120,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1.1,
+                "kalorie": 89,
+                "tluszcz": 0.3,
+                "weglowodany": 22.8
+            },
+            "nazwa": "Banan",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 86,
+                "tluszcz": 0.5,
+                "weglowodany": 3.5
+            },
+            "nazwa": "Twaróg chudy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0,
+                "kalorie": 884,
+                "tluszcz": 100,
+                "weglowodany": 0
+            },
+            "nazwa": "Oliwa z oliwek",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 13,
+                "kalorie": 370,
+                "tluszcz": 7,
+                "weglowodany": 62
+            },
+            "nazwa": "Płatki owsiane",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.3,
+                "kalorie": 52,
+                "tluszcz": 0.2,
+                "weglowodany": 14
+            },
+            "nazwa": "Jabłko",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 35,
+                    "nazwa": "kromka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 6.5,
+                "kalorie": 259,
+                "tluszcz": 1.8,
+                "weglowodany": 48
+            },
+            "nazwa": "Chleb żytni",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 20,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 25,
+                "kalorie": 588,
+                "tluszcz": 50,
+                "weglowodany": 20
+            },
+            "nazwa": "Masło orzechowe",
+            "ulubiony": false
+        }
+    ]
+}

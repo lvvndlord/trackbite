@@ -15,6 +15,7 @@
 
 class QTableWidget;
 class QLabel;
+class QDoubleSpinBox;
 
 class MainWindow : public QMainWindow
 {
@@ -34,8 +35,6 @@ private slots:
     void on_buttonDodajKolacja_clicked();
     void on_buttonDodajPrzekaski_clicked();
 
-    void on_buttonZapiszProfil_clicked();
-
     void on_buttonDodajProdukt_clicked();
     void on_lineEditSzukajProduktu_textChanged(const QString& tekst);
 
@@ -49,9 +48,20 @@ private:
 
     bool aktualizujeUi = false;
 
+    QComboBox* comboCelTyp = nullptr;
+    QDoubleSpinBox* spinWagaDocelowa = nullptr;
+    QDoubleSpinBox* spinTempoWagi = nullptr;
+    QLabel* labelSzacowanyCzas = nullptr;
+    QLabel* labelAutoKalorie = nullptr;
+    double limitKaloriiAuto = 2000.0;
+
     void ustawDziennikGui();
     void ustawTabelePosilkow();
     void odswiezDziennik();
+    void odswiezSekcjeCelu();
+    void utworzSekcjeCeluProfilu();
+    void zastosujProfilZUiIAutozapis(bool pokazKomunikatyBledu);
+    void przeliczAutomatycznyLimitKalorii();
 
     void wypelnijTabeleDlaPory(
         PoraPosilku pora,
