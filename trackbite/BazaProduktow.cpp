@@ -9,7 +9,7 @@ using namespace std;
 
 namespace
 {
-    // Helper zamieniający cały tekst na małe litery - uodparnia bazę na błędy typu "Jabłko" == "jabłko"
+    // Helper zamieniający cały tekst na małe litery - uodparnia bazę na błędy typu "Jabłko" = "jabłko"
     string naMaleLitery(const string& tekst)
     {
         string wynik = tekst;
