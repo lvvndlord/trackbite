@@ -1,10 +1,10 @@
 #pragma once
 
+#include "TypyZywieniowe.h"
+
 #include <cstddef>
 #include <string>
 #include <vector>
-
-#include "TypyZywieniowe.h"
 
 enum class PoraPosilku
 {
@@ -33,14 +33,19 @@ public:
     const Makroskladniki& pobierzMakroNa100g() const;
     PoraPosilku pobierzPorePosilku() const;
 
+    void zmienIloscIJednostke(
+        double nowaIlosc,
+        const JednostkaProduktu& nowaJednostka
+    );
+
     Makroskladniki obliczMakro() const override;
 
 private:
     std::string nazwaProduktu;
-    double ilosc;
+    double ilosc = 0.0;
     JednostkaProduktu jednostka;
     Makroskladniki makroNa100g;
-    PoraPosilku poraPosilku;
+    PoraPosilku poraPosilku = PoraPosilku::Sniadanie;
 };
 
 class DziennikZywieniowy
@@ -71,11 +76,21 @@ public:
     );
 
     bool usunPozycje(std::size_t indeks);
+    bool usunPozycjeDlaPory(PoraPosilku pora, std::size_t indeksWPorze);
+
+    WynikOperacji edytujPozycjeDlaPory(
+        PoraPosilku pora,
+        std::size_t indeksWPorze,
+        double ilosc,
+        const JednostkaProduktu& jednostka
+    );
+
     void wyczysc();
 
     const std::vector<PozycjaDziennika>& pobierzPozycje() const;
 
     std::vector<PozycjaDziennika> pobierzPozycjeDlaPory(PoraPosilku pora) const;
+
     Makroskladniki obliczSume() const;
     Makroskladniki obliczSumeDlaPory(PoraPosilku pora) const;
 

@@ -2,7 +2,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include <QDate>
-#include <vector>
+#include <QComboBox>
+#include <QDoubleSpinBox>
 
 #include "ui_mainwindow.h"
 #include "DziennikZywieniowy.h"
@@ -10,6 +11,9 @@
 #include "BazaProduktow.h"
 #include "PlikManager.h"
 #include "ProfilUzytkownika.h"
+
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -34,41 +38,57 @@ private slots:
     void on_buttonDodajKolacja_clicked();
     void on_buttonDodajPrzekaski_clicked();
 
-    void on_buttonZapiszProfil_clicked();
-
-    // Nowe funkcje dla zakładki Produkty
     void on_buttonDodajProdukt_clicked();
-    void on_lineEditSzukajProduktu_textChanged(const QString& arg1);
+    void on_lineEditSzukajProduktu_textChanged(const QString& tekst);
 
 private:
     Ui::MainWindowClass ui;
 
     DziennikZywieniowy dziennik;
-    BazaProduktow bazaProduktow; // Używamy Twojej klasy zamiast vectora!
+    BazaProduktow bazaProduktow;
     ProfilUzytkownika profil;
     QDate aktualnaData;
 
-    void ustawDziennikGui();
-    void odswiezDziennik();
-
     bool aktualizujeUi = false;
 
-    void ustawTabelePosilkow();
-    void wypelnijTabeleDlaPory(
-        PoraPosilku pora,
-        QTableWidget* tabela,
-        QLabel* labelKcal
-    );
+    QComboBox* comboCelTyp = nullptr;
+    QDoubleSpinBox* spinWagaDocelowa = nullptr;
+    QDoubleSpinBox* spinTempoWagi = nullptr;
+    QLabel* labelSzacowanyCzas = nullptr;
+    QLabel* labelAutoKalorie = nullptr;
+    double limitKaloriiAuto = 2000.0;
 
-    void dodajProduktTestowyDoPory(PoraPosilku pora);
+    void ustawDziennikGui();
+    void ustawTabelePosilkow();
+    void odswiezDziennik();
+    void odswiezSekcjeCelu();
+    void utworzSekcjeCeluProfilu();
+    void zastosujProfilZUiIAutozapis(bool pokazKomunikatyBledu);
+    void przeliczAutomatycznyLimitKalorii();
+
+    void wypelnijTabeleDlaPory(PoraPosilku pora, QTableWidget* tabela, QLabel* labelKcal);
     void dopasujWysokoscTabeli(QTableWidget* tabela);
+
+    void dodajProduktDoPory(PoraPosilku pora);
+    void usunPozycjeWPorze(PoraPosilku pora, int indeksWiersza);
+    void edytujPozycjeWPorze(PoraPosilku pora, int indeksWiersza);
+    void podlaczEdycjePozycji(QTableWidget* tabela, PoraPosilku pora);
 
     void wczytajDaneZPlikow();
     void zapiszDaneDoPlikow();
 
-    QString komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) const;
-
-    // Funkcje pomocnicze dla UI produktów
-    void zaladujWektorDoTabeli(QTableWidget* tabela, const vector<Produkt>& prod);
     void odswiezTabeleProduktow();
+    void zaladujWektorDoTabeli(QTableWidget* tabela, const vector<Produkt>& produkty);
+
+    void otworzOknoEdycji(Produkt p);
+
+    vector<JednostkaProduktu> pobierzJednostkiDlaNazwy(const string& nazwaProduktu, const JednostkaProduktu* domyslnaJednostka = nullptr) const;
+
+    bool pokazDialogIlosci(
+        const QString& tytulOkna, const string& nazwaProduktu, const Makroskladniki& makroNa100g,
+        const vector<JednostkaProduktu>& dostepneJednostki, double domyslnaIlosc, const JednostkaProduktu& domyslnaJednostka,
+        double& wybranaIlosc, JednostkaProduktu& wybranaJednostka
+    );
+
+    QString komunikatBledu(DziennikZywieniowy::WynikOperacji wynik) const;
 };

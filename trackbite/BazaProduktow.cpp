@@ -1,67 +1,129 @@
 #include "BazaProduktow.h"
+
 #include <algorithm>
 #include <cctype>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-void BazaProduktow::dodajProdukt(const Produkt& p) {
-    listaProduktow.push_back(p);
+namespace
+{
+    // Helper zamieniający cały tekst na małe litery - uodparnia bazę na błędy typu "Jabłko" == "jabłko"
+    string naMaleLitery(const string& tekst)
+    {
+        string wynik = tekst;
+        transform(
+            wynik.begin(),
+            wynik.end(),
+            wynik.begin(),
+            [](unsigned char znak) { return static_cast<char>(tolower(znak)); }
+        );
+        return wynik;
+    }
 }
 
-bool BazaProduktow::usunProdukt(const string& nazwa) {
-    for (auto it = listaProduktow.begin(); it != listaProduktow.end(); ++it) {
-        if (it->pobierzNazwe() == nazwa) {
-            listaProduktow.erase(it);
-            return true;
+void BazaProduktow::dodajProdukt(const Produkt& produkt)
+{
+    if (!produkt.czyPoprawny()) { return; }
+
+    const string nazwaNowegoProduktu = naMaleLitery(produkt.pobierzNazwe());
+
+    // Przeszukanie bazy by zabezpieczyć się przed dublowaniem się produktów i awariami systemu
+    const auto znaleziony = find_if(
+        listaProduktow.begin(),
+        listaProduktow.end(),
+        [&nazwaNowegoProduktu](const Produkt& obecnyProdukt) {
+            return naMaleLitery(obecnyProdukt.pobierzNazwe()) == nazwaNowegoProduktu;
         }
-    }
-    return false;
+    );
+
+    if (znaleziony != listaProduktow.end()) { return; }
+
+    listaProduktow.push_back(produkt);
 }
 
-bool BazaProduktow::usunProduktPoIndeksie(int indeks) {
-    if (indeks >= 0 && indeks < listaProduktow.size()) {
-        listaProduktow.erase(listaProduktow.begin() + indeks);
-        return true;
-    }
-    return false;
+bool BazaProduktow::usunProdukt(const string& nazwa)
+{
+    const string szukanaNazwa = naMaleLitery(nazwa);
+
+    const auto znaleziony = find_if(
+        listaProduktow.begin(),
+        listaProduktow.end(),
+        [&szukanaNazwa](const Produkt& produkt) {
+            return naMaleLitery(produkt.pobierzNazwe()) == szukanaNazwa;
+        }
+    );
+
+    if (znaleziony == listaProduktow.end()) { return false; } // Nic nie znaleziono
+
+    listaProduktow.erase(znaleziony);
+    return true;
 }
 
-vector<Produkt> BazaProduktow::wyszukajProdukt(const string& fraza) const {
+bool BazaProduktow::usunProduktPoIndeksie(int indeks)
+{
+    if (indeks < 0) { return false; }
+
+    const size_t indeksJakoSizeT = static_cast<size_t>(indeks);
+
+    // Ochrona przed usunięciem wiersza, który wykracza poza rozmiar bazy
+    if (indeksJakoSizeT >= listaProduktow.size()) { return false; }
+
+    listaProduktow.erase(listaProduktow.begin() + static_cast<ptrdiff_t>(indeksJakoSizeT));
+    return true;
+}
+
+// Algorytm filtrujący dla "Live Searcha"
+vector<Produkt> BazaProduktow::wyszukajProdukt(const string& fraza) const
+{
+    if (fraza.empty()) { return listaProduktow; } // Puste pole wrzuca wszystko
+
     vector<Produkt> wyniki;
+    const string frazaMale = naMaleLitery(fraza);
 
-    string frazaMale = fraza;
-    transform(frazaMale.begin(), frazaMale.end(), frazaMale.begin(), ::tolower);
+    for (const Produkt& produkt : listaProduktow)
+    {
+        const string nazwaMale = naMaleLitery(produkt.pobierzNazwe());
 
-    for (const auto& p : listaProduktow) {
-        string nazwaMale = p.pobierzNazwe();
-        transform(nazwaMale.begin(), nazwaMale.end(), nazwaMale.begin(), ::tolower);
-
-        if (nazwaMale.find(frazaMale) != string::npos) {
-            wyniki.push_back(p);
+        // Metoda 'find' zwraca string::npos jeśli NIE odnajdzie powiązania. Różne od 'npos' znaczy, że wpisaliśmy trafnie.
+        if (nazwaMale.find(frazaMale) != string::npos)
+        {
+            wyniki.push_back(produkt);
         }
     }
+
     return wyniki;
 }
 
-vector<Produkt> BazaProduktow::pobierzWszystkie() const {
-    return listaProduktow;
-}
+vector<Produkt> BazaProduktow::pobierzWszystkie() const { return listaProduktow; }
 
-void BazaProduktow::przelaczUlubiony(const string& nazwa) {
-    for (auto& p : listaProduktow) {
-        if (p.pobierzNazwe() == nazwa) {
-            p.ustawUlubiony(!p.czyUlubiony());
-            break;
+// Wyszukuje dany produkt i zamienia pole "ulubiony" na przeciwny status
+void BazaProduktow::przelaczUlubiony(const string& nazwa)
+{
+    const string szukanaNazwa = naMaleLitery(nazwa);
+
+    const auto znaleziony = find_if(
+        listaProduktow.begin(),
+        listaProduktow.end(),
+        [&szukanaNazwa](const Produkt& produkt) {
+            return naMaleLitery(produkt.pobierzNazwe()) == szukanaNazwa;
         }
+    );
+
+    if (znaleziony != listaProduktow.end())
+    {
+        znaleziony->ustawUlubiony(!znaleziony->czyUlubiony());
     }
 }
 
-vector<Produkt> BazaProduktow::pobierzUlubione() const {
+// Metoda widoku wykorzystywana do wypełniania specjalnej zakładki "Ulubione"
+vector<Produkt> BazaProduktow::pobierzUlubione() const
+{
     vector<Produkt> ulubione;
-    for (const auto& p : listaProduktow) {
-        if (p.czyUlubiony()) {
-            ulubione.push_back(p);
-        }
+    for (const Produkt& produkt : listaProduktow)
+    {
+        if (produkt.czyUlubiony()) { ulubione.push_back(produkt); }
     }
     return ulubione;
 }
