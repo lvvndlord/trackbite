@@ -1,3 +1,5 @@
+// Implementacja bazy produktów trzymanej w pamięci programu.
+// Klasa pilnuje braku duplikatów, wyszukiwania oraz listy ulubionych.
 #include "BazaProduktow.h"
 
 #include <algorithm>
@@ -7,6 +9,7 @@
 
 namespace
 {
+    // Normalizacja tekstu do porównań: dzięki temu „Jabłko” i „jabłko” są traktowane jak ta sama nazwa.
     std::string naMaleLitery(const std::string& tekst)
     {
         std::string wynik = tekst;
@@ -25,6 +28,7 @@ namespace
     }
 }
 
+// Dodawanie produktu jest defensywne: najpierw walidacja obiektu, potem blokada duplikatu po nazwie.
 void BazaProduktow::dodajProdukt(const Produkt& produkt)
 {
     if (!produkt.czyPoprawny())
@@ -34,6 +38,7 @@ void BazaProduktow::dodajProdukt(const Produkt& produkt)
 
     const std::string nazwaNowegoProduktu = naMaleLitery(produkt.pobierzNazwe());
 
+    // Szukamy produktu o tej samej nazwie niezależnie od wielkości liter, żeby nie robić duplikatów w tabeli.
     const auto znaleziony = std::find_if(
         listaProduktow.begin(),
         listaProduktow.end(),
@@ -51,6 +56,7 @@ void BazaProduktow::dodajProdukt(const Produkt& produkt)
     listaProduktow.push_back(produkt);
 }
 
+// Usuwanie po nazwie jest używane głównie z UI, gdzie użytkownik widzi nazwę produktu w tabeli.
 bool BazaProduktow::usunProdukt(const std::string& nazwa)
 {
     const std::string szukanaNazwa = naMaleLitery(nazwa);
@@ -82,6 +88,7 @@ bool BazaProduktow::usunProduktPoIndeksie(int indeks)
 
     const std::size_t indeksJakoSizeT = static_cast<std::size_t>(indeks);
 
+    // Indeks z widoku może być błędny, więc przed erase koniecznie sprawdzamy zakres wektora.
     if (indeksJakoSizeT >= listaProduktow.size())
     {
         return false;
@@ -91,6 +98,7 @@ bool BazaProduktow::usunProduktPoIndeksie(int indeks)
     return true;
 }
 
+// Filtrowanie do wyszukiwarki „na żywo”: pusta fraza zwraca całą bazę, wpisany tekst zawęża wyniki.
 std::vector<Produkt> BazaProduktow::wyszukajProdukt(const std::string& fraza) const
 {
     if (fraza.empty())
@@ -105,6 +113,7 @@ std::vector<Produkt> BazaProduktow::wyszukajProdukt(const std::string& fraza) co
     {
         const std::string nazwaMale = naMaleLitery(produkt.pobierzNazwe());
 
+        // find != npos oznacza, że wpisana fraza występuje gdzieś w nazwie produktu.
         if (nazwaMale.find(frazaMale) != std::string::npos)
         {
             wyniki.push_back(produkt);
@@ -114,11 +123,13 @@ std::vector<Produkt> BazaProduktow::wyszukajProdukt(const std::string& fraza) co
     return wyniki;
 }
 
+// Zwracamy kopię listy, żeby zewnętrzny kod nie mógł przypadkiem zmienić wektora bez kontroli klasy.
 std::vector<Produkt> BazaProduktow::pobierzWszystkie() const
 {
     return listaProduktow;
 }
 
+// Przełącza gwiazdkę produktu. Jeśli nazwa nie istnieje, metoda nic nie psuje i po prostu kończy działanie.
 void BazaProduktow::przelaczUlubiony(const std::string& nazwa)
 {
     const std::string szukanaNazwa = naMaleLitery(nazwa);
@@ -138,6 +149,7 @@ void BazaProduktow::przelaczUlubiony(const std::string& nazwa)
     }
 }
 
+// Buduje osobną listę tylko z produktami oznaczonymi gwiazdką, potrzebną do zakładki „Ulubione”.
 std::vector<Produkt> BazaProduktow::pobierzUlubione() const
 {
     std::vector<Produkt> ulubione;

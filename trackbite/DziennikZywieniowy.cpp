@@ -1,3 +1,5 @@
+// Implementacja dziennika żywieniowego: pozycje posiłków, przeliczenia makro,
+// dzienne limity oraz operacje dodawania/edycji/usuwania wpisów.
 #include "DziennikZywieniowy.h"
 
 #include <cmath>
@@ -5,11 +7,13 @@
 
 namespace
 {
+    // Pomocnicza kontrola pól tekstowych: nazwa złożona z samych spacji jest traktowana jak pusta.
     bool czyTekstPusty(const std::string& tekst)
     {
         return tekst.find_first_not_of(" \t\n\r") == std::string::npos;
     }
 
+    // Jedna funkcja do walidacji liczb zabezpiecza przed NaN, nieskończonością i wartościami spoza zakresu.
     bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
     {
         return std::isfinite(wartosc)
@@ -17,6 +21,8 @@ namespace
             && wartosc <= maksimum;
     }
 
+    // Tabele w UI mają indeksy liczone osobno dla każdej pory posiłku.
+    // Ta funkcja mapuje taki indeks na prawdziwy indeks w głównym wektorze dziennika.
     std::optional<std::size_t> znajdzIndeksGlobalnyDlaPory(
         const std::vector<PozycjaDziennika>& pozycje,
         PoraPosilku pora,
@@ -44,6 +50,7 @@ namespace
     }
 }
 
+// Pozycja dziennika zapamiętuje stan produktu w momencie dodania, także makro i wybraną jednostkę.
 PozycjaDziennika::PozycjaDziennika(
     const std::string& nazwaProduktu,
     double ilosc,
@@ -56,8 +63,10 @@ PozycjaDziennika::PozycjaDziennika(
     jednostka(jednostka),
     makroNa100g(makroNa100g),
     poraPosilku(poraPosilku)
-{}
+{
+}
 
+// Gettery są używane przez UI i zapis do JSON-a; nie modyfikują obiektu.
 const std::string& PozycjaDziennika::pobierzNazweProduktu() const
 {
     return nazwaProduktu;
@@ -73,6 +82,7 @@ const JednostkaProduktu& PozycjaDziennika::pobierzJednostke() const
     return jednostka;
 }
 
+// Ilość użytkownika przeliczamy na gramy, bo makroskładniki są przechowywane w przeliczeniu na 100 g.
 double PozycjaDziennika::pobierzGramy() const
 {
     return ilosc * jednostka.gramyNaJednostke;
@@ -88,6 +98,7 @@ PoraPosilku PozycjaDziennika::pobierzPorePosilku() const
     return poraPosilku;
 }
 
+// Przy edycji pozycji zmieniamy tylko ilość i jednostkę, a nazwa oraz makro produktu zostają bez zmian.
 void PozycjaDziennika::zmienIloscIJednostke(
     double nowaIlosc,
     const JednostkaProduktu& nowaJednostka
@@ -97,15 +108,19 @@ void PozycjaDziennika::zmienIloscIJednostke(
     jednostka = nowaJednostka;
 }
 
+// Właściwe przeliczenie kalorii i makro dla konkretnej ilości produktu.
 Makroskladniki PozycjaDziennika::obliczMakro() const
 {
     return makroNa100g.przeliczNaGramy(pobierzGramy());
 }
 
+// Domyślne limity pozwalają uruchomić aplikację bez wcześniejszego uzupełniania profilu.
 DziennikZywieniowy::DziennikZywieniowy()
     : limityDzienne{ 2200.0, 120.0, 240.0, 70.0 }
-{}
+{
+}
 
+// Dodanie wpisu składa dane makro w strukturę, waliduje całość i dopiero wtedy dopisuje do wektora.
 DziennikZywieniowy::WynikOperacji DziennikZywieniowy::dodajPozycje(
     const std::string& nazwaProduktu,
     double ilosc,
@@ -143,6 +158,7 @@ DziennikZywieniowy::WynikOperacji DziennikZywieniowy::dodajPozycje(
     return WynikOperacji::Sukces;
 }
 
+// Usunięcie po indeksie globalnym jest najprostszą operacją na głównym wektorze pozycji.
 bool DziennikZywieniowy::usunPozycje(std::size_t indeks)
 {
     if (indeks >= pozycje.size())
@@ -157,6 +173,7 @@ bool DziennikZywieniowy::usunPozycje(std::size_t indeks)
     return true;
 }
 
+// Usuwanie z konkretnej pory posiłku musi najpierw znaleźć odpowiadający wpis w całym dzienniku.
 bool DziennikZywieniowy::usunPozycjeDlaPory(
     PoraPosilku pora,
     std::size_t indeksWPorze
@@ -173,6 +190,7 @@ bool DziennikZywieniowy::usunPozycjeDlaPory(
     return usunPozycje(indeksGlobalny.value());
 }
 
+// Edycja pozycji korzysta z tej samej walidacji co dodawanie, żeby nie rozjechały się zasady poprawności danych.
 DziennikZywieniowy::WynikOperacji DziennikZywieniowy::edytujPozycjeDlaPory(
     PoraPosilku pora,
     std::size_t indeksWPorze,
@@ -206,6 +224,7 @@ DziennikZywieniowy::WynikOperacji DziennikZywieniowy::edytujPozycjeDlaPory(
     return WynikOperacji::Sukces;
 }
 
+// Czyści tylko wpisy dnia, nie ruszając zapisanych limitów dziennych.
 void DziennikZywieniowy::wyczysc()
 {
     pozycje.clear();
@@ -216,6 +235,7 @@ const std::vector<PozycjaDziennika>& DziennikZywieniowy::pobierzPozycje() const
     return pozycje;
 }
 
+// Tworzy osobną listę pozycji dla wybranej pory, dzięki czemu każda tabela posiłku może być wypełniana niezależnie.
 std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(
     PoraPosilku pora
 ) const
@@ -233,6 +253,7 @@ std::vector<PozycjaDziennika> DziennikZywieniowy::pobierzPozycjeDlaPory(
     return wynik;
 }
 
+// Sumowanie całego dnia opiera się na obliczMakro() każdej pozycji, więc jednostki są uwzględniane automatycznie.
 Makroskladniki DziennikZywieniowy::obliczSume() const
 {
     Makroskladniki suma;
@@ -245,6 +266,7 @@ Makroskladniki DziennikZywieniowy::obliczSume() const
     return suma;
 }
 
+// Sumowanie dla jednej pory posiłku zasila nagłówki tabel: kcal, białko, węgle i tłuszcz przy danym posiłku.
 Makroskladniki DziennikZywieniowy::obliczSumeDlaPory(PoraPosilku pora) const
 {
     Makroskladniki suma;
@@ -260,6 +282,7 @@ Makroskladniki DziennikZywieniowy::obliczSumeDlaPory(PoraPosilku pora) const
     return suma;
 }
 
+// Ustawianie limitów ma własną walidację, bo błędny limit zepsułby paski procentowe i podsumowanie dnia.
 bool DziennikZywieniowy::ustawLimitKalorii(double limitKalorii)
 {
     if (!czyLiczbaWZakresie(limitKalorii, 1.0, 10000.0))
@@ -285,16 +308,19 @@ bool DziennikZywieniowy::ustawLimityDzienne(const Makroskladniki& limity)
     return true;
 }
 
+// Limity są zwracane jako kopia, bo UI ma je tylko wyświetlać albo zapisywać do pliku.
 Makroskladniki DziennikZywieniowy::pobierzLimityDzienne() const
 {
     return limityDzienne;
 }
 
+// Różnica między limitem a spożyciem może być ujemna — wtedy UI pokazuje przekroczenie limitu.
 double DziennikZywieniowy::pozostaleKalorie() const
 {
     return limityDzienne.kalorie - obliczSume().kalorie;
 }
 
+// Procenty są przygotowane pod paski postępu w interfejsie.
 int DziennikZywieniowy::procentKalorii() const
 {
     return procentWartosci(
@@ -327,6 +353,7 @@ int DziennikZywieniowy::procentTluszczu() const
     );
 }
 
+// Centralna walidacja pozycji dziennika: metoda zwraca konkretny kod błędu zamiast samego true/false.
 DziennikZywieniowy::WynikOperacji DziennikZywieniowy::walidujPozycje(
     const std::string& nazwaProduktu,
     double ilosc,
@@ -365,6 +392,7 @@ DziennikZywieniowy::WynikOperacji DziennikZywieniowy::walidujPozycje(
     return WynikOperacji::Sukces;
 }
 
+// Wspólna metoda do obliczania procentów makro; chroni przed dzieleniem przez zero i błędnym limitem.
 int DziennikZywieniowy::procentWartosci(double wartosc, double limit) const
 {
     if (!czyLiczbaWZakresie(limit, 0.01, 100000.0))

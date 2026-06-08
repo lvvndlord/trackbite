@@ -1,3 +1,5 @@
+// Implementacja zapisu i odczytu danych aplikacji w formacie JSON.
+// PlikManager oddziela logikę plików od klas domenowych i interfejsu.
 #include "PlikManager.h"
 
 #include <QFile>
@@ -8,6 +10,7 @@
 
 namespace
 {
+    // Zamienia enum pory posiłku na tekst zapisywany w JSON-ie.
     QString poraPosilkuNaTekst(PoraPosilku pora)
     {
         switch (pora)
@@ -32,6 +35,7 @@ namespace
         }
     }
 
+    // Odwrotność funkcji powyżej: tekst z pliku zmienia z powrotem na enum używany w programie.
     bool tekstNaPorePosilku(const QString& tekst, PoraPosilku& pora)
     {
         if (tekst == "Sniadanie")
@@ -69,6 +73,7 @@ namespace
 
     bool zapiszJsonDoPliku(const std::string& sciezka, const QJsonObject& root)
     {
+        // Otwieramy plik tekstowo, bo JSON ma być czytelny również poza programem.
         QFile plik(QString::fromStdString(sciezka));
 
         if (!plik.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -77,6 +82,7 @@ namespace
         }
 
         const QJsonDocument dokument(root);
+        // Indented zostawia plik czytelny dla człowieka, co pomaga przy testach i debugowaniu.
         plik.write(dokument.toJson(QJsonDocument::Indented));
         plik.close();
 
@@ -85,6 +91,7 @@ namespace
 
     bool wczytajJsonZPliku(const std::string& sciezka, QJsonObject& root)
     {
+        // Brak pliku nie jest awarią programu — metoda zwróci false, a aplikacja użyje danych domyślnych.
         QFile plik(QString::fromStdString(sciezka));
 
         if (!plik.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -92,6 +99,7 @@ namespace
             return false;
         }
 
+        // Czytamy cały plik naraz, bo dane aplikacji są małe i proste.
         const QByteArray dane = plik.readAll();
         plik.close();
 
@@ -107,6 +115,7 @@ namespace
         return true;
     }
 
+    // Proste mapowanie struktury makro na obiekt JSON. Nazwy pól muszą być zgodne przy zapisie i odczycie.
     QJsonObject makroDoJson(const Makroskladniki& makro)
     {
         QJsonObject obiekt;
@@ -119,6 +128,7 @@ namespace
         return obiekt;
     }
 
+    // Odczyt makro z JSON-a. Brakujące wartości Qt zamieni na 0, a dalsza walidacja odfiltruje błędne rekordy.
     Makroskladniki makroZJson(const QJsonObject& obiekt)
     {
         return {
@@ -129,6 +139,7 @@ namespace
         };
     }
 
+    // Jednostka produktu jest zapisywana jako nazwa oraz przelicznik gramów.
     QJsonObject jednostkaDoJson(const JednostkaProduktu& jednostka)
     {
         QJsonObject obiekt;
@@ -139,6 +150,7 @@ namespace
         return obiekt;
     }
 
+    // Przy odczycie jednostki od razu odrzucamy puste nazwy i niepoprawne przeliczniki.
     bool jednostkaZJson(const QJsonObject& obiekt, JednostkaProduktu& jednostka)
     {
         const QString nazwa = obiekt["nazwa"].toString();
@@ -158,11 +170,13 @@ namespace
     }
 }
 
+// Zapis produktów obejmuje nazwę, makro, stan ulubionego oraz wszystkie zdefiniowane jednostki.
 bool PlikManager::zapiszProdukty(
     const std::string& sciezka,
     const std::vector<Produkt>& produkty
 )
 {
+    // Budujemy tablicę JSON, w której każdy element odpowiada jednemu produktowi z bazy.
     QJsonArray produktyArray;
 
     for (const Produkt& produkt : produkty)
@@ -188,9 +202,11 @@ bool PlikManager::zapiszProdukty(
     QJsonObject root;
     root["produkty"] = produktyArray;
 
+    // Fizyczny zapis jest przeniesiony do wspólnej funkcji pomocniczej.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
+// Wczytywanie produktów jest odporne na częściowo uszkodzony plik: błędne rekordy są pomijane.
 bool PlikManager::wczytajProdukty(
     const std::string& sciezka,
     std::vector<Produkt>& produkty
@@ -198,6 +214,7 @@ bool PlikManager::wczytajProdukty(
 {
     QJsonObject root;
 
+    // Jeśli pliku nie ma albo JSON jest uszkodzony, zwracamy false i nie nadpisujemy aktualnych danych.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;
@@ -266,11 +283,13 @@ bool PlikManager::wczytajProdukty(
     return true;
 }
 
+// Profil użytkownika zapisujemy jako pojedynczy obiekt JSON, bo to jeden zestaw danych, a nie lista.
 bool PlikManager::zapiszProfil(
     const std::string& sciezka,
     const ProfilUzytkownika& profil
 )
 {
+    // Każde pole profilu dostaje własny klucz, co upraszcza późniejsze wczytywanie.
     QJsonObject root;
 
     root["imie"] = QString::fromStdString(profil.pobierzImie());
@@ -282,9 +301,11 @@ bool PlikManager::zapiszProfil(
     root["wagaDocelowa"] = profil.pobierzWageDocelowa();
     root["tempoZmianyWagiTygodniowo"] = profil.pobierzTempoZmianyWagiTygodniowo();
 
+    // Zwracamy wynik zapisu, żeby wywołujący mógł zareagować na problem z plikiem.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
+// Przy odczycie profilu korzystamy z setterów, więc zakresy liczb są nadal pilnowane przez klasę profilu.
 bool PlikManager::wczytajProfil(
     const std::string& sciezka,
     ProfilUzytkownika& profil
@@ -292,6 +313,7 @@ bool PlikManager::wczytajProfil(
 {
     QJsonObject root;
 
+    // Niepoprawny lub brakujący plik oznacza powrót do danych domyślnych w aplikacji.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;
@@ -312,11 +334,13 @@ bool PlikManager::wczytajProfil(
     return true;
 }
 
+// Dziennik zapisuje limity oraz listę pozycji z podziałem na pory posiłku.
 bool PlikManager::zapiszDziennik(
     const std::string& sciezka,
     const DziennikZywieniowy& dziennik
 )
 {
+    // Limity zapisujemy razem z pozycjami, aby każdy dzień mógł mieć własny stan podsumowania.
     QJsonObject root;
 
     root["limityDzienne"] = makroDoJson(dziennik.pobierzLimityDzienne());
@@ -339,9 +363,11 @@ bool PlikManager::zapiszDziennik(
 
     root["pozycje"] = pozycjeArray;
 
+    // Zapis trafia do pliku zależnego od daty, co pozwala przełączać dni w aplikacji.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
+// Odczyt dziennika odtwarza obiekt przez publiczne metody, dzięki czemu działa ta sama walidacja co w UI.
 bool PlikManager::wczytajDziennik(
     const std::string& sciezka,
     DziennikZywieniowy& dziennik
@@ -349,6 +375,7 @@ bool PlikManager::wczytajDziennik(
 {
     QJsonObject root;
 
+    // Jeśli plik dziennika nie istnieje dla danej daty, aplikacja zacznie od pustego dnia.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;

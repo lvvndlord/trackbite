@@ -1,9 +1,12 @@
+// Implementacja profilu użytkownika: dane podstawowe, cel wagowy,
+// limit kalorii oraz proste obliczenie czasu dojścia do celu.
 #include "ProfilUzytkownika.h"
 
 #include <cmath>
 
 namespace
 {
+    // Wspólna kontrola wartości liczbowych używana przez settery profilu.
     bool czyLiczbaWZakresie(double wartosc, double minimum, double maksimum)
     {
         return std::isfinite(wartosc)
@@ -12,6 +15,7 @@ namespace
     }
 }
 
+// Gettery zwracają aktualny stan profilu do UI oraz do zapisu w pliku.
 const std::string& ProfilUzytkownika::pobierzImie() const
 {
     return imie;
@@ -52,6 +56,7 @@ double ProfilUzytkownika::pobierzTempoZmianyWagiTygodniowo() const
     return tempoZmianyWagiTygodniowo;
 }
 
+// Settery aktualizują dane profilu, a przy liczbach odrzucają wartości spoza rozsądnych zakresów.
 void ProfilUzytkownika::ustawImie(const std::string& noweImie)
 {
     imie = noweImie;
@@ -122,6 +127,7 @@ void ProfilUzytkownika::ustawTempoZmianyWagiTygodniowo(double noweTempo)
     tempoZmianyWagiTygodniowo = noweTempo;
 }
 
+// Cel wagi jest poprawny tylko wtedy, gdy obecna waga, cel i tempo dają realną różnicę do policzenia.
 bool ProfilUzytkownika::maPoprawnyCelWagi() const
 {
     return czyLiczbaWZakresie(waga, 20.0, 400.0)
@@ -130,6 +136,7 @@ bool ProfilUzytkownika::maPoprawnyCelWagi() const
         && std::abs(wagaDocelowa - waga) >= 0.1;
 }
 
+// Szacowanie czasu jest proste: różnica kilogramów podzielona przez tempo tygodniowe i zamieniona na dni.
 int ProfilUzytkownika::obliczSzacowaneDniDoCelu() const
 {
     if (!maPoprawnyCelWagi())

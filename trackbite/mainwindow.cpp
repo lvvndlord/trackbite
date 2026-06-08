@@ -1,3 +1,5 @@
+// Implementacja głównego okna aplikacji Fit Plan.
+// Ten plik łączy interfejs Qt z logiką dziennika, bazy produktów, profilu i zapisu do plików.
 #include "mainwindow.h"
 
 #include <QAbstractItemView>
@@ -29,16 +31,19 @@
 
 namespace
 {
+    // Stałe nazwy plików trzymamy w funkcjach pomocniczych, żeby nie rozrzucać stringów po całej klasie.
     std::string sciezkaProfilu()
     {
         return "profil.json";
     }
 
+    // Plik z produktami jest wspólny dla całej aplikacji, niezależnie od wybranego dnia.
     std::string sciezkaProduktow()
     {
         return "produkty.json";
     }
 
+    // Dziennik ma osobny plik dla każdej daty, np. dziennik_2026_06_08.json.
     std::string sciezkaDziennikaDlaDaty(const QDate& data)
     {
         return QString("dziennik_%1.json")
@@ -46,6 +51,7 @@ namespace
             .toStdString();
     }
 
+    // Centralny arkusz stylów Qt. Dzięki temu wygląd aplikacji jest ustawiany w jednym miejscu.
     QString stylAplikacji()
     {
         return R"(
@@ -244,7 +250,7 @@ namespace
                 border: none;
             }
 
-            /* DZIENNIK */
+            /* DZIENNIK - style kart, nagłówka dnia i podsumowania posiłków */
             QFrame#frameStatusDnia,
             QFrame#frameProduktyHero,
             QFrame#frameProfilHero {
@@ -438,7 +444,7 @@ namespace
                 color: #15803d;
             }
 
-            /* PRODUKTY */
+            /* PRODUKTY - styl listy produktów, ulubionych i przycisku dodawania */
             QPushButton#buttonDodajProdukt {
                 background: #ffffff;
                 color: #15803d;
@@ -457,7 +463,7 @@ namespace
                 min-height: 360px;
             }
 
-            /* PROFIL */
+            /* PROFIL - formularz danych użytkownika i celów wagowych */
             QLabel#labelWiek,
             QLabel#labelWaga,
             QLabel#labelWzrost,
@@ -470,7 +476,7 @@ namespace
             }
 
 
-            /* POPRAWKI: etykiety w kartach nie mogą dziedziczyć QFrame */
+            /* POPRAWKI: etykiety w kartach nie mogą dziedziczyć tła i obramowania QFrame */
             QLabel,
             QFrame QLabel {
                 background: transparent;
@@ -619,6 +625,7 @@ namespace
         )";
     }
 
+    // Ustawia pasek postępu i koloruje go na czerwono po przekroczeniu 100%.
     void ustawProgress(QProgressBar* pasek, int procent)
     {
         const int wartoscPaska = std::clamp(procent, 0, 100);
@@ -649,6 +656,7 @@ namespace
         );
     }
 
+    // Porównuje jednostki z tolerancją dla liczb zmiennoprzecinkowych, bo wartości typu 1.0 mogą mieć drobne różnice.
     bool czyTaSamaJednostka(
         const JednostkaProduktu& pierwsza,
         const JednostkaProduktu& druga
@@ -659,6 +667,7 @@ namespace
     }
 }
 
+// Konstruktor składa całe okno: ustawia styl, ładuje dane, podpina profil i odświeża wszystkie widoki.
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent),
     aktualnaData(QDate::currentDate())
@@ -675,6 +684,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     wczytajDaneZPlikow();
 
+    // Flaga blokuje autozapis podczas programowego ustawiania pól, żeby start aplikacji nie wywoływał niepotrzebnych zmian.
     aktualizujeUi = true;
 
     limitKaloriiAuto = std::round(profil.pobierzLimitKalorii());
@@ -734,14 +744,15 @@ MainWindow::MainWindow(QWidget* parent)
     ui.tableUlubione->verticalHeader()->setVisible(false);
 }
 
+// Destruktor zapisuje aktualny stan, żeby zamknięcie programu nie zgubiło zmian użytkownika.
 MainWindow::~MainWindow()
 {
     zapiszDaneDoPlikow();
 }
 
+// Sekcja celu jest wyszukiwana po nazwach kontrolek z pliku .ui, a brakujące etykiety są tworzone awaryjnie w kodzie.
 void MainWindow::utworzSekcjeCeluProfilu()
 {
-    // Podpinanie kontrolek po objectName z UI (żeby działało nawet gdy nazwy nie są członkami ui.xxx)
     comboCelTyp = ui.profilTab->findChild<QComboBox*>("comboBoxCel");
 
     if (comboCelTyp == nullptr)
@@ -777,7 +788,6 @@ void MainWindow::utworzSekcjeCeluProfilu()
         labelAutoKalorie = ui.profilTab->findChild<QLabel*>("labelAutoKcalProfil");
     }
 
-    // Gdy etykiety nie istnieją w UI, utwórz je automatycznie
     if (labelSzacowanyCzas == nullptr)
     {
         labelSzacowanyCzas = new QLabel(ui.profilTab);
@@ -901,6 +911,7 @@ void MainWindow::utworzSekcjeCeluProfilu()
     );
 }
 
+// Odświeża informacje o celu wagowym i dzisiejszym bilansie kalorii widoczne w zakładce profilu.
 void MainWindow::odswiezSekcjeCelu()
 {
     if (labelSzacowanyCzas == nullptr || spinWagaDocelowa == nullptr || spinTempoWagi == nullptr)
@@ -939,6 +950,7 @@ void MainWindow::odswiezSekcjeCelu()
     );
 }
 
+// Wylicza automatyczny limit kcal z danych profilu i kierunku celu; wynik trafia do profilu oraz dziennika.
 void MainWindow::przeliczAutomatycznyLimitKalorii()
 {
     if (comboCelTyp == nullptr || spinWagaDocelowa == nullptr || spinTempoWagi == nullptr)
@@ -956,10 +968,12 @@ void MainWindow::przeliczAutomatycznyLimitKalorii()
         return;
     }
 
+    // Uproszczony wzór na BMR; w projekcie wystarcza jako automatyczna propozycja limitu kcal.
     const double bmr = 10.0 * waga + 6.25 * wzrost - 5.0 * static_cast<double>(wiek) + 5.0;
     const double tdee = bmr * 1.4;
 
     const double tempo = spinTempoWagi->value();
+    // Przyjmujemy orientacyjnie 7700 kcal na 1 kg masy i rozbijamy zmianę na dni tygodnia.
     const double kcalNaDzienZmiana = (tempo * 7700.0) / 7.0;
 
     const double roznicaKg = wagaDocelowa - waga;
@@ -989,8 +1003,10 @@ void MainWindow::przeliczAutomatycznyLimitKalorii()
     }
 }
 
+// Zbiera dane z formularza profilu, waliduje je, aktualizuje model i od razu zapisuje zmiany do plików.
 void MainWindow::zastosujProfilZUiIAutozapis(bool pokazKomunikatyBledu)
 {
+    // Gdy UI jest właśnie wypełniane z pliku, nie zapisujemy tych samych danych z powrotem.
     if (aktualizujeUi)
     {
         return;
@@ -1081,6 +1097,7 @@ void MainWindow::zastosujProfilZUiIAutozapis(bool pokazKomunikatyBledu)
     odswiezSekcjeCelu();
 }
 
+// Jednorazowa konfiguracja wyglądu i zachowania tabel dziennika po utworzeniu interfejsu.
 void MainWindow::ustawDziennikGui()
 {
     ui.scrollAreaDziennik->setWidgetResizable(true);
@@ -1148,6 +1165,7 @@ void MainWindow::ustawDziennikGui()
     }
 }
 
+// Ustawia wszystkie tabele posiłków według jednego schematu kolumn, selekcji i rozmiarów.
 void MainWindow::ustawTabelePosilkow()
 {
     auto ustawTabele = [](QTableWidget* tabela)
@@ -1210,6 +1228,7 @@ void MainWindow::ustawTabelePosilkow()
     podlaczEdycjePozycji(ui.tablePrzekaski, PoraPosilku::Przekaski);
 }
 
+// Podłącza kliknięcie w wiersz tabeli do edycji pozycji z odpowiedniej pory posiłku.
 void MainWindow::podlaczEdycjePozycji(QTableWidget* tabela, PoraPosilku pora)
 {
     connect(
@@ -1228,6 +1247,7 @@ void MainWindow::podlaczEdycjePozycji(QTableWidget* tabela, PoraPosilku pora)
     );
 }
 
+// Dynamiczna wysokość sprawia, że puste tabele znikają, a wypełnione nie pokazują wewnętrznego scrolla.
 void MainWindow::dopasujWysokoscTabeli(QTableWidget* tabela)
 {
     if (tabela->rowCount() <= 0)
@@ -1246,6 +1266,7 @@ void MainWindow::dopasujWysokoscTabeli(QTableWidget* tabela)
     tabela->setMaximumHeight(wysokosc);
 }
 
+// Wypełnia jedną tabelę posiłku: liczy sumę pory, ustawia wiersze produktów i dodaje przyciski usuwania.
 void MainWindow::wypelnijTabeleDlaPory(
     PoraPosilku pora,
     QTableWidget* tabela,
@@ -1265,6 +1286,7 @@ void MainWindow::wypelnijTabeleDlaPory(
         .arg(sumaPory.tluszcz, 0, 'f', 1)
     );
 
+    // Pusta pora posiłku ma schowaną tabelę, dzięki czemu ekran nie marnuje miejsca.
     if (pozycje.empty())
     {
         tabela->clearContents();
@@ -1364,6 +1386,7 @@ void MainWindow::wypelnijTabeleDlaPory(
     }
 }
 
+// Główne odświeżenie dziennika po każdej zmianie: tabele, data, kafelki kcal i paski makro.
 void MainWindow::odswiezDziennik()
 {
     odswiezSekcjeCelu();
@@ -1428,6 +1451,7 @@ void MainWindow::odswiezDziennik()
 
     const double zostalo = dziennik.pozostaleKalorie();
 
+    // Ujemna wartość oznacza przekroczenie limitu — dlatego UI zmienia tekst i kolor sekcji.
     if (zostalo < 0.0)
     {
         ui.labelTytulZostalo->setText("Przekroczono");
@@ -1494,6 +1518,7 @@ void MainWindow::odswiezDziennik()
     ui.scrollAreaDziennik->updateGeometry();
 }
 
+// Pobiera jednostki produktu z bazy i dokłada jednostkę z edytowanej pozycji, żeby nie zgubić starych danych.
 std::vector<JednostkaProduktu> MainWindow::pobierzJednostkiDlaNazwy(
     const std::string& nazwaProduktu,
     const JednostkaProduktu* domyslnaJednostka
@@ -1579,6 +1604,7 @@ std::vector<JednostkaProduktu> MainWindow::pobierzJednostkiDlaNazwy(
     return wynik;
 }
 
+// Wspólny dialog wyboru ilości i jednostki, używany zarówno przy dodawaniu, jak i edycji pozycji posiłku.
 bool MainWindow::pokazDialogIlosci(
     const QString& tytulOkna,
     const std::string& nazwaProduktu,
@@ -1722,6 +1748,7 @@ bool MainWindow::pokazDialogIlosci(
 
     odswiezPodglad();
 
+    // Jeśli użytkownik anuluje dialog, nie zmieniamy modelu danych.
     if (dialog.exec() != QDialog::Accepted)
     {
         return false;
@@ -1740,6 +1767,7 @@ bool MainWindow::pokazDialogIlosci(
     return true;
 }
 
+// Obsługuje pełny proces dodania produktu do posiłku: wybór produktu, ilość, walidację, zapis i odświeżenie.
 void MainWindow::dodajProduktDoPory(PoraPosilku pora)
 {
     const std::vector<Produkt> produkty = bazaProduktow.pobierzWszystkie();
@@ -1918,6 +1946,7 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     odswiezDziennik();
 }
 
+// Edycja pozycji korzysta z indeksu w konkretnej tabeli posiłku, a dziennik mapuje go później na główny wektor.
 void MainWindow::edytujPozycjeWPorze(PoraPosilku pora, int indeksWiersza)
 {
     const std::vector<PozycjaDziennika> pozycje =
@@ -1971,6 +2000,7 @@ void MainWindow::edytujPozycjeWPorze(PoraPosilku pora, int indeksWiersza)
     odswiezDziennik();
 }
 
+// Usuwa wpis z wybranej pory posiłku i od razu zapisuje nowy stan dnia.
 void MainWindow::usunPozycjeWPorze(PoraPosilku pora, int indeksWiersza)
 {
     if (indeksWiersza < 0)
@@ -1994,6 +2024,7 @@ void MainWindow::usunPozycjeWPorze(PoraPosilku pora, int indeksWiersza)
     odswiezDziennik();
 }
 
+// Startowe ładowanie danych: profil, produkty i dziennik bieżącego dnia; przy braku produktów tworzy przykładową bazę.
 void MainWindow::wczytajDaneZPlikow()
 {
     ProfilUzytkownika wczytanyProfil;
@@ -2060,6 +2091,7 @@ void MainWindow::wczytajDaneZPlikow()
         );
     }
 
+    // Brak pliku dla daty oznacza nowy pusty dzień z limitem pobranym z profilu.
     if (!PlikManager::wczytajDziennik(
         sciezkaDziennikaDlaDaty(aktualnaData),
         dziennik))
@@ -2069,6 +2101,7 @@ void MainWindow::wczytajDaneZPlikow()
     }
 }
 
+// Jeden punkt zapisu całego stanu aplikacji, używany po zmianach i przy przełączaniu dni.
 void MainWindow::zapiszDaneDoPlikow()
 {
     PlikManager::zapiszProfil(sciezkaProfilu(), profil);
@@ -2084,6 +2117,7 @@ void MainWindow::zapiszDaneDoPlikow()
     );
 }
 
+// Przełączenie dnia zapisuje obecny dziennik, tworzy pusty model dla nowej daty i próbuje wczytać jej plik.
 void MainWindow::on_buttonPoprzedniDzien_clicked()
 {
     zapiszDaneDoPlikow();
@@ -2100,6 +2134,7 @@ void MainWindow::on_buttonPoprzedniDzien_clicked()
     odswiezDziennik();
 }
 
+// Analogiczna obsługa przejścia do kolejnego dnia w dzienniku.
 void MainWindow::on_buttonNastepnyDzien_clicked()
 {
     zapiszDaneDoPlikow();
@@ -2116,6 +2151,7 @@ void MainWindow::on_buttonNastepnyDzien_clicked()
     odswiezDziennik();
 }
 
+// Sloty przycisków dodawania przekazują tylko właściwą porę posiłku do wspólnej metody.
 void MainWindow::on_buttonDodajSniadanie_clicked()
 {
     dodajProduktDoPory(PoraPosilku::Sniadanie);
@@ -2141,6 +2177,7 @@ void MainWindow::on_buttonDodajPrzekaski_clicked()
     dodajProduktDoPory(PoraPosilku::Przekaski);
 }
 
+// Wczytuje listę produktów do tabeli, tworząc też przyciski ulubionych, usuwania i obsługę edycji.
 void MainWindow::zaladujWektorDoTabeli(
     QTableWidget* tabela,
     const std::vector<Produkt>& produkty
@@ -2184,6 +2221,23 @@ void MainWindow::zaladujWektorDoTabeli(
     tabela->setColumnWidth(6, 56);
 
     tabela->setRowCount(0);
+
+    // Przed ponownym podłączeniem sygnału odpinamy stare połączenia, żeby dwuklik nie uruchamiał edycji kilka razy.
+    disconnect(tabela, &QTableWidget::cellDoubleClicked, this, nullptr);
+
+    // Dwuklik w nazwę produktu otwiera formularz edycji konkretnego rekordu.
+    connect(tabela, &QTableWidget::cellDoubleClicked, this, [this, tabela](int row, int column) {
+        if (column == 0) {
+            std::string nazwaDoEdycji = tabela->item(row, 0)->text().toStdString();
+            for (const auto& p : bazaProduktow.pobierzWszystkie()) {
+                if (p.pobierzNazwe() == nazwaDoEdycji) {
+                    otworzOknoEdycji(p);
+                    break;
+                }
+            }
+        }
+        });
+
 
     for (int i = 0; i < static_cast<int>(produkty.size()); ++i)
     {
@@ -2282,10 +2336,12 @@ void MainWindow::zaladujWektorDoTabeli(
     tabela->resizeRowsToContents();
 }
 
+// Odświeża zakładkę produktów: główna tabela respektuje wyszukiwarkę, a ulubione zawsze pokazują same gwiazdki.
 void MainWindow::odswiezTabeleProduktow()
 {
     const std::string fraza = ui.lineEditSzukajProduktu->text().trimmed().toStdString();
 
+    // Pusta wyszukiwarka pokazuje wszystkie produkty, wpisany tekst uruchamia filtrowanie po nazwie.
     if (fraza.empty())
     {
         zaladujWektorDoTabeli(
@@ -2307,11 +2363,13 @@ void MainWindow::odswiezTabeleProduktow()
     );
 }
 
+// Każda zmiana tekstu w wyszukiwarce natychmiast przebudowuje listę produktów.
 void MainWindow::on_lineEditSzukajProduktu_textChanged(const QString&)
 {
     odswiezTabeleProduktow();
 }
 
+// Formularz dodawania produktu buduje Produkt z danych użytkownika, waliduje go i dopiero wtedy dopisuje do bazy.
 void MainWindow::on_buttonDodajProdukt_clicked()
 {
     QDialog dialog(this);
@@ -2329,7 +2387,7 @@ void MainWindow::on_buttonDodajProdukt_clicked()
     tytul->setObjectName("dialogTitle");
     layout->addWidget(tytul);
 
-    auto* opis = new QLabel("Wpisz wartości odżywcze na 100 g. Dodatkową jednostkę dodawaj tylko wtedy, gdy znasz jej wagę.", &dialog);
+    auto* opis = new QLabel("Wpisz wartości odżywcze dla 100 g produktu. Poniżej możesz opcjonalnie zdefiniować własne miary (np. plaster, opakowanie).", &dialog);
     opis->setObjectName("dialogSubtitle");
     opis->setWordWrap(true);
     layout->addWidget(opis);
@@ -2344,44 +2402,19 @@ void MainWindow::on_buttonDodajProdukt_clicked()
     editNazwa.setPlaceholderText("np. Jajko, Ryż biały, Banan");
     editNazwa.setMinimumHeight(46);
 
-    QDoubleSpinBox spinKcal(&dialog);
-    QDoubleSpinBox spinBialko(&dialog);
-    QDoubleSpinBox spinWegle(&dialog);
-    QDoubleSpinBox spinTluszcz(&dialog);
+    QDoubleSpinBox spinKcal(&dialog), spinBialko(&dialog), spinWegle(&dialog), spinTluszcz(&dialog);
 
     for (QDoubleSpinBox* spin : { &spinKcal, &spinBialko, &spinWegle, &spinTluszcz })
     {
         spin->setMinimumHeight(46);
+        spin->setRange(0.0, 10000.0);
+        spin->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
     }
-
-    spinKcal.setRange(0.0, 1000.0);
-    spinBialko.setRange(0.0, 100.0);
-    spinWegle.setRange(0.0, 100.0);
-    spinTluszcz.setRange(0.0, 100.0);
 
     spinKcal.setDecimals(0);
     spinBialko.setDecimals(1);
     spinWegle.setDecimals(1);
     spinTluszcz.setDecimals(1);
-
-    QComboBox comboJednostka(&dialog);
-    comboJednostka.setMinimumHeight(46);
-    comboJednostka.addItems({
-        "Brak - wartości są na 100 g",
-        "sztuka",
-        "opakowanie",
-        "porcja",
-        "ml",
-        "łyżka",
-        "szklanka"
-        });
-
-    QDoubleSpinBox spinWagaJednostki(&dialog);
-    spinWagaJednostki.setRange(0.0, 5000.0);
-    spinWagaJednostki.setDecimals(0);
-    spinWagaJednostki.setValue(0.0);
-    spinWagaJednostki.setSuffix(" g");
-    spinWagaJednostki.setMinimumHeight(46);
 
     auto dodajWiersz = [&](const QString& tekst, QWidget* pole)
         {
@@ -2396,10 +2429,61 @@ void MainWindow::on_buttonDodajProdukt_clicked()
     dodajWiersz("Białko / 100 g", &spinBialko);
     dodajWiersz("Węglowodany / 100 g", &spinWegle);
     dodajWiersz("Tłuszcz / 100 g", &spinTluszcz);
-    dodajWiersz("Dodatkowa jednostka", &comboJednostka);
-    dodajWiersz("Waga jednostki", &spinWagaJednostki);
 
     layout->addLayout(formularz);
+
+    QFrame* linia = new QFrame(&dialog);
+    linia->setFrameShape(QFrame::HLine);
+    linia->setStyleSheet("color: #e2e8f0; margin-top: 4px; margin-bottom: 4px;");
+    layout->addWidget(linia);
+
+    auto* opisMiar = new QLabel("Dodatkowe jednostki (opcjonalnie):", &dialog);
+    opisMiar->setStyleSheet("font-weight: 800; color: #475569; font-size: 14px;");
+    layout->addWidget(opisMiar);
+
+    QVBoxLayout* jednostkiLayout = new QVBoxLayout();
+    jednostkiLayout->setSpacing(10);
+    layout->addLayout(jednostkiLayout);
+
+    struct MiaraRow { QComboBox* combo; QDoubleSpinBox* spin; };
+    std::vector<MiaraRow> wierszeMiar;
+
+    auto dodajWierszMiary = [&](const std::string& domyslnaNazwa = "sztuka", double domyslnaWaga = 0.0) {
+        QHBoxLayout* row = new QHBoxLayout();
+
+        QComboBox* combo = new QComboBox(&dialog);
+        combo->addItems({ "sztuka", "opakowanie", "porcja", "plaster", "ml", "łyżka", "szklanka" });
+        combo->setMinimumHeight(46);
+        combo->setCurrentText(QString::fromStdString(domyslnaNazwa));
+
+        QDoubleSpinBox* spin = new QDoubleSpinBox(&dialog);
+        spin->setRange(0.0, 5000.0);
+        spin->setDecimals(0);
+        spin->setMinimumHeight(46);
+        spin->setSuffix(" g");
+        spin->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        spin->setValue(domyslnaWaga);
+
+        row->addWidget(combo, 1);
+        row->addWidget(spin, 1);
+
+        jednostkiLayout->addLayout(row);
+        wierszeMiar.push_back({ combo, spin });
+        dialog.adjustSize();
+        };
+
+    dodajWierszMiary();
+
+    QPushButton* btnDodajMiare = new QPushButton("+ Dodaj kolejną miarę", &dialog);
+    btnDodajMiare->setStyleSheet(
+        "QPushButton { background: #f8fafc; color: #15803d; border: 1px dashed #bbf7d0; border-radius: 14px; padding: 8px; font-weight: 800; }"
+        "QPushButton:hover { background: #f0fdf4; }"
+    );
+    layout->addWidget(btnDodajMiare);
+
+    connect(btnDodajMiare, &QPushButton::clicked, [&]() {
+        dodajWierszMiary();
+        });
 
     QDialogButtonBox przyciski(
         QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
@@ -2428,64 +2512,239 @@ void MainWindow::on_buttonDodajProdukt_clicked()
         return;
     }
 
-    Produkt nowyProdukt(
-        nazwa,
-        {
-            spinKcal.value(),
-            spinBialko.value(),
-            spinWegle.value(),
-            spinTluszcz.value()
-        }
-    );
+    Produkt nowyProdukt(nazwa, { spinKcal.value(), spinBialko.value(), spinWegle.value(), spinTluszcz.value() });
 
-    if (comboJednostka.currentIndex() != 0)
-    {
-        if (spinWagaJednostki.value() <= 0.0)
-        {
-            QMessageBox::warning(
-                this,
-                "Błąd",
-                "Dla dodatkowej jednostki podaj wagę większą od 0 g."
-            );
-            return;
+    for (const auto& wiersz : wierszeMiar) {
+        if (wiersz.spin->value() > 0.0) {
+            nowyProdukt.dodajJednostke(wiersz.combo->currentText().toStdString(), wiersz.spin->value());
         }
-
-        nowyProdukt.dodajJednostke(
-            comboJednostka.currentText().toStdString(),
-            spinWagaJednostki.value()
-        );
     }
 
     if (!nowyProdukt.czyPoprawny())
     {
-        QMessageBox::warning(
-            this,
-            "Błąd",
-            "Wprowadzone wartości produktu są niepoprawne."
-        );
+        QMessageBox::warning(this, "Błąd", "Wprowadzone wartości produktu są niepoprawne.");
         return;
     }
 
+    // Baza nie zwraca osobnego kodu błędu przy duplikacie, więc porównujemy rozmiar przed i po dodaniu.
     const std::size_t liczbaPrzed = bazaProduktow.pobierzWszystkie().size();
     bazaProduktow.dodajProdukt(nowyProdukt);
     const std::size_t liczbaPo = bazaProduktow.pobierzWszystkie().size();
 
     if (liczbaPo == liczbaPrzed)
     {
-        QMessageBox::warning(
-            this,
-            "Produkt",
-            "Nie dodano produktu. Taki produkt może już istnieć albo dane są niepoprawne."
-        );
+        QMessageBox::warning(this, "Produkt", "Nie dodano produktu. Taki produkt może już istnieć albo dane są niepoprawne.");
         return;
     }
 
     zapiszDaneDoPlikow();
     odswiezTabeleProduktow();
 
-    QMessageBox::information(this, "Produkt", "Produkt został dodany.");
+    QMessageBox::information(this, "Produkt", "Produkt został pomyślnie dodany.");
 }
 
+// Formularz edycji pracuje na kopii produktu; stary rekord jest przywracany, jeśli nowe dane okażą się błędne.
+void MainWindow::otworzOknoEdycji(Produkt p)
+{
+    QDialog dialog(this);
+    dialog.setObjectName("dialogFit");
+    dialog.setWindowTitle("Edytuj produkt");
+    dialog.setStyleSheet(styleSheet());
+    dialog.setMinimumWidth(560);
+    dialog.setModal(true);
+
+    auto* layout = new QVBoxLayout(&dialog);
+    layout->setContentsMargins(24, 22, 24, 20);
+    layout->setSpacing(14);
+
+    auto* tytul = new QLabel("Edytuj produkt", &dialog);
+    tytul->setObjectName("dialogTitle");
+    layout->addWidget(tytul);
+
+    auto* opis = new QLabel("Zaktualizuj wartości odżywcze dla 100 g produktu. Możesz też edytować lub dopisać nowe własne miary (np. plaster, opakowanie).", &dialog);
+    opis->setObjectName("dialogSubtitle");
+    opis->setWordWrap(true);
+    layout->addWidget(opis);
+
+    auto* formularz = new QFormLayout();
+    formularz->setContentsMargins(0, 4, 0, 0);
+    formularz->setSpacing(12);
+    formularz->setLabelAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    formularz->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+
+    QLineEdit editNazwa(&dialog);
+    editNazwa.setText(QString::fromStdString(p.pobierzNazwe()));
+    editNazwa.setMinimumHeight(46);
+
+    QDoubleSpinBox spinKcal(&dialog), spinBialko(&dialog), spinWegle(&dialog), spinTluszcz(&dialog);
+
+    for (QDoubleSpinBox* spin : { &spinKcal, &spinBialko, &spinWegle, &spinTluszcz })
+    {
+        spin->setMinimumHeight(46);
+        spin->setRange(0.0, 10000.0);
+        spin->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    }
+
+    spinKcal.setDecimals(0);
+    spinBialko.setDecimals(1);
+    spinWegle.setDecimals(1);
+    spinTluszcz.setDecimals(1);
+
+    // Formularz edycji startuje od dotychczasowych wartości produktu.
+    spinKcal.setValue(p.pobierzMakroNa100g().kalorie);
+    spinBialko.setValue(p.pobierzMakroNa100g().bialko);
+    spinWegle.setValue(p.pobierzMakroNa100g().weglowodany);
+    spinTluszcz.setValue(p.pobierzMakroNa100g().tluszcz);
+
+    auto dodajWiersz = [&](const QString& tekst, QWidget* pole)
+        {
+            auto* label = new QLabel(tekst, &dialog);
+            label->setMinimumWidth(170);
+            label->setStyleSheet("font-weight: 800; color: #475569;");
+            formularz->addRow(label, pole);
+        };
+
+    dodajWiersz("Nazwa produktu", &editNazwa);
+
+    auto* labelMakroTitle = new QLabel("Wartości dla 100g:", &dialog);
+    labelMakroTitle->setStyleSheet("font-size: 14px; font-weight: 900; color: #15803d; margin-top: 10px; padding-bottom: 5px; border-bottom: 2px solid #bbf7d0;");
+    labelMakroTitle->setAlignment(Qt::AlignCenter);
+    formularz->addRow(labelMakroTitle);
+
+    dodajWiersz("Kalorie (kcal)", &spinKcal);
+    dodajWiersz("Białko (g)", &spinBialko);
+    dodajWiersz("Węglowodany (g)", &spinWegle);
+    dodajWiersz("Tłuszcz (g)", &spinTluszcz);
+
+    layout->addLayout(formularz);
+
+    // Sekcja dynamicznych miar pozwala dopisywać jednostki bez stałej liczby pól w UI.
+    QFrame* linia = new QFrame(&dialog);
+    linia->setFrameShape(QFrame::HLine);
+    linia->setStyleSheet("color: #e5e7eb; margin-top: 5px; margin-bottom: 5px;");
+    layout->addWidget(linia);
+
+    auto* opisMiar = new QLabel("Dodatkowe jednostki (opcjonalnie):", &dialog);
+    opisMiar->setStyleSheet("font-weight: 900; color: #0f172a; font-size: 14px;");
+    layout->addWidget(opisMiar);
+
+    QVBoxLayout* jednostkiLayout = new QVBoxLayout();
+    jednostkiLayout->setSpacing(10);
+    layout->addLayout(jednostkiLayout);
+
+    struct MiaraRow { QComboBox* combo; QDoubleSpinBox* spin; };
+    std::vector<MiaraRow> wierszeMiar;
+
+    // Lokalna lambda dodaje jeden wiersz miary i zapamiętuje wskaźniki do późniejszego odczytu.
+    auto dodajWierszMiary = [&](const std::string& domyslnaNazwa = "sztuka", double domyslnaWaga = 0.0) {
+        QHBoxLayout* row = new QHBoxLayout();
+
+        QComboBox* combo = new QComboBox(&dialog);
+        combo->addItems({ "sztuka", "opakowanie", "porcja", "plaster", "ml", "łyżka", "szklanka" });
+        combo->setMinimumHeight(46);
+        combo->setCurrentText(QString::fromStdString(domyslnaNazwa));
+
+        QDoubleSpinBox* spin = new QDoubleSpinBox(&dialog);
+        spin->setRange(0.0, 5000.0);
+        spin->setDecimals(0);
+        spin->setMinimumHeight(46);
+        spin->setSuffix(" g");
+        spin->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+        spin->setValue(domyslnaWaga);
+
+        row->addWidget(combo, 1);
+        row->addWidget(spin, 1);
+
+        jednostkiLayout->addLayout(row);
+        wierszeMiar.push_back({ combo, spin });
+        };
+
+    // Przy edycji odtwarzamy wcześniejsze miary, ale pomijamy bazowe gramy.
+    bool mialInne = false;
+    for (const auto& jedn : p.pobierzJednostki()) {
+        // Bazowe gramy są dodawane automatycznie przez Produkt, więc nie pokazujemy ich jako dodatkowej miary.
+        if (jedn.nazwa != "g" && jedn.nazwa != "gram") {
+            dodajWierszMiary(jedn.nazwa, jedn.gramyNaJednostke);
+            mialInne = true;
+        }
+    }
+
+    // Jeśli produkt nie miał dodatkowych miar, zostawiamy jeden pusty wiersz dla wygody użytkownika.
+    if (!mialInne) {
+        dodajWierszMiary();
+    }
+
+    QPushButton* btnDodajMiare = new QPushButton("+ Dodaj kolejną miarę", &dialog);
+    btnDodajMiare->setStyleSheet(
+        "QPushButton { background: #f8fafc; color: #15803d; border: 1px dashed #bbf7d0; border-radius: 14px; padding: 10px; font-weight: 800; }"
+        "QPushButton:hover { background: #f0fdf4; }"
+    );
+    layout->addWidget(btnDodajMiare);
+
+    connect(btnDodajMiare, &QPushButton::clicked, [&]() {
+        dodajWierszMiary();
+        dialog.adjustSize();
+        });
+
+    QDialogButtonBox przyciski(
+        QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
+        &dialog
+    );
+
+    przyciski.button(QDialogButtonBox::Ok)->setText("Zapisz zmiany");
+    przyciski.button(QDialogButtonBox::Cancel)->setText("Anuluj");
+    przyciski.button(QDialogButtonBox::Cancel)->setObjectName("buttonSecondary");
+
+    layout->addWidget(&przyciski);
+
+    connect(&przyciski, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+    connect(&przyciski, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+    if (dialog.exec() != QDialog::Accepted)
+    {
+        return;
+    }
+
+    const std::string nazwa = editNazwa.text().trimmed().toStdString();
+
+    if (nazwa.empty())
+    {
+        QMessageBox::warning(this, "Błąd", "Nazwa produktu nie może być pusta.");
+        return;
+    }
+
+    // Edycję realizujemy jako podmianę: usuwamy starą wersję i po walidacji dodajemy nową.
+    bazaProduktow.usunProdukt(p.pobierzNazwe());
+
+    Produkt nowyProdukt(nazwa, { spinKcal.value(), spinBialko.value(), spinWegle.value(), spinTluszcz.value() });
+
+    // Gwiazdka ulubionych nie powinna zniknąć tylko dlatego, że użytkownik edytował makro.
+    nowyProdukt.ustawUlubiony(p.czyUlubiony());
+
+    for (const auto& wiersz : wierszeMiar) {
+        if (wiersz.spin->value() > 0.0) {
+            nowyProdukt.dodajJednostke(wiersz.combo->currentText().toStdString(), wiersz.spin->value());
+        }
+    }
+
+    // Jeśli nowe dane są błędne, przywracamy starą wersję, żeby nie utracić produktu.
+    if (!nowyProdukt.czyPoprawny())
+    {
+        bazaProduktow.dodajProdukt(p);
+        QMessageBox::warning(this, "Błąd", "Wprowadzone wartości produktu są niepoprawne.");
+        return;
+    }
+
+    // Po pozytywnej walidacji nowy obiekt zastępuje poprzedni w bazie.
+    bazaProduktow.dodajProdukt(nowyProdukt);
+
+    zapiszDaneDoPlikow();
+    odswiezTabeleProduktow();
+
+    QMessageBox::information(this, "Produkt", "Produkt został pomyślnie zaktualizowany.");
+}
+
+// Tłumaczy kody błędów z logiki dziennika na komunikaty zrozumiałe dla użytkownika.
 QString MainWindow::komunikatBledu(
     DziennikZywieniowy::WynikOperacji wynik
 ) const
