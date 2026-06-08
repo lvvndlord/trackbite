@@ -7,6 +7,7 @@ class ProfilUzytkownika
 public:
     ProfilUzytkownika() = default;
 
+    // Gettery używane przy zapisie profilu do pliku.
     const std::string& pobierzImie() const;
     int pobierzWiek() const;
     double pobierzWage() const;
@@ -16,6 +17,7 @@ public:
     double pobierzWageDocelowa() const;
     double pobierzTempoZmianyWagiTygodniowo() const;
 
+    // Settery używane przy odczycie profilu z pliku.
     void ustawImie(const std::string& noweImie);
     void ustawWiek(int nowyWiek);
     void ustawWage(double nowaWaga);
@@ -29,6 +31,7 @@ public:
     int obliczSzacowaneDniDoCelu() const;
 
 private:
+    // Pola profilu zapisywane i odczytywane z pliku.
     std::string imie;
     int wiek = 0;
     double waga = 0.0;

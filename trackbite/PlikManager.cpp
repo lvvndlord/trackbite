@@ -69,6 +69,7 @@ namespace
 
     bool zapiszJsonDoPliku(const std::string& sciezka, const QJsonObject& root)
     {
+        // Otwiera plik do zapisu danych aplikacji.
         QFile plik(QString::fromStdString(sciezka));
 
         if (!plik.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -77,6 +78,7 @@ namespace
         }
 
         const QJsonDocument dokument(root);
+        // Zapisuje sformatowany JSON do pliku.
         plik.write(dokument.toJson(QJsonDocument::Indented));
         plik.close();
 
@@ -85,6 +87,7 @@ namespace
 
     bool wczytajJsonZPliku(const std::string& sciezka, QJsonObject& root)
     {
+        // Otwiera plik do odczytu danych aplikacji.
         QFile plik(QString::fromStdString(sciezka));
 
         if (!plik.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -92,6 +95,7 @@ namespace
             return false;
         }
 
+        // Wczytuje całą zawartość pliku JSON.
         const QByteArray dane = plik.readAll();
         plik.close();
 
@@ -163,6 +167,7 @@ bool PlikManager::zapiszProdukty(
     const std::vector<Produkt>& produkty
 )
 {
+    // Przygotowuje strukturę danych produktów do zapisu w pliku.
     QJsonArray produktyArray;
 
     for (const Produkt& produkt : produkty)
@@ -188,6 +193,7 @@ bool PlikManager::zapiszProdukty(
     QJsonObject root;
     root["produkty"] = produktyArray;
 
+    // Zapisuje produkty do wskazanego pliku.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
@@ -198,6 +204,7 @@ bool PlikManager::wczytajProdukty(
 {
     QJsonObject root;
 
+    // Wczytuje dane produktów z pliku.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;
@@ -271,6 +278,7 @@ bool PlikManager::zapiszProfil(
     const ProfilUzytkownika& profil
 )
 {
+    // Przygotowuje dane profilu użytkownika do zapisu w pliku.
     QJsonObject root;
 
     root["imie"] = QString::fromStdString(profil.pobierzImie());
@@ -282,6 +290,7 @@ bool PlikManager::zapiszProfil(
     root["wagaDocelowa"] = profil.pobierzWageDocelowa();
     root["tempoZmianyWagiTygodniowo"] = profil.pobierzTempoZmianyWagiTygodniowo();
 
+    // Zapisuje profil użytkownika do wskazanego pliku.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
@@ -292,6 +301,7 @@ bool PlikManager::wczytajProfil(
 {
     QJsonObject root;
 
+    // Wczytuje profil użytkownika z pliku.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;
@@ -317,6 +327,7 @@ bool PlikManager::zapiszDziennik(
     const DziennikZywieniowy& dziennik
 )
 {
+    // Przygotowuje dane dziennika do zapisu w pliku.
     QJsonObject root;
 
     root["limityDzienne"] = makroDoJson(dziennik.pobierzLimityDzienne());
@@ -339,6 +350,7 @@ bool PlikManager::zapiszDziennik(
 
     root["pozycje"] = pozycjeArray;
 
+    // Zapisuje dziennik żywieniowy do wskazanego pliku.
     return zapiszJsonDoPliku(sciezka, root);
 }
 
@@ -349,6 +361,7 @@ bool PlikManager::wczytajDziennik(
 {
     QJsonObject root;
 
+    // Wczytuje dziennik żywieniowy z pliku.
     if (!wczytajJsonZPliku(sciezka, root))
     {
         return false;
