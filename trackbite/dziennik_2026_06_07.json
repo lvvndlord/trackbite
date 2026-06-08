@@ -1,0 +1,40 @@
+{
+    "limityDzienne": {
+        "bialko": 120,
+        "kalorie": 3208,
+        "tluszcz": 70,
+        "weglowodany": 240
+    },
+    "pozycje": [
+        {
+            "ilosc": 1,
+            "jednostka": {
+                "gramyNaJednostke": 500,
+                "nazwa": "opakowanie"
+            },
+            "makroNa100g": {
+                "bialko": 7,
+                "kalorie": 350,
+                "tluszcz": 1,
+                "weglowodany": 79
+            },
+            "nazwaProduktu": "Ryż biały",
+            "poraPosilku": "Obiad"
+        },
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 10,
+                "nazwa": "łyżka"
+            },
+            "makroNa100g": {
+                "bialko": 35,
+                "kalorie": 170,
+                "tluszcz": 3.6,
+                "weglowodany": 5
+            },
+            "nazwaProduktu": "Pierś z kurczaka",
+            "poraPosilku": "Obiad"
+        }
+    ]
+}

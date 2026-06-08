@@ -1,10 +1,10 @@
 {
-    "cel": "",
-    "imie": "",
-    "limitKalorii": 2000,
-    "tempoZmianyWagiTygodniowo": 0,
-    "waga": 0,
-    "wagaDocelowa": 0,
-    "wiek": 0,
-    "wzrost": 0
+    "cel": "Utrzymanie masy",
+    "imie": "Grzegorz",
+    "limitKalorii": 3208,
+    "tempoZmianyWagiTygodniowo": 0.4,
+    "waga": 91,
+    "wagaDocelowa": 91,
+    "wiek": 11,
+    "wzrost": 229
 }

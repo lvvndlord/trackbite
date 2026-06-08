@@ -1,0 +1,25 @@
+{
+    "limityDzienne": {
+        "bialko": 120,
+        "kalorie": 3334,
+        "tluszcz": 70,
+        "weglowodany": 240
+    },
+    "pozycje": [
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 1,
+                "nazwa": "g"
+            },
+            "makroNa100g": {
+                "bialko": 0,
+                "kalorie": 884,
+                "tluszcz": 100,
+                "weglowodany": 0
+            },
+            "nazwaProduktu": "Oliwa z oliwek",
+            "poraPosilku": "DrugieSniadanie"
+        }
+    ]
+}

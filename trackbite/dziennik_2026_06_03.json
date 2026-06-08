@@ -1,10 +1,55 @@
 {
     "limityDzienne": {
         "bialko": 120,
-        "kalorie": 2000,
+        "kalorie": 3173,
         "tluszcz": 70,
         "weglowodany": 240
     },
     "pozycje": [
+        {
+            "ilosc": 1000,
+            "jednostka": {
+                "gramyNaJednostke": 1,
+                "nazwa": "g"
+            },
+            "makroNa100g": {
+                "bialko": 6.5,
+                "kalorie": 259,
+                "tluszcz": 1.8,
+                "weglowodany": 48
+            },
+            "nazwaProduktu": "Chleb żytni",
+            "poraPosilku": "Kolacja"
+        },
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 1,
+                "nazwa": "g"
+            },
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 86,
+                "tluszcz": 0.5,
+                "weglowodany": 3.5
+            },
+            "nazwaProduktu": "Twaróg chudy",
+            "poraPosilku": "Przekaski"
+        },
+        {
+            "ilosc": 100,
+            "jednostka": {
+                "gramyNaJednostke": 1,
+                "nazwa": "g"
+            },
+            "makroNa100g": {
+                "bialko": 1.1,
+                "kalorie": 89,
+                "tluszcz": 0.3,
+                "weglowodany": 22.8
+            },
+            "nazwaProduktu": "Banan",
+            "poraPosilku": "Obiad"
+        }
     ]
 }
