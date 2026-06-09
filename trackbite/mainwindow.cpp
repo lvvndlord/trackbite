@@ -8,12 +8,14 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDoubleSpinBox>
+#include <QDir>
 #include <QFormLayout>
 #include <QFrame>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
+#include <QListWidgetItem>
 #include <QMessageBox>
 #include <QProgressBar>
 #include <QPushButton>
@@ -21,6 +23,7 @@
 #include <QSizePolicy>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+#include <QTabWidget>
 #include <QVBoxLayout>
 
 #include <algorithm>
@@ -31,24 +34,51 @@
 
 namespace
 {
+    // Nazwa folderu, w którym aplikacja trzyma własne pliki danych.
+    QString nazwaKataloguDanych()
+    {
+        return "dane";
+    }
+
+    // Zwraca ścieżkę do folderu danych i tworzy go, jeśli jeszcze nie istnieje.
+    QString katalogDanych()
+    {
+        QDir katalogRoboczy(QDir::currentPath());
+
+        if (!katalogRoboczy.exists(nazwaKataloguDanych()))
+        {
+            katalogRoboczy.mkpath(nazwaKataloguDanych());
+        }
+
+        return katalogRoboczy.filePath(nazwaKataloguDanych());
+    }
+
+    // Dokleja nazwę pliku do folderu danych.
+    std::string sciezkaWFolderzeDanych(const QString& nazwaPliku)
+    {
+        QDir katalog(katalogDanych());
+        return katalog.filePath(nazwaPliku).toStdString();
+    }
+
     // Stałe nazwy plików trzymamy w funkcjach pomocniczych, żeby nie rozrzucać stringów po całej klasie.
     std::string sciezkaProfilu()
     {
-        return "profil.json";
+        return sciezkaWFolderzeDanych("profil.json");
     }
 
     // Plik z produktami jest wspólny dla całej aplikacji, niezależnie od wybranego dnia.
     std::string sciezkaProduktow()
     {
-        return "produkty.json";
+        return sciezkaWFolderzeDanych("produkty.json");
     }
 
-    // Dziennik ma osobny plik dla każdej daty, np. dziennik_2026_06_08.json.
+    // Dziennik ma osobny plik dla każdej daty.
     std::string sciezkaDziennikaDlaDaty(const QDate& data)
     {
-        return QString("dziennik_%1.json")
-            .arg(data.toString("yyyy_MM_dd"))
-            .toStdString();
+        const QString nazwaPliku = QString("dziennik_%1.json")
+            .arg(data.toString("yyyy_MM_dd"));
+
+        return sciezkaWFolderzeDanych(nazwaPliku);
     }
 
     // Centralny arkusz stylów Qt. Dzięki temu wygląd aplikacji jest ustawiany w jednym miejscu.
@@ -664,6 +694,28 @@ namespace
     {
         return pierwsza.nazwa == druga.nazwa
             && std::abs(pierwsza.gramyNaJednostke - druga.gramyNaJednostke) < 0.001;
+    }
+
+    // Rozpoznaje bazową jednostkę gramową. Dla niej wygodnym domyślnym wyborem jest 100 g.
+    bool czyJednostkaGramowa(const JednostkaProduktu& jednostka)
+    {
+        const QString nazwa = QString::fromStdString(jednostka.nazwa)
+            .trimmed()
+            .toLower();
+
+        return nazwa == "g" || nazwa == "gram" || nazwa == "gramy";
+    }
+
+    // Po zmianie jednostki ustawiamy sensowną ilość: 100 dla gramów, 1 dla sztuk, opakowań, łyżek itd.
+    double domyslnaIloscDlaJednostki(const JednostkaProduktu& jednostka)
+    {
+        return czyJednostkaGramowa(jednostka) ? 100.0 : 1.0;
+    }
+
+    // Krok zmiany w spinboxie też zależy od jednostki, żeby nie klikać po 0.5 opakowania bez potrzeby.
+    double krokIlosciDlaJednostki(const JednostkaProduktu& jednostka)
+    {
+        return czyJednostkaGramowa(jednostka) ? 10.0 : 1.0;
     }
 }
 
@@ -1674,6 +1726,16 @@ bool MainWindow::pokazDialogIlosci(
 
     comboJednostka->setCurrentIndex(indeksDomyslnejJednostki);
 
+    if (indeksDomyslnejJednostki >= 0 &&
+        indeksDomyslnejJednostki < static_cast<int>(dostepneJednostki.size()))
+    {
+        spinIlosc->setSingleStep(
+            krokIlosciDlaJednostki(
+                dostepneJednostki[static_cast<std::size_t>(indeksDomyslnejJednostki)]
+            )
+        );
+    }
+
     auto* formularz = new QFormLayout();
     formularz->setContentsMargins(0, 4, 0, 0);
     formularz->setSpacing(12);
@@ -1727,8 +1789,22 @@ bool MainWindow::pokazDialogIlosci(
         comboJednostka,
         QOverload<int>::of(&QComboBox::currentIndexChanged),
         &dialog,
-        [&](int)
+        [&](int indeks)
         {
+            if (indeks < 0 || indeks >= static_cast<int>(dostepneJednostki.size()))
+            {
+                odswiezPodglad();
+                return;
+            }
+
+            const JednostkaProduktu& nowaJednostka =
+                dostepneJednostki[static_cast<std::size_t>(indeks)];
+
+            // Przy zmianie z gramów na np. opakowanie nie zostawiamy 100 jako liczby opakowań.
+            // Gramatura domyślnie startuje od 100, a pozostałe jednostki od 1.
+            spinIlosc->setSingleStep(krokIlosciDlaJednostki(nowaJednostka));
+            spinIlosc->setValue(domyslnaIloscDlaJednostki(nowaJednostka));
+
             odswiezPodglad();
         }
     );
@@ -1778,11 +1854,28 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
         return;
     }
 
+    // Kopia listy jest sortowana tylko na potrzeby okna wyboru: ulubione mają być zawsze pod ręką.
+    std::vector<Produkt> produktyDoWyboru = produkty;
+
+    std::stable_sort(
+        produktyDoWyboru.begin(),
+        produktyDoWyboru.end(),
+        [](const Produkt& pierwszy, const Produkt& drugi)
+        {
+            if (pierwszy.czyUlubiony() != drugi.czyUlubiony())
+            {
+                return pierwszy.czyUlubiony();
+            }
+
+            return pierwszy.pobierzNazwe() < drugi.pobierzNazwe();
+        }
+    );
+
     QDialog dialogListy(this);
     dialogListy.setObjectName("dialogFit");
     dialogListy.setWindowTitle("Wybierz produkt");
     dialogListy.setStyleSheet(styleSheet());
-    dialogListy.setMinimumSize(520, 560);
+    dialogListy.setMinimumSize(540, 590);
     dialogListy.setModal(true);
 
     auto* layoutListy = new QVBoxLayout(&dialogListy);
@@ -1793,7 +1886,7 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     tytul->setObjectName("dialogTitle");
     layoutListy->addWidget(tytul);
 
-    auto* opis = new QLabel("Wyszukaj produkt i zatwierdź wybór. Dwuklik też dodaje produkt do posiłku.", &dialogListy);
+    auto* opis = new QLabel("Wybierz zakładkę Ulubione albo Wszystkie. Ulubione są też przypięte na górze pełnej listy.", &dialogListy);
     opis->setObjectName("dialogSubtitle");
     opis->setWordWrap(true);
     layoutListy->addWidget(opis);
@@ -1803,17 +1896,157 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     poleWyszukiwania->setMinimumHeight(46);
     layoutListy->addWidget(poleWyszukiwania);
 
-    auto* listaProduktow = new QListWidget(&dialogListy);
-    listaProduktow->setMinimumHeight(330);
-    listaProduktow->setSpacing(2);
+    auto* zakladkiProduktow = new QTabWidget(&dialogListy);
+    zakladkiProduktow->setObjectName("zakladkiWyboruProduktow");
+    zakladkiProduktow->setMinimumHeight(350);
+    zakladkiProduktow->setStyleSheet(R"(
+        QTabWidget#zakladkiWyboruProduktow::pane {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            top: -1px;
+        }
 
-    for (const Produkt& produkt : produkty)
+        QTabWidget#zakladkiWyboruProduktow QTabBar::tab {
+            background: #e2e8f0;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            border-bottom: none;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            padding: 10px 26px;
+            margin-right: 6px;
+            min-width: 120px;
+            font-weight: 900;
+        }
+
+        QTabWidget#zakladkiWyboruProduktow QTabBar::tab:selected {
+            background: #ffffff;
+            color: #15803d;
+            border-color: #22c55e;
+        }
+
+        QTabWidget#zakladkiWyboruProduktow QTabBar::tab:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+        }
+    )");
+
+    auto* tabUlubione = new QWidget(zakladkiProduktow);
+    auto* tabWszystkie = new QWidget(zakladkiProduktow);
+
+    auto* layoutUlubione = new QVBoxLayout(tabUlubione);
+    layoutUlubione->setContentsMargins(0, 10, 0, 0);
+    layoutUlubione->setSpacing(0);
+
+    auto* layoutWszystkie = new QVBoxLayout(tabWszystkie);
+    layoutWszystkie->setContentsMargins(0, 10, 0, 0);
+    layoutWszystkie->setSpacing(0);
+
+    auto* listaUlubione = new QListWidget(tabUlubione);
+    auto* listaWszystkie = new QListWidget(tabWszystkie);
+
+    listaUlubione->setMinimumHeight(330);
+    listaWszystkie->setMinimumHeight(330);
+    listaUlubione->setSpacing(2);
+    listaWszystkie->setSpacing(2);
+
+    layoutUlubione->addWidget(listaUlubione);
+    layoutWszystkie->addWidget(listaWszystkie);
+
+    zakladkiProduktow->addTab(tabUlubione, "Ulubione");
+    zakladkiProduktow->addTab(tabWszystkie, "Wszystkie");
+    layoutListy->addWidget(zakladkiProduktow, 1);
+
+    auto dodajProduktDoListy = [](QListWidget* lista, const Produkt& produkt, bool pokazGwiazdke)
+        {
+            const QString nazwa = QString::fromStdString(produkt.pobierzNazwe());
+            const QString tekst = pokazGwiazdke && produkt.czyUlubiony()
+                ? QString("★ %1").arg(nazwa)
+                : nazwa;
+
+            auto* element = new QListWidgetItem(tekst, lista);
+            element->setData(Qt::UserRole, nazwa);
+            element->setToolTip(nazwa);
+        };
+
+    int liczbaUlubionych = 0;
+
+    for (const Produkt& produkt : produktyDoWyboru)
     {
-        listaProduktow->addItem(QString::fromStdString(produkt.pobierzNazwe()));
+        if (produkt.czyUlubiony())
+        {
+            dodajProduktDoListy(listaUlubione, produkt, false);
+            ++liczbaUlubionych;
+        }
+
+        dodajProduktDoListy(listaWszystkie, produkt, true);
     }
 
-    listaProduktow->setCurrentRow(0);
-    layoutListy->addWidget(listaProduktow, 1);
+    if (liczbaUlubionych == 0)
+    {
+        // Pusta zakładka byłaby myląca, więc wyłączamy ją do czasu oznaczenia pierwszego produktu gwiazdką.
+        zakladkiProduktow->setTabEnabled(0, false);
+        zakladkiProduktow->setCurrentIndex(1);
+    }
+    else
+    {
+        listaUlubione->setCurrentRow(0);
+        zakladkiProduktow->setCurrentIndex(0);
+    }
+
+    listaWszystkie->setCurrentRow(0);
+
+    auto odswiezWidocznoscListy = [](QListWidget* lista, const QString& tekst)
+        {
+            int pierwszyWidoczny = -1;
+
+            for (int i = 0; i < lista->count(); ++i)
+            {
+                QListWidgetItem* element = lista->item(i);
+
+                if (element == nullptr)
+                {
+                    continue;
+                }
+
+                const QString nazwa = element->data(Qt::UserRole).toString();
+                const bool ukryty = !nazwa.contains(tekst, Qt::CaseInsensitive);
+                element->setHidden(ukryty);
+
+                if (!ukryty && pierwszyWidoczny < 0)
+                {
+                    pierwszyWidoczny = i;
+                }
+            }
+
+            if (pierwszyWidoczny >= 0)
+            {
+                lista->setCurrentRow(pierwszyWidoczny);
+            }
+        };
+
+    connect(
+        poleWyszukiwania,
+        &QLineEdit::textChanged,
+        &dialogListy,
+        [listaUlubione, listaWszystkie, odswiezWidocznoscListy](const QString& tekst)
+        {
+            odswiezWidocznoscListy(listaUlubione, tekst);
+            odswiezWidocznoscListy(listaWszystkie, tekst);
+        }
+    );
+
+    auto zaakceptujWidocznyElement = [&dialogListy](QListWidgetItem* element)
+        {
+            if (element != nullptr && !element->isHidden())
+            {
+                dialogListy.accept();
+            }
+        };
+
+    connect(listaUlubione, &QListWidget::itemDoubleClicked, &dialogListy, zaakceptujWidocznyElement);
+    connect(listaWszystkie, &QListWidget::itemDoubleClicked, &dialogListy, zaakceptujWidocznyElement);
 
     auto* przyciskiListy = new QDialogButtonBox(
         QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
@@ -1825,55 +2058,53 @@ void MainWindow::dodajProduktDoPory(PoraPosilku pora)
     przyciskiListy->button(QDialogButtonBox::Cancel)->setObjectName("buttonSecondary");
     layoutListy->addWidget(przyciskiListy);
 
-    connect(
-        poleWyszukiwania,
-        &QLineEdit::textChanged,
-        &dialogListy,
-        [listaProduktow](const QString& tekst)
-        {
-            int pierwszyWidoczny = -1;
-
-            for (int i = 0; i < listaProduktow->count(); ++i)
-            {
-                QListWidgetItem* element = listaProduktow->item(i);
-
-                if (element == nullptr)
-                {
-                    continue;
-                }
-
-                const bool ukryty = !element->text().contains(tekst, Qt::CaseInsensitive);
-                element->setHidden(ukryty);
-
-                if (!ukryty && pierwszyWidoczny < 0)
-                {
-                    pierwszyWidoczny = i;
-                }
-            }
-
-            if (pierwszyWidoczny >= 0)
-            {
-                listaProduktow->setCurrentRow(pierwszyWidoczny);
-            }
-        }
-    );
-
-    connect(listaProduktow, &QListWidget::itemDoubleClicked, &dialogListy, &QDialog::accept);
     connect(przyciskiListy, &QDialogButtonBox::accepted, &dialogListy, &QDialog::accept);
     connect(przyciskiListy, &QDialogButtonBox::rejected, &dialogListy, &QDialog::reject);
 
-    if (dialogListy.exec() != QDialog::Accepted || listaProduktow->currentItem() == nullptr)
+    if (dialogListy.exec() != QDialog::Accepted)
     {
         return;
     }
 
-    if (listaProduktow->currentItem()->isHidden())
+    QListWidget* aktywnaLista = zakladkiProduktow->currentIndex() == 0
+        ? listaUlubione
+        : listaWszystkie;
+
+    QListWidget* zapasowaLista = aktywnaLista == listaUlubione
+        ? listaWszystkie
+        : listaUlubione;
+
+    auto pobierzWidocznyWybor = [](QListWidget* lista) -> QListWidgetItem*
+        {
+            if (lista == nullptr)
+            {
+                return nullptr;
+            }
+
+            QListWidgetItem* element = lista->currentItem();
+
+            if (element != nullptr && !element->isHidden())
+            {
+                return element;
+            }
+
+            return nullptr;
+        };
+
+    QListWidgetItem* wybranyElement = pobierzWidocznyWybor(aktywnaLista);
+
+    if (wybranyElement == nullptr)
+    {
+        wybranyElement = pobierzWidocznyWybor(zapasowaLista);
+    }
+
+    if (wybranyElement == nullptr)
     {
         return;
     }
 
     const std::string wybranaNazwa =
-        listaProduktow->currentItem()->text().toStdString();
+        wybranyElement->data(Qt::UserRole).toString().toStdString();
 
     const auto iterator = std::find_if(
         produkty.begin(),

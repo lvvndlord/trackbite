@@ -1,0 +1,1244 @@
+{
+    "produkty": [
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 7,
+                "kalorie": 350,
+                "tluszcz": 1,
+                "weglowodany": 79
+            },
+            "nazwa": "Ryż biały",
+            "ulubiony": true
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 55,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 12.6,
+                "kalorie": 143,
+                "tluszcz": 9.5,
+                "weglowodany": 0.7
+            },
+            "nazwa": "Jajko",
+            "ulubiony": true
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 120,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1.1,
+                "kalorie": 89,
+                "tluszcz": 0.3,
+                "weglowodany": 22.8
+            },
+            "nazwa": "Banan",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 86,
+                "tluszcz": 0.5,
+                "weglowodany": 3.5
+            },
+            "nazwa": "Twaróg chudy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0,
+                "kalorie": 884,
+                "tluszcz": 100,
+                "weglowodany": 0
+            },
+            "nazwa": "Oliwa z oliwek",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 13,
+                "kalorie": 370,
+                "tluszcz": 7,
+                "weglowodany": 62
+            },
+            "nazwa": "Płatki owsiane",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.3,
+                "kalorie": 52,
+                "tluszcz": 0.2,
+                "weglowodany": 14
+            },
+            "nazwa": "Jabłko",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 35,
+                    "nazwa": "kromka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 6.5,
+                "kalorie": 259,
+                "tluszcz": 1.8,
+                "weglowodany": 48
+            },
+            "nazwa": "Chleb żytni",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 20,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 25,
+                "kalorie": 588,
+                "tluszcz": 50,
+                "weglowodany": 20
+            },
+            "nazwa": "Masło orzechowe",
+            "ulubiony": true
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "sztuka"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "opakowanie"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "łyżka"
+                },
+                {
+                    "gramyNaJednostke": 59,
+                    "nazwa": "ml"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 35,
+                "kalorie": 170,
+                "tluszcz": 3.6,
+                "weglowodany": 5
+            },
+            "nazwa": "Pierś z kurczaka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 200,
+                    "nazwa": "sztuka"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "plaster"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 10,
+                "kalorie": 200,
+                "tluszcz": 18,
+                "weglowodany": 70
+            },
+            "nazwa": "Chałka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 7.5,
+                "kalorie": 360,
+                "tluszcz": 2.7,
+                "weglowodany": 76
+            },
+            "nazwa": "Ryż brązowy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 12,
+                "kalorie": 350,
+                "tluszcz": 1.5,
+                "weglowodany": 72
+            },
+            "nazwa": "Makaron pszenny",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 100,
+                    "nazwa": "woreczek"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 13,
+                "kalorie": 343,
+                "tluszcz": 3.4,
+                "weglowodany": 72
+            },
+            "nazwa": "Kasza gryczana",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 100,
+                    "nazwa": "woreczek"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 11,
+                "kalorie": 378,
+                "tluszcz": 4.2,
+                "weglowodany": 73
+            },
+            "nazwa": "Kasza jaglana",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 2,
+                "kalorie": 77,
+                "tluszcz": 0.1,
+                "weglowodany": 17
+            },
+            "nazwa": "Ziemniaki",
+            "ulubiony": true
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 200,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1.6,
+                "kalorie": 86,
+                "tluszcz": 0.1,
+                "weglowodany": 20
+            },
+            "nazwa": "Bataty",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 30,
+                    "nazwa": "kromka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 9,
+                "kalorie": 265,
+                "tluszcz": 3.2,
+                "weglowodany": 49
+            },
+            "nazwa": "Chleb pszenny",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 60,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 9,
+                "kalorie": 290,
+                "tluszcz": 2.5,
+                "weglowodany": 58
+            },
+            "nazwa": "Bułka kajzerka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 60,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 8,
+                "kalorie": 310,
+                "tluszcz": 7,
+                "weglowodany": 53
+            },
+            "nazwa": "Tortilla pszenna",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 250,
+                    "nazwa": "szklanka"
+                },
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "ml"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 3.4,
+                "kalorie": 50,
+                "tluszcz": 2,
+                "weglowodany": 4.8
+            },
+            "nazwa": "Mleko 2%",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 4.3,
+                "kalorie": 61,
+                "tluszcz": 2,
+                "weglowodany": 6
+            },
+            "nazwa": "Jogurt naturalny",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 200,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 9,
+                "kalorie": 97,
+                "tluszcz": 5,
+                "weglowodany": 4
+            },
+            "nazwa": "Jogurt grecki",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 250,
+                    "nazwa": "szklanka"
+                },
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "ml"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 3.4,
+                "kalorie": 51,
+                "tluszcz": 2,
+                "weglowodany": 4.7
+            },
+            "nazwa": "Kefir",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 20,
+                    "nazwa": "plaster"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 25,
+                "kalorie": 356,
+                "tluszcz": 27,
+                "weglowodany": 2.2
+            },
+            "nazwa": "Ser żółty gouda",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 125,
+                    "nazwa": "kulka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 254,
+                "tluszcz": 19,
+                "weglowodany": 2
+            },
+            "nazwa": "Mozzarella",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 250,
+                    "nazwa": "kostka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 18.7,
+                "kalorie": 132,
+                "tluszcz": 4.7,
+                "weglowodany": 3.7
+            },
+            "nazwa": "Twaróg półtłusty",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 200,
+                    "nazwa": "opakowanie"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 11,
+                "kalorie": 97,
+                "tluszcz": 5,
+                "weglowodany": 2
+            },
+            "nazwa": "Serek wiejski",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 5,
+                    "nazwa": "łyżeczka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.9,
+                "kalorie": 717,
+                "tluszcz": 81,
+                "weglowodany": 0.1
+            },
+            "nazwa": "Masło",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "porcja"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 23,
+                "kalorie": 104,
+                "tluszcz": 1.2,
+                "weglowodany": 0
+            },
+            "nazwa": "Pierś z indyka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "porcja"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 21,
+                "kalorie": 158,
+                "tluszcz": 8,
+                "weglowodany": 0
+            },
+            "nazwa": "Wołowina chuda",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 80,
+                    "nazwa": "plaster"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 21,
+                "kalorie": 152,
+                "tluszcz": 7,
+                "weglowodany": 0
+            },
+            "nazwa": "Schab wieprzowy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "filet"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 20,
+                "kalorie": 208,
+                "tluszcz": 13,
+                "weglowodany": 0
+            },
+            "nazwa": "Łosoś",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 120,
+                    "nazwa": "puszka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 26,
+                "kalorie": 116,
+                "tluszcz": 1,
+                "weglowodany": 0
+            },
+            "nazwa": "Tuńczyk w wodzie",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "filet"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 18,
+                "kalorie": 82,
+                "tluszcz": 0.7,
+                "weglowodany": 0
+            },
+            "nazwa": "Dorsz",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 15,
+                    "nazwa": "plaster"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 20,
+                "kalorie": 110,
+                "tluszcz": 3,
+                "weglowodany": 1
+            },
+            "nazwa": "Szynka z indyka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 190,
+                    "nazwa": "szklanka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 24,
+                "kalorie": 352,
+                "tluszcz": 1.5,
+                "weglowodany": 52
+            },
+            "nazwa": "Soczewica czerwona",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 240,
+                    "nazwa": "puszka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 8.9,
+                "kalorie": 164,
+                "tluszcz": 2.6,
+                "weglowodany": 27
+            },
+            "nazwa": "Ciecierzyca gotowana",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 240,
+                    "nazwa": "puszka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 8.7,
+                "kalorie": 127,
+                "tluszcz": 0.5,
+                "weglowodany": 22.8
+            },
+            "nazwa": "Fasola czerwona gotowana",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "kostka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 15,
+                "kalorie": 144,
+                "tluszcz": 8,
+                "weglowodany": 2
+            },
+            "nazwa": "Tofu naturalne",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 500,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 2.8,
+                "kalorie": 34,
+                "tluszcz": 0.4,
+                "weglowodany": 6.6
+            },
+            "nazwa": "Brokuł",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 120,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.9,
+                "kalorie": 18,
+                "tluszcz": 0.2,
+                "weglowodany": 3.9
+            },
+            "nazwa": "Pomidor",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.7,
+                "kalorie": 15,
+                "tluszcz": 0.1,
+                "weglowodany": 3.6
+            },
+            "nazwa": "Ogórek",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 70,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.9,
+                "kalorie": 41,
+                "tluszcz": 0.2,
+                "weglowodany": 9.6
+            },
+            "nazwa": "Marchew",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1,
+                "kalorie": 31,
+                "tluszcz": 0.3,
+                "weglowodany": 6
+            },
+            "nazwa": "Papryka czerwona",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 100,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1.1,
+                "kalorie": 40,
+                "tluszcz": 0.1,
+                "weglowodany": 9.3
+            },
+            "nazwa": "Cebula",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 30,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 1.4,
+                "kalorie": 15,
+                "tluszcz": 0.2,
+                "weglowodany": 2.9
+            },
+            "nazwa": "Sałata",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 30,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 2.9,
+                "kalorie": 23,
+                "tluszcz": 0.4,
+                "weglowodany": 3.6
+            },
+            "nazwa": "Szpinak",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 2,
+                "kalorie": 160,
+                "tluszcz": 14.7,
+                "weglowodany": 8.5
+            },
+            "nazwa": "Awokado",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 170,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.4,
+                "kalorie": 57,
+                "tluszcz": 0.1,
+                "weglowodany": 15
+            },
+            "nazwa": "Gruszka",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 180,
+                    "nazwa": "sztuka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.9,
+                "kalorie": 47,
+                "tluszcz": 0.1,
+                "weglowodany": 11.8
+            },
+            "nazwa": "Pomarańcza",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 150,
+                    "nazwa": "szklanka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.7,
+                "kalorie": 32,
+                "tluszcz": 0.3,
+                "weglowodany": 7.7
+            },
+            "nazwa": "Truskawki",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 50,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.7,
+                "kalorie": 57,
+                "tluszcz": 0.3,
+                "weglowodany": 14.5
+            },
+            "nazwa": "Borówki",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 80,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.7,
+                "kalorie": 69,
+                "tluszcz": 0.2,
+                "weglowodany": 18.1
+            },
+            "nazwa": "Winogrona",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 30,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 15,
+                "kalorie": 654,
+                "tluszcz": 65,
+                "weglowodany": 14
+            },
+            "nazwa": "Orzechy włoskie",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 30,
+                    "nazwa": "garść"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 21,
+                "kalorie": 579,
+                "tluszcz": 50,
+                "weglowodany": 22
+            },
+            "nazwa": "Migdały",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 30,
+                "kalorie": 559,
+                "tluszcz": 49,
+                "weglowodany": 10.7
+            },
+            "nazwa": "Pestki dyni",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 12,
+                    "nazwa": "łyżeczka"
+                },
+                {
+                    "gramyNaJednostke": 25,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.3,
+                "kalorie": 304,
+                "tluszcz": 0,
+                "weglowodany": 82
+            },
+            "nazwa": "Miód",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 15,
+                    "nazwa": "łyżeczka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0.4,
+                "kalorie": 250,
+                "tluszcz": 0.2,
+                "weglowodany": 60
+            },
+            "nazwa": "Dżem truskawkowy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 10,
+                    "nazwa": "łyżka"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 0,
+                "kalorie": 884,
+                "tluszcz": 100,
+                "weglowodany": 0
+            },
+            "nazwa": "Olej rzepakowy",
+            "ulubiony": false
+        },
+        {
+            "jednostki": [
+                {
+                    "gramyNaJednostke": 1,
+                    "nazwa": "g"
+                },
+                {
+                    "gramyNaJednostke": 100,
+                    "nazwa": "porcja"
+                }
+            ],
+            "makroNa100g": {
+                "bialko": 20.7,
+                "kalorie": 221,
+                "tluszcz": 15.5,
+                "weglowodany": 0
+            },
+            "nazwa": "Makrela wędzona",
+            "ulubiony": false
+        }
+    ]
+}

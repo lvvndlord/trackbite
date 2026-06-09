@@ -3,6 +3,8 @@
 #include "PlikManager.h"
 
 #include <QFile>
+#include <QDir>
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -73,8 +75,20 @@ namespace
 
     bool zapiszJsonDoPliku(const std::string& sciezka, const QJsonObject& root)
     {
+        const QString sciezkaQt = QString::fromStdString(sciezka);
+
+        // Przed zapisem upewniamy się, że katalog docelowy istnieje.
+        // To zabezpiecza aplikację, gdy pliki mają trafiać np. do folderu "dane".
+        const QFileInfo informacjeOPliku(sciezkaQt);
+        QDir katalogDocelowy = informacjeOPliku.absoluteDir();
+
+        if (!katalogDocelowy.exists() && !katalogDocelowy.mkpath("."))
+        {
+            return false;
+        }
+
         // Otwieramy plik tekstowo, bo JSON ma być czytelny również poza programem.
-        QFile plik(QString::fromStdString(sciezka));
+        QFile plik(sciezkaQt);
 
         if (!plik.open(QIODevice::WriteOnly | QIODevice::Text))
         {
